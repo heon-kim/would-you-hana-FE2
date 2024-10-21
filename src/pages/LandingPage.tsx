@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col, Card, Input } from 'antd';
 import notebookUser from "../assets/notebook_byulsongi.png";
+import '../App.css'
 // import { useSelector, useDispatch } from 'react-redux';
 // import { RootState } from '../store'; // Assuming this is your Redux store's RootState type
 
@@ -20,7 +21,7 @@ const LandingPage: React.FC = () => {
 
   return (
     <div style={{ width: '100%', padding: '20 20' }}>
-      <div style={{textAlign: 'center' }}>
+      <div style={{textAlign: 'center'}}>
         <Row gutter={[16, 16]} style={{ backgroundColor: '#DDFCD2', height: '600px'}}>
           {/* Carousel Column */}
           <Col span={12} style={{marginTop:'100px'}}>
@@ -42,45 +43,45 @@ const LandingPage: React.FC = () => {
               enterButton
               size="large"
               onSearch={onSearch} // Calls the onSearch function when the search button is clicked
-              style={{ width: '100%'}}
+              style={{ width: '100%', fontFamily: 'Hana2Bold'}}
             />
           </Col>
         </Row>
-        <Row gutter={[16, 16]} style={{ backgroundColor: '#63465A'}}>
+        <Row gutter={[16, 16]} style={{ backgroundColor: '#C1E9E8'}}>
          <Col span={24} style={{ marginTop: '40px' }}>
-            <h2 style={{ fontSize: '24px', marginBottom: '10px' }}>🔘 Quick Access</h2>
+            <h2 style={{ fontSize: '24px', marginBottom: '10px' }}>🔘 빠른 접근</h2>
           </Col>
 
           <Col xs={24} sm={8}>
             <Card
               hoverable
-              title="Feature A"
+              title="기능 A"
               style={{ textAlign: 'center' }}
               onClick={() => navigate('/feature-a')}
             >
-              Learn more about Feature A.
+                A입니다.
             </Card>
           </Col>
 
           <Col xs={24} sm={8}>
             <Card
               hoverable
-              title="Feature B"
+              title="기능 B"
               style={{ textAlign: 'center' }}
               onClick={() => navigate('/feature-b')}
             >
-              Learn more about Feature B.
+              B입니다.
             </Card>
           </Col>
 
           <Col xs={24} sm={8}>
             <Card
               hoverable
-              title="Feature C"
+              title="기능 C"
               style={{ textAlign: 'center' }}
               onClick={() => navigate('/feature-c')}
             >
-              Learn more about Feature C.
+              C입니다.
             </Card>
           </Col>
           </Row>
