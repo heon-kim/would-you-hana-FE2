@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; // Import necessary routing components
 import LandingPage from "./pages/LandingPage";
 import "./App.css";
+import "./styles/fonts.css"
 
 function App() {
   return (

@@ -1,88 +1,95 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Row, Col, Card, Carousel } from 'antd';
+import { Row, Col, Card, Input } from 'antd';
+import notebookUser from "../assets/notebook_byulsongi.png";
+import '../App.css'
 // import { useSelector, useDispatch } from 'react-redux';
 // import { RootState } from '../store'; // Assuming this is your Redux store's RootState type
+
+const { Search } = Input;
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
 //   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 //   const dispatch = useDispatch();
 
+  // Function to handle search
+  const onSearch = (value: string) => {
+    console.log(value);
+    // Add logic to handle the search input, e.g., navigate to a results page
+  };
+
   return (
-    <div style={{ width: '100%', padding: '50px 0', backgroundColor: '#f0f2f5' }}>
-      <div style={{ marginLeft: '15%', marginRight: '15%', textAlign: 'center' }}>
-        <Row gutter={[16, 16]}>
-          <Col span={24}>
-            <h1 style={{ fontSize: '32px', marginBottom: '20px' }}>Welcome to Our Homepage</h1>
-            <p style={{ fontSize: '18px', color: '#555' }}>
-              Explore our services and learn more about what we offer.
-            </p>
+    <div style={{ width: '100%', padding: '20 20' }}>
+      <div style={{textAlign: 'center'}}>
+        <Row gutter={[16, 16]} style={{ backgroundColor: '#DDFCD2', height: '600px'}}>
+          {/* Carousel Column */}
+          <Col span={12} style={{marginTop:'100px'}}>
+            <h1 style={{ color: 'black', fontSize: '48px', lineHeight: '1.2', textAlign:'left', marginLeft:'100px'}}>
+                <strong>
+                궁금한 금융 질문을
+                <br /><span style = {{color:'green'}}> 내 주변의 하나 가족</span>으로부터 
+                <br /> 답변 받아가세요!
+                </strong>
+            </h1>
+            <img src ={notebookUser} alt="notebookUser" width={330} style={{marginLeft:'100px'}}></img>
           </Col>
 
-          <Col span={24}>
-            <Carousel autoplay>
-              <div>
-                <h3 style={carouselContentStyle}>Discover Our Products</h3>
-              </div>
-              <div>
-                <h3 style={carouselContentStyle}>Exclusive Offers Available Now</h3>
-              </div>
-              <div>
-                <h3 style={carouselContentStyle}>Join Our Community</h3>
-              </div>
-            </Carousel>
+          {/* Search Input Column */}
+          <Col span={8} style={{marginTop:'300px'}}>
+            <Search
+              placeholder="질문을 입력하세요."
+              allowClear
+              enterButton
+              size="large"
+              onSearch={onSearch} // Calls the onSearch function when the search button is clicked
+              style={{ width: '100%', fontFamily: 'Hana2Bold'}}
+            />
           </Col>
-
-          <Col span={24} style={{ marginTop: '40px' }}>
-            <h2 style={{ fontSize: '24px', marginBottom: '10px' }}>🔘 Quick Access</h2>
+        </Row>
+        <Row gutter={[16, 16]} style={{ backgroundColor: '#C1E9E8'}}>
+         <Col span={24} style={{ marginTop: '40px' }}>
+            <h2 style={{ fontSize: '24px', marginBottom: '10px' }}>🔘 빠른 접근</h2>
           </Col>
 
           <Col xs={24} sm={8}>
             <Card
               hoverable
-              title="Feature A"
+              title="기능 A"
               style={{ textAlign: 'center' }}
               onClick={() => navigate('/feature-a')}
             >
-              Learn more about Feature A.
+                A입니다.
             </Card>
           </Col>
 
           <Col xs={24} sm={8}>
             <Card
               hoverable
-              title="Feature B"
+              title="기능 B"
               style={{ textAlign: 'center' }}
               onClick={() => navigate('/feature-b')}
             >
-              Learn more about Feature B.
+              B입니다.
             </Card>
           </Col>
 
           <Col xs={24} sm={8}>
             <Card
               hoverable
-              title="Feature C"
+              title="기능 C"
               style={{ textAlign: 'center' }}
               onClick={() => navigate('/feature-c')}
             >
-              Learn more about Feature C.
+              C입니다.
             </Card>
           </Col>
-        </Row>
+          </Row>
       </div>
     </div>
   );
 };
 
-// Style for Carousel content
-const carouselContentStyle: React.CSSProperties = {
-  height: '160px',
-  color: '#fff',
-  lineHeight: '160px',
-  textAlign: 'center',
-  background: '#364d79',
-};
 
-export default LandingPage;
+  
+  export default LandingPage;
