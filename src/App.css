@@ -1,0 +1,8 @@
+* {
+  font-family: 'Hana2Bold',sans-serif;
+}
+
+/* App.css 또는 특정 CSS 파일 */
+.ant-input::placeholder {
+  font-family: 'Hana2Bold', sans-serif;
+}
