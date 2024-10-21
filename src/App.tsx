@@ -1,21 +1,20 @@
-import { useState } from "react";
-
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; // Import necessary routing components
+import LandingPage from "./pages/LandingPage";
 import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
+    <Router>
       <div>
-        <button
-          className="text-2xl font-bold"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          count is {count}
-        </button>
+        {/* Define the routes for your application */}
+        <Routes>
+          {/* Default route: LandingPage will be rendered when visiting '/' */}
+          <Route path="/" element={<LandingPage />} />
+          {/* You can add other routes here as needed */}
+        </Routes>
       </div>
-    </>
+    </Router>
   );
 }
 
