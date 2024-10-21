@@ -35,6 +35,7 @@
 - `chore`: 빌드 업무 수정, 패키지 매니저 수정
 
 ## SRC 내부 폴더구조
+```
 ─ src
  ├─ components
  ├─ assets 
@@ -48,3 +49,4 @@
  ├─ contexts
  ├─ App.js
  └─ index.js
+```
