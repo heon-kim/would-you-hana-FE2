@@ -6,6 +6,7 @@ import userIcon from '../assets/img/icon_user.png';
 import { DownOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Dropdown, Space, message } from 'antd';
+import { findUser } from '../utils/userStorage';
 
 const items: MenuProps['items'] = [
   {
@@ -31,6 +32,11 @@ interface LoggedInComponentProps {
 
 function LoggedInComponent({ onLogout }: LoggedInComponentProps) {
   const [label, setLabel] = useState<string>('내 동네 설정');
+  const loggedUser = localStorage.getItem('loggedUser');
+  let user;
+  if (loggedUser) {
+    user = findUser(loggedUser);
+  }
 
   const handleMenuClick: MenuProps['onClick'] = (e) => {
     const selectedItem = items?.find((item) => item?.key === e.key);
@@ -68,7 +74,7 @@ function LoggedInComponent({ onLogout }: LoggedInComponentProps) {
         </li>
         <li className="flex items-center gap-2">
           <img src={userIcon} alt="user icon" width={35} />
-          <span>김하나</span>
+          <span>{user?.name}</span>
         </li>
       </ul>
     </div>
