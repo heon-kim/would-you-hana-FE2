@@ -1,6 +1,18 @@
 @font-face {
-    font-family: 'Hana2Bold';
-    src: url('../assets/font/Hana2-Bold.ttf') format('truetype');
-    font-weight: normal;
-    font-style:normal;
-  }
+  font-family: 'Hana';
+  src: url('../assets/font/Hana2-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Hana';
+  src: url('../assets/font/Hana2-Medium.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Hana';
+  src: url('../assets/font/Hana2-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}

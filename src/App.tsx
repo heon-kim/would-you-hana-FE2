@@ -13,6 +13,7 @@ import Register from "./pages/Register";
 import "./App.css";
 import "./styles/fonts.css";
 import Header from "./components/Header";
+import QuestionRegister from "./pages/QuestionRegister";
 
 function App() {
   return (
@@ -32,6 +33,8 @@ function App() {
           {/* You can add other routes here as needed */}
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/registqna" element={<QuestionRegister/>}/>
+
         </Routes>
       </div>
     </Router>
