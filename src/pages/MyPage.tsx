@@ -2,7 +2,7 @@ import React, { useState } from 'react'; // useState 추가
 import { Layout, Progress, Avatar, Menu } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { useNavigate, Outlet } from 'react-router-dom'; // Outlet 추가
-import userIcon from '../assets/icon_user.png'; // 사용자 아이콘 경로
+import userIcon from '../assets/img/icon_user.png'; // 사용자 아이콘 경로
 
 const { Content, Sider } = Layout;
 
@@ -18,7 +18,7 @@ const MyPage: React.FC = () => {
   return (
     <Layout style={{ backgroundColor: '#FFFFFF', marginTop: '70px' }}> {/* 전체 배경을 흰색으로 설정 */}
       {/* 사용자 정보 */}
-      <Layout style={{ display: 'flex', backgroundColor: '#FFFFFF'}}>
+      <Layout style={{ display: 'flex', backgroundColor: '#FFFFFF', minHeight: '30vh'}}>
         <Sider width="15%" style={{ backgroundColor: '#FFFFFF'}}></Sider>
         <Layout style={{ width: '85%'}}>
             <Content style={{ paddingBottom: '24px', paddingRight: '50px', paddingLeft: '50px', textAlign: 'center', backgroundColor: '#FFFFFF' }}>
