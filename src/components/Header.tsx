@@ -59,7 +59,7 @@ function LoggedInComponent({ onLogout }: LoggedInComponentProps) {
           </Dropdown>
         </li>
         <li>
-          <Link to="/my">마이페이지</Link>
+          <Link to="/my/profile">마이페이지</Link>
         </li>
         <li>
           <span onClick={onLogout} style={{ cursor: "pointer" }}>
