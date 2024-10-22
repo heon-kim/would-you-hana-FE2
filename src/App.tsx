@@ -1,6 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; // Import necessary routing components
 import LandingPage from "./pages/LandingPage";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 import "./App.css";
 import "./styles/fonts.css";
 import Header from "./components/Header";
@@ -8,13 +10,12 @@ import Header from "./components/Header";
 function App() {
   return (
     <Router>
-      <Header></Header>
-      <div>
-        {/* Define the routes for your application */}
+      <div className="h-dvh flex flex-col">
+        <Header></Header>
         <Routes>
-          {/* Default route: LandingPage will be rendered when visiting '/' */}
           <Route path="/" element={<LandingPage />} />
-          {/* You can add other routes here as needed */}
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </div>
     </Router>
