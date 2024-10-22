@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"; // Import necessary routing components
-import { useState } from "react";
-import logo from "../assets/logo.png";
-import userIcon from "../assets/icon_user.png";
+import { useState, useEffect } from "react";
+import logo from "../assets/img/logo.png";
+import userIcon from "../assets/img/icon_user.png";
 
 import { DownOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
@@ -24,7 +24,12 @@ const items: MenuProps["items"] = [
     key: "3",
   },
 ];
-function Header() {
+
+interface LoggedInComponentProps {
+  onLogout: () => void;
+}
+
+function LoggedInComponent({ onLogout }: LoggedInComponentProps) {
   const [label, setLabel] = useState<string>("내 동네 설정");
 
   const handleMenuClick: MenuProps["onClick"] = (e) => {
@@ -40,6 +45,65 @@ function Header() {
       onClick: item && "label" in item ? handleMenuClick : undefined,
     })),
   };
+  return (
+    <div>
+      <ul className="flex gap-8 items-center ">
+        <li>
+          <Dropdown menu={menu}>
+            <a onClick={(e) => e.preventDefault()}>
+              <Space>
+                {label}
+                <DownOutlined />
+              </Space>
+            </a>
+          </Dropdown>
+        </li>
+        <li>
+          <Link to="/my">마이페이지</Link>
+        </li>
+        <li>
+          <span onClick={onLogout} style={{ cursor: "pointer" }}>
+            로그아웃
+          </span>
+        </li>
+        <li className="flex items-center gap-2">
+          <img src={userIcon} alt="user icon" width={35} />
+          <span>김하나</span>
+        </li>
+      </ul>
+    </div>
+  );
+}
+
+function LoggedOutComponent() {
+  return (
+    <nav className="flex items-center ">
+      <ul className="flex gap-8 items-center ">
+        <li>
+          <Link to="/register">회원가입</Link>
+        </li>
+        <li>
+          <Link to="/login">로그인</Link>
+        </li>
+      </ul>
+    </nav>
+  );
+}
+function Header() {
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const user = localStorage.getItem("loggedUser");
+    setIsLoggedIn(!!user);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("loggedUser");
+    setIsLoggedIn(false);
+    alert("로그아웃 성공!");
+    window.location.href = "/";
+  };
+
   return (
     <div className="w-screen px-6 py-3 flex items-center bg-white border-b">
       <Link to="/">
@@ -57,30 +121,11 @@ function Header() {
             </li>
           </ul>
         </nav>
-        <div>
-          <ul className="flex gap-8 items-center ">
-            <li>
-              <Dropdown menu={menu}>
-                <a onClick={(e) => e.preventDefault()}>
-                  <Space>
-                    {label}
-                    <DownOutlined />
-                  </Space>
-                </a>
-              </Dropdown>
-            </li>
-            <li>
-              <Link to="/my">마이페이지</Link>
-            </li>
-            <li>
-              <span>로그아웃</span>
-            </li>
-            <li className="flex items-center gap-2">
-              <img src={userIcon} alt="user icon" width={35} />
-              <span>김하나</span>
-            </li>
-          </ul>
-        </div>
+        {isLoggedIn ? (
+          <LoggedInComponent onLogout={handleLogout} />
+        ) : (
+          <LoggedOutComponent />
+        )}
       </div>
     </div>
   );
