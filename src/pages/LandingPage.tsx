@@ -29,13 +29,25 @@ const LandingPage: React.FC = () => {
         >
           {/* Carousel Column */}
           <Col span={12} style={{ marginTop: '100px' }}>
+            <img
+              src={notebookUser}
+              alt='notebookUser'
+              width={470}
+              style={{ marginLeft: '100px', marginTop: '15px' }}
+            ></img>
+          </Col>
+
+          {/* Search Input Column */}
+          <Col
+            span={12}
+            style={{ alignContent: 'center', marginLeft:'0px'}}
+          >
             <h1
               style={{
                 color: 'black',
-                fontSize: '48px',
+                fontSize: '40px',
                 lineHeight: '1.2',
                 textAlign: 'left',
-                marginLeft: '100px',
               }}
             >
               <strong>
@@ -46,21 +58,12 @@ const LandingPage: React.FC = () => {
                 <br /> 답변 받아가세요!
               </strong>
             </h1>
-            <img
-              src={notebookUser}
-              alt='notebookUser'
-              width={320}
-              style={{ marginLeft: '100px', marginTop: '15px'}}
-            ></img>
-          </Col>
-
-          {/* Search Input Column */}
-          <Col span={12} style={{ marginTop: '300px' }}>
             <div
               style={{
                 display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
+                justifyContent: 'start',
+                // alignItems: 'center',
+                marginTop: '40px',
               }}
             >
               <input
@@ -76,7 +79,7 @@ const LandingPage: React.FC = () => {
                 placeholder='질문을 입력하세요.'
               ></input>
               <button className='bg-[#008485] w-[120px] h-[55px] rounded-lg p-2 text-white text-[15px] hover:bg-[#006f6f]'>
-                <div className='flex items-center justify-center font-Hana2Medium'>
+                <div className='flex items-center justify-center'>
                   <img
                     src={iconSearch}
                     alt='iconSearch'
