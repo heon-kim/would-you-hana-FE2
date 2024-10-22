@@ -4,10 +4,9 @@ interface User {
   nickname: string;
   name: string;
   gender: string;
-  phoneNum: string;
+  phone: string;
   birthDate: string;
-  address1: string;
-  address2: string;
+  location: string;
   userType: string;
 }
 
