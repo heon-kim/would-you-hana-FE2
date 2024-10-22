@@ -4,6 +4,7 @@ import LandingPage from "./pages/LandingPage";
 import "./App.css";
 import "./styles/fonts.css";
 import Header from "./components/Header";
+import QuestionRegisterPage from "./pages/QuestionRegisterPage";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           {/* Default route: LandingPage will be rendered when visiting '/' */}
           <Route path="/" element={<LandingPage />} />
+          <Route path="/registqna" element={<QuestionRegisterPage/>}/>
           {/* You can add other routes here as needed */}
         </Routes>
       </div>
