@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col, Card, Input } from 'antd';
-import notebookUser from '../assets/notebook_byulsongi.png';
-import iconSearch from '../assets/icon_search.png';
+import notebookUser from '../assets/img/notebook_byulsongi.png';
+import iconSearch from '../assets/img/icon_search.png';
 import '../App.css';
 // import { useSelector, useDispatch } from 'react-redux';
 // import { RootState } from '../store'; // Assuming this is your Redux store's RootState type
@@ -11,8 +11,6 @@ const { Search } = Input;
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
-  //   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-  //   const dispatch = useDispatch();
   //   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   //   const dispatch = useDispatch();
 
@@ -46,7 +44,6 @@ const LandingPage: React.FC = () => {
                 <span style={{ color: 'green' }}> 내 주변의 하나 가족</span>
                 으로부터
                 <br /> 답변 받아가세요!
-              </strong>
               </strong>
             </h1>
             <img
@@ -107,7 +104,6 @@ const LandingPage: React.FC = () => {
               onClick={() => navigate('/feature-a')}
             >
               A입니다.
-              A입니다.
             </Card>
           </Col>
 
@@ -133,12 +129,9 @@ const LandingPage: React.FC = () => {
             </Card>
           </Col>
         </Row>
-        </Row>
       </div>
     </div>
   );
 };
-
-export default LandingPage;
 
 export default LandingPage;

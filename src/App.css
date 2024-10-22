@@ -1,5 +1,5 @@
 * {
-  font-family: 'Hana2Bold',sans-serif;
+  font-family: 'Hana',sans-serif;
 }
 
 /* App.css 또는 특정 CSS 파일 */
@@ -7,6 +7,3 @@
   font-family: 'Hana2Bold', sans-serif;
 }
 
-.regular-font {
-  font-family: 'Hana2Regular', sans-serif;
-}
