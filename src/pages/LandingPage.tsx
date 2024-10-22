@@ -13,6 +13,8 @@ const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   //   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   //   const dispatch = useDispatch();
+  //   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  //   const dispatch = useDispatch();
 
   // Function to handle search
   const onSearch = (value: string) => {
@@ -44,6 +46,7 @@ const LandingPage: React.FC = () => {
                 <span style={{ color: 'green' }}> 내 주변의 하나 가족</span>
                 으로부터
                 <br /> 답변 받아가세요!
+              </strong>
               </strong>
             </h1>
             <img
@@ -104,6 +107,7 @@ const LandingPage: React.FC = () => {
               onClick={() => navigate('/feature-a')}
             >
               A입니다.
+              A입니다.
             </Card>
           </Col>
 
@@ -129,9 +133,12 @@ const LandingPage: React.FC = () => {
             </Card>
           </Col>
         </Row>
+        </Row>
       </div>
     </div>
   );
 };
+
+export default LandingPage;
 
 export default LandingPage;
