@@ -6,3 +6,7 @@
 .ant-input::placeholder {
   font-family: 'Hana2Bold', sans-serif;
 }
+
+.regular-font {
+  font-family: 'Hana2Regular', sans-serif;
+}
