@@ -2,6 +2,8 @@ import React from 'react';
 import { Layout, Row, Col, Avatar, Card } from 'antd';
 import { UserOutlined, HeartOutlined, MessageOutlined, CommentOutlined } from '@ant-design/icons';
 import userIcon from '../assets/img/icon_user.png'; // 사용자 아이콘 경로
+import star4 from '../assets/img/stars/star4.png'; 
+
 
 const { Content } = Layout;
 
@@ -27,15 +29,11 @@ const Profile: React.FC = () => {
             </Card>
         </Col>
         <Col span={12}>
-            <Card 
-            title={<div style={{ textAlign: 'left' }}>이 주의 활약</div>} // 제목을 왼쪽 정렬
-            bordered={false} 
-            style={{ backgroundColor: '#F0F0F0', height: '100%' }}
-            >
-            <div style={{ textAlign: 'center' }}> {/* 본문 내용을 가운데 정렬 */}
-                <p>⭐️ ⭐️ ⭐️ ⭐️ ⭐️ ⭐️ ⭐️</p>
+        <Card title={<div style={{ textAlign: 'left' }}>이 주의 활약</div>} bordered={false} style={{ backgroundColor: '#F0F0F0', height: '100%' }}>
+            <div className="flex justify-center">
+                <img className="h-40" src={star4} alt="star4" />
             </div>
-            </Card>
+        </Card>
         </Col>
         </Row>
 
