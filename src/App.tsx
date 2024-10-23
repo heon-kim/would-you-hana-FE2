@@ -11,7 +11,6 @@ import Posts from './pages/MyPage/Posts';
 // import Auth from "./pages/Auth";
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
-import Interest from './pages/Auth/Interest';
 import './App.css';
 import './styles/fonts.css';
 import Header from './components/Header';
@@ -41,7 +40,6 @@ function App() {
             </Route>
             {/* You can add other routes here as needed */}
             <Route path="/register" element={<Register />} />
-            <Route path="/interest" element={<Interest />} />
             <Route path="/login" element={<Login />} />
             <Route path="/registqna" element={<QuestionRegister />} />
           </Routes>
