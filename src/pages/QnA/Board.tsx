@@ -90,6 +90,16 @@ const Board: React.FC = () => {
         paddingRight: '20%',
       }}
     >
+      <div className='flex justify-end items-center'>
+        <div
+          className='flex space-x-3 items-end text-gray-400'
+          style={{ fontSize: '13px', fontWeight: '300' }}
+        >
+          <button>최근 답변순</button>
+          <button>최신순</button>
+          <button>인기순</button>
+        </div>
+      </div>
       <ul className='divide-y divide-gray-300'>
         {currentPosts.map((post) => (
           <li key={post.id} className='py-5'>
@@ -105,7 +115,7 @@ const Board: React.FC = () => {
                   <span className='text-mainColor'>조회 {post.views}</span> ·
                   도움돼요 {post.likes} · 댓글 {post.comments}
                 </p>
-                
+
                 <div
                   style={{
                     display: 'flex',
@@ -113,8 +123,15 @@ const Board: React.FC = () => {
                     alignItems: 'center',
                   }}
                 >
-                  <img src={iconUser} alt='iconUser' width={25} style={{borderRadius:'50%'}}/>
-                  <label className='ml-2 text-xs text-gray-500'>신제철차장</label>
+                  <img
+                    src={iconUser}
+                    alt='iconUser'
+                    width={25}
+                    style={{ borderRadius: '50%' }}
+                  />
+                  <label className='ml-2 text-xs text-gray-500'>
+                    신제철차장
+                  </label>
                 </div>
               </div>
             </button>
