@@ -16,6 +16,7 @@ import './App.css';
 import './styles/fonts.css';
 import Header from './components/Header';
 import QuestionRegister from './pages/QnA/QuestionRegister';
+import Board from './pages/QnA/Board';
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/interest" element={<Interest />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/qna" element={<Board/>}/>
             <Route path="/qna/regist" element={<QuestionRegister />} />
           </Routes>
         </div>
