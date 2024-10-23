@@ -1,18 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Row, Col, Card, Input } from 'antd';
+import { Row, Col, Card } from 'antd';
 import notebookUser from '../../assets/img/notebook_byulsongi.png';
 import iconSearch from '../../assets/img/icon_search.png';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../hoc/store';
+
 import '../../App.css';
 // import { useSelector, useDispatch } from 'react-redux';
 // import { RootState } from '../store'; // Assuming this is your Redux store's RootState type
 
-const { Search } = Input;
+//const { Search } = Input;
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  //   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-  //   const dispatch = useDispatch();
+
+  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const userRole = useSelector((state: RootState) => state.auth.userRole);
+  const userEmail = useSelector((state: RootState) => state.auth.userEmail);
+
+    // useEffect를 사용하여 상태가 업데이트 될 때마다 실행
+    useEffect(() => {
+      console.log('User Role:', userRole);
+      console.log('User Email:', userEmail);
+      console.log('Is Authenticated:', isAuthenticated);
+  
+      // 여기에서 필요에 따라 추가 로직을 구현할 수 있습니다.
+    }, [userRole, userEmail, isAuthenticated]); // 상태가 변경될 때마다 실행
 
   // Function to handle search
   const onSearch = (value: string) => {

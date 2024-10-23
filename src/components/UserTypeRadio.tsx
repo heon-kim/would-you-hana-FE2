@@ -3,7 +3,7 @@ import React from "react";
 const UserTypeRadio: React.FC<{
   userType: "C" | "B";
   setUserType: React.Dispatch<React.SetStateAction<"C" | "B">>;
-  labels: { custormer: string; banker: string };
+  labels: { customer: string; banker: string };
 }> = ({ userType, setUserType, labels }) => (
   <div className="flex gap-4">
     <label>
@@ -13,7 +13,7 @@ const UserTypeRadio: React.FC<{
         checked={userType === "C"}
         onChange={() => setUserType("C")}
       />
-      {labels.custormer}
+      {labels.customer}
     </label>
     <label>
       <input
