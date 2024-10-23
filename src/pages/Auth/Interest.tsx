@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DownOutlined } from '@ant-design/icons';
 import { message, Button, Select } from 'antd';
-import { findUser, updateUser } from '../utils/userStorage';
+import { findUser, updateUser } from '../../utils/userStorage';
 import { useNavigate } from 'react-router-dom';
 
 const CATEGORIES = [

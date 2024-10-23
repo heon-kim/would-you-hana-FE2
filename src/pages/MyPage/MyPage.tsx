@@ -2,7 +2,7 @@ import React, { useState } from 'react'; // useState 추가
 import { Layout, Progress, Avatar, Menu } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { useNavigate, Outlet } from 'react-router-dom'; // Outlet 추가
-import userIcon from '../assets/img/icon_user.png'; // 사용자 아이콘 경로
+import userIcon from '../../assets/img/icon_user.png'; // 사용자 아이콘 경로
 
 const { Content, Sider } = Layout;
 

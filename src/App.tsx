@@ -1,21 +1,21 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
-import LandingPage from './pages/LandingPage';
-import MyPage from './pages/MyPage';
-import Profile from './pages/Profile';
-import Posts from './pages/Posts';
+import Home from './pages/Home/Home';
+import MyPage from './pages/MyPage/MyPage';
+import Profile from './pages/MyPage/Profile';
+import Posts from './pages/MyPage/Posts';
 // import Likes from "./pages/Likes";
 // import Scrap from "./pages/Scrap";
 // import EditProfile from "./pages/EditProfile";
 // import Auth from "./pages/Auth";
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Interest from './pages/Interest';
+import Login from './pages/Auth/Login';
+import Register from './pages/Auth/Register';
+import Interest from './pages/Auth/Interest';
 import './App.css';
 import './styles/fonts.css';
 import Header from './components/Header';
-import QuestionRegister from './pages/QuestionRegister';
+import QuestionRegister from './pages/QnA/QuestionRegister';
 
 function App() {
   return (
@@ -30,7 +30,7 @@ function App() {
         <div className="h-dvh flex flex-col">
           <Header></Header>
           <Routes>
-            <Route path="/" element={<LandingPage />} />
+            <Route path="/" element={<Home />} />
             <Route path="/my" element={<MyPage />}>
               <Route path="profile" element={<Profile />} />
               <Route path="posts" element={<Posts />} />

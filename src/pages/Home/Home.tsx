@@ -1,15 +1,15 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col, Card, Input } from 'antd';
-import notebookUser from '../assets/img/notebook_byulsongi.png';
-import iconSearch from '../assets/img/icon_search.png';
-import '../App.css';
+import notebookUser from '../../assets/img/notebook_byulsongi.png';
+import iconSearch from '../../assets/img/icon_search.png';
+import '../../App.css';
 // import { useSelector, useDispatch } from 'react-redux';
 // import { RootState } from '../store'; // Assuming this is your Redux store's RootState type
 
 const { Search } = Input;
 
-const LandingPage: React.FC = () => {
+const Home: React.FC = () => {
   const navigate = useNavigate();
   //   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
   //   const dispatch = useDispatch();
@@ -137,4 +137,4 @@ const LandingPage: React.FC = () => {
   );
 };
 
-export default LandingPage;
+export default Home;
