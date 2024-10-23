@@ -1,35 +1,98 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../App.css';
-import { Select } from 'antd';
+import { Select, message, Image, Upload } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import type { UploadFile, UploadProps } from 'antd';
+
+const getBase64 = (file: File) =>
+  new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
 
 const QuestionRegister: React.FC = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [category, setCategory] = useState(''); // 분야 추가
   const maxTitleLength = 30;
   const maxContentLength = 5000;
 
+  // 로컬스토리지에서 파일 리스트 불러오기
+  useEffect(() => {
+    const storedFiles = localStorage.getItem('uploadedImages');
+    if (storedFiles) {
+      setFileList(JSON.parse(storedFiles));
+    }
+  }, []);
+
+  const saveToLocalStorage = (files: UploadFile[]) => {
+    localStorage.setItem('uploadedImages', JSON.stringify(files));
+  };
+
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as File);
+    }
+    setPreviewImage(file.url || (file.preview as string));
+    setPreviewOpen(true);
+  };
+
+  const handleChange: UploadProps['onChange'] = async ({ fileList: newFileList }) => {
+    if (newFileList.length > 5) {
+      message.error('최대 5개의 이미지만 업로드할 수 있습니다.');
+      return;
+    }
+
+    const updatedFileList = await Promise.all(
+      newFileList.map(async (file) => {
+        if (!file.url && !file.preview && file.originFileObj) {
+          file.preview = await getBase64(file.originFileObj as File);
+        }
+        return file;
+      })
+    );
+
+    setFileList(updatedFileList);
+    saveToLocalStorage(updatedFileList); // 로컬스토리지에 저장
+  };
+
+  const handleRegister = () => {
+    if (!category || !title || !content) {
+      message.error('모든 필드를 입력해주세요.');
+      return;
+    }
+
+    // 저장할 데이터 객체 생성
+    const questionData = {
+      category,
+      title,
+      content,
+      images: fileList.map((file) => ({
+        name: file.name,
+        preview: file.preview || '',
+      })),
+    };
+
+    // 로컬스토리지에 저장
+    localStorage.setItem('questionData', JSON.stringify(questionData));
+    message.success('질문이 등록되었습니다!');
+  };
+
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </div>
+  );
+
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'start',
-        width: '60%',
-        alignSelf: 'center',
-      }}
-    >
-      <h1
-        style={{
-          color: 'black',
-          fontSize: '30px',
-          lineHeight: '1.2',
-          textAlign: 'left',
-          marginTop: '20px',
-          marginBottom: '40px',
-          fontWeight: 'bold',
-        }}
-      >
+    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'start', width: '60%', alignSelf: 'center' }}>
+      <h1 style={{ color: 'black', fontSize: '30px', lineHeight: '1.2', textAlign: 'left', marginTop: '20px', marginBottom: '40px', fontWeight: 'bold' }}>
         <p>
           질문을 남겨주시면,
           <br />
@@ -38,137 +101,83 @@ const QuestionRegister: React.FC = () => {
           <br /> 빠른 시일 내에 답해드려요!
         </p>
       </h1>
-      <div style={{ width: '100%' }}>
-        <label className='block mb-2 font-bold'>분야</label>
-        
-        <Select
-          showSearch
-          style={{ width: '100%', height: '60px'}}
-          placeholder="어떤 분야가 궁금한가요?"
-          optionFilterProp="label"
-          filterSort={(optionA, optionB) =>
-            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-          }
-          options={[
-            { value: '1', label: '예금/적금' },
-            { value: '2', label: '이체' },
-            { value: '3', label: '자산관리' },
-            { value: '4', label: '퇴직연금' },
-            { value: '5', label: '전자금융' },
-            { value: '6', label: '대출' },
-          ]}
-        />
 
-        <div
-          style={{
-            marginTop: '10px',
-            backgroundColor: '#F3F5F7',
-            borderRadius: '5px',
-            width: '100%',
-            textAlign: 'start',
-            padding: '20px',
-            fontFamily: 'Hana2Regular',
-            lineHeight: '1.8',
-            fontWeight: '300',
-            color: '#7E8082',
-            fontSize: '15px',
-          }}
-        >
-      
-          <p style={{ color: 'black' }}>이런 질문을 해보세요.</p>
-          <p>· 해외에서 금융인증서를 활용할 수 있나요?</p>
-          <p>· 여권번호로도 금융인증서 발급이 되나요?</p>
-          <p>· 금융인증서의 기한을 연장할 수 있나요?</p>
+      <Select
+        showSearch
+        style={{ width: '100%', height: '60px' }}
+        placeholder='어떤 분야가 궁금한가요?'
+        optionFilterProp='label'
+        onChange={(value) => setCategory(value)} // 분야 상태 설정
+        options={[
+          { value: '예금/적금', label: '예금/적금' },
+          { value: '이체', label: '이체' },
+          { value: '자산관리', label: '자산관리' },
+          { value: '퇴직연금', label: '퇴직연금' },
+          { value: '전자금융', label: '전자금융' },
+          { value: '대출', label: '대출' },
+        ]}
+      />
+
+      <div className='mx-100 mx-auto' style={{ width: '100%', marginTop: '40px' }}>
+        <div className='mb-6'>
+          <label className='block mb-2 font-bold'>제목</label>
+          <div className='relative'>
+            <input
+              type='text'
+              placeholder='궁금한 점을 요약해서 작성해 주세요.'
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              maxLength={maxTitleLength}
+              className='w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:border-gray-500'
+              style={{ fontWeight: '300' }}
+            />
+            <span className='absolute bottom-2 right-3 text-gray-500 text-sm'>{`${title.length}/${maxTitleLength}`}</span>
+          </div>
         </div>
-      </div>
 
-      <div style={{ width: '100%', marginTop: '40px' }}>
-        <div className='mx-100 mx-auto'>
-          <div className='mb-8'>
-            <label className='block mb-2 font-bold'>제목</label>
-            <div className='relative'>
-              <input
-                type='text'
-                placeholder='궁금한 점을 요약해서 작성해 주세요.'
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                maxLength={maxTitleLength}
-                className='w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:border-gray-500'
-                style={{ fontWeight: '300' }}
+        <div className='mb-4'>
+          <label className='block mb-2 font-bold'>내용</label>
+          <div className='relative'>
+            <textarea
+              placeholder={`· 자세하게 적으면 좋은 답변을 받을 수 있어요.\n· 개인정보(본명, 전화 번호 등)를 쓰면 안 돼요.\n· 질문에서 내 이름은 보이지 않아요.`}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              maxLength={maxContentLength}
+              className='w-full border border-gray-300 rounded-md p-3 h-52 resize-none focus:outline-none focus:border-gray-500'
+              style={{ fontWeight: '300' }}
+            />
+            <span className='absolute bottom-2 right-3 text-gray-500 text-sm'>{`${content.length}/${maxContentLength}`}</span>
+          </div>
+        </div>
+
+        <div className='mb-6'>
+          <div className='relative'>
+            <Upload
+              listType='picture-card'
+              fileList={fileList}
+              onPreview={handlePreview}
+              onChange={handleChange}
+            >
+              {fileList.length >= 5 ? null : uploadButton}
+            </Upload>
+            {previewImage && (
+              <Image
+                wrapperStyle={{ display: 'none' }}
+                preview={{
+                  visible: previewOpen,
+                  onVisibleChange: (visible) => setPreviewOpen(visible),
+                  afterOpenChange: (visible) =>
+                    !visible && setPreviewImage(''),
+                }}
+                src={previewImage}
               />
-              <span className='absolute bottom-2 right-3 text-gray-500 text-sm'>{`${title.length}/${maxTitleLength}`}</span>
-            </div>
-          </div>
-
-          <div className='mb-8'>
-            <label className='block mb-2 font-bold'>내용</label>
-            <div className='relative'>
-              <textarea
-                placeholder={`· 자세하게 적으면 좋은 답변을 받을 수 있어요.\n· 개인정보(본명, 전화 번호 등)를 쓰면 안 돼요.\n· 질문에서 내 이름은 보이지 않아요.`}
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                maxLength={maxContentLength}
-                className='w-full border border-gray-300 rounded-md p-3 h-52 resize-none focus:outline-none focus:border-gray-500'
-                style={{ fontWeight: '300' }}
-              />
-              <span className='absolute bottom-2 right-3 text-gray-500 text-sm'>{`${content.length}/${maxContentLength}`}</span>
-            </div>
-          </div>
-
-          <div className='flex items-center mb-8'>
-            <button className='w-12 h-12 border-2 border-dashed border-mainColor rounded-lg flex justify-center items-center text-mainColor text-xl'>
-              +
-            </button>
-            <span className='ml-4 text-gray-500 text-sm'>0/5</span>
+            )}
           </div>
         </div>
-      </div>
-
-      <div
-        style={{
-          marginTop: '10px',
-          backgroundColor: '#F3F5F7',
-          borderRadius: '5px',
-          width: '100%',
-          textAlign: 'start',
-          padding: '20px',
-          fontFamily: 'Hana2Regular',
-          color: '#7E8082',
-          fontSize: '14px',
-          lineHeight: '1.8',
-          fontWeight: '300',
-        }}
-      >
-        <div>
-          <p>이런 경우 답변을 받지 못할 수 있어요.</p>
-          <p>
-            · 개인정보(이름, 전화번호, 주민등록번호, 읍/면/동 이하 상세 주소
-            등)가 있는 경우
-          </p>
-          <p>
-            · 금융과 관련이 없거나 질문의 내용이 충분하지 않아 답변하기 어려운
-            경우
-          </p>
-        </div>
-      </div>
-
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          marginTop: '20px',
-        }}
-      >
-        <input type='checkbox' id='agree' style={{ marginRight: '10px' }} />
-        <label
-          htmlFor='agree'
-          style={{ fontFamily: 'Hana2Regular', fontSize: '14px' }}
-        >
-          개인정보 처리 방침에 동의합니다.
-        </label>
       </div>
 
       <button
+        onClick={handleRegister} // 등록 버튼 클릭 시 handleRegister 호출
         style={{
           width: '100%',
           height: '50px',
