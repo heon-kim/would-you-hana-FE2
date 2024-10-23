@@ -1,4 +1,5 @@
 import React from 'react';
+import iconUser from '../../assets/img/icon_user_board.jpg';
 
 interface Post {
   id: number;
@@ -70,52 +71,53 @@ const Board: React.FC = () => {
       }}
     >
       <header className='flex justify-end items-center'>
-        <div className='flex space-x-3 items-end text-gray-400' style={{ fontSize: '13px', fontWeight:'300'}}>
-          <button>
-            최근 답변순
-          </button>
+        <div
+          className='flex space-x-3 items-end text-gray-400'
+          style={{ fontSize: '13px', fontWeight: '300' }}
+        >
+          <button>최근 답변순</button>
           <button>최신순</button>
           <button>인기순</button>
         </div>
       </header>
       <ul className='divide-y divide-gray-300'>
         {posts.map((post) => (
-          <li key={post.id} className='py-6'>
+          <li key={post.id} className='py-5'>
             <button className='text-start'>
-            <div>
-              <p className=' text-gray-500 mb-2' style={{fontSize:'15px'}}>{post.category}</p>
-              <h3 className='text-lg font-semibold text-gray-800 mb-2'>
-                {post.title}
-              </h3>
-              <p className='text-gray-500'  style={{fontSize:'12px'}}>
-                <span className='text-mainColor'>조회 {post.views}</span> ·
-                도달률 {post.reach} · {post.time}
-              </p>
-            </div>
+              <div>
+                <p className=' text-gray-500 mb-2' style={{ fontSize: '15px' }}>
+                  {post.category}
+                </p>
+                <h3 className='text-lg font-semibold text-gray-800 mb-2'>
+                  {post.title}
+                </h3>
+                <p className='text-gray-500 mb-4' style={{ fontSize: '12px' }}>
+                  <span className='text-mainColor'>조회 {post.views}</span> ·
+                  도달률 {post.reach} · {post.time}
+                </p>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}
+                >
+                  <img src={iconUser} alt='iconUser' width={25} style={{borderRadius:'50%'}}/>
+                  <label className='ml-2 text-xs text-gray-500'>신제철차장</label>
+                </div>
+              </div>
             </button>
           </li>
         ))}
       </ul>
       <footer className='mt-6 flex justify-center space-x-5'>
-        <button className='bg-white rounded'>
-          1
-        </button>
-        <button className='bg-white rounded'>
-          2
-        </button>
-        <button className='bg-white rounded'>
-          3
-        </button>
-        <button className='bg-white rounded'>
-          4
-        </button>
-        <button className='bg-white rounded'>
-          5
-        </button>
+        <button className='bg-white rounded'>1</button>
+        <button className='bg-white rounded'>2</button>
+        <button className='bg-white rounded'>3</button>
+        <button className='bg-white rounded'>4</button>
+        <button className='bg-white rounded'>5</button>
         <p> ··· </p>
-        <button className='bg-white rounded'>
-          >
-        </button>
+        <button className='bg-white rounded'>&gt;</button>
         {/* 페이지 버튼 추가 가능 */}
       </footer>
     </div>
