@@ -464,6 +464,7 @@ const Register: React.FC = () => {
             user={user}
             setUser={setUser}
             setCompleteInputForm={setCompleteInputForm}
+
           />
         )}
       </div>
