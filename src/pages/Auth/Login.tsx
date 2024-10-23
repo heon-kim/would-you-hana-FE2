@@ -4,12 +4,16 @@ import InputField from '../../components/InputField';
 import UserTypeRadio from '../../components/UserTypeRadio';
 import { findUser } from '../../utils/userStorage';
 import { message } from 'antd';
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from '../../hoc/actions';
+import { setAuthHeader, setUserEmail, setUserRole } from '../../hoc/request';
 
 const Login: React.FC = () => {
   const [userType, setUserType] = useState<'C' | 'B'>('C'); // 일반회원(customer: C) | 행원(banker: B)
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const loggedUser = localStorage.getItem('loggedUser');
@@ -29,6 +33,13 @@ const Login: React.FC = () => {
 
     if (password === storedUser.password) {
       localStorage.setItem('loggedUser', email);
+      const token: string = 'generatedAuthToken'; // string 타입 지정
+      const role: string = userType; // string 타입 지정
+      console.log('Dispatching loginSuccess with:', { token, role, email });
+      dispatch(loginSuccess(token, role,email)); // Dispatch login success action with role
+      setAuthHeader(token);
+      setUserRole(role);
+      setUserEmail(email);
       message.success('로그인 성공!');
       navigate('/');
     } else {
@@ -43,7 +54,7 @@ const Login: React.FC = () => {
         <UserTypeRadio
           userType={userType}
           setUserType={setUserType}
-          labels={{ custormer: '일반 회원', banker: '행원' }}
+          labels={{ customer: '일반 회원', banker: '행원' }}
         />
         <form onSubmit={handleLogin} className="flex flex-col gap-3">
           <InputField
