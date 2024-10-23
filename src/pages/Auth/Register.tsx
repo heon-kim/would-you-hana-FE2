@@ -5,7 +5,6 @@ import { saveUser, findUser, findNickname } from '../../utils/userStorage';
 import { message, Button, Select } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 
 interface User {
   email: string;
@@ -464,7 +463,6 @@ const Register: React.FC = () => {
             user={user}
             setUser={setUser}
             setCompleteInputForm={setCompleteInputForm}
-
           />
         )}
       </div>

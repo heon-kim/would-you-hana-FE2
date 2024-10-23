@@ -2,11 +2,15 @@ import { Link, useNavigate } from 'react-router-dom'; // Import necessary routin
 import { useState, useEffect } from 'react';
 import logo from '../assets/img/logo.png';
 import userIcon from '../assets/img/icon_user.png';
-
+import { useSelector } from 'react-redux';
+import { RootState } from '../hoc/store';
+import { useDispatch } from 'react-redux';
+import { logout } from '../hoc/actions';
 import { DownOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Dropdown, Space, message } from 'antd';
 import { findUser } from '../utils/userStorage';
+import { setAuthHeader, setUserRole, setUserEmail } from '../hoc/request';
 
 const items: MenuProps['items'] = [
   {
@@ -99,14 +103,23 @@ function LoggedOutComponent() {
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
+
   useEffect(() => {
-    const user = localStorage.getItem('loggedUser');
-    setIsLoggedIn(!!user);
-  }, []);
+    setIsLoggedIn(isAuthenticated);
+  }, [isAuthenticated]);
 
   const handleLogout = () => {
     localStorage.removeItem('loggedUser');
+    setUserRole(null);
+    setUserEmail(null);
+    setAuthHeader(null);
     setIsLoggedIn(false);
+    dispatch(logout()); // Dispatch login success action with role
     message.success('로그아웃 성공!');
     navigate('/');
   };
