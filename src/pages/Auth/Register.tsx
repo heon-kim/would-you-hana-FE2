@@ -206,7 +206,7 @@ const Register: React.FC = () => {
           <UserTypeRadio
             userType={userType}
             setUserType={setUserType}
-            labels={{ custormer: '일반 회원 가입', banker: '행원 가입' }}
+            labels={{ customer: '일반 회원 가입', banker: '행원 가입' }}
           />
           <NicknameInput
             nickname={nickname}
