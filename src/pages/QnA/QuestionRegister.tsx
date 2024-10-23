@@ -196,7 +196,7 @@ const QuestionRegister: React.FC = () => {
           <div className='relative'>
             <Upload
               //서버로 이미지 업로드 
-              // action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
+              action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
               listType='picture-card'
               fileList={fileList}
               onPreview={handlePreview}
