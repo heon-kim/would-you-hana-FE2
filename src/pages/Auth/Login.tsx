@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import InputField from '../components/InputField';
-import UserTypeRadio from '../components/UserTypeRadio';
-import { findUser } from '../utils/userStorage';
+import InputField from '../../components/InputField';
+import UserTypeRadio from '../../components/UserTypeRadio';
+import { findUser } from '../../utils/userStorage';
 import { message } from 'antd';
 
 const Login: React.FC = () => {

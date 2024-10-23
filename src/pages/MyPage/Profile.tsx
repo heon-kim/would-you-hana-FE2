@@ -1,8 +1,8 @@
 import React from 'react';
 import { Layout, Row, Col, Avatar, Card } from 'antd';
 import { UserOutlined, HeartOutlined, MessageOutlined, CommentOutlined } from '@ant-design/icons';
-import userIcon from '../assets/img/icon_user.png'; // 사용자 아이콘 경로
-import star4 from '../assets/img/stars/star4.png'; 
+import userIcon from '../../assets/img/icon_user.png'; // 사용자 아이콘 경로
+import star4 from '../../assets/img/stars/star4.png'; 
 
 
 const { Content } = Layout;

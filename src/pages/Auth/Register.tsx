@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import InputField from '../components/InputField';
-import UserTypeRadio from '../components/UserTypeRadio';
-import { saveUser, findUser, findNickname } from '../utils/userStorage';
+import InputField from '../../components/InputField';
+import UserTypeRadio from '../../components/UserTypeRadio';
+import { saveUser, findUser, findNickname } from '../../utils/userStorage';
 import { message } from 'antd';
 
 const EmailInput: React.FC<{
