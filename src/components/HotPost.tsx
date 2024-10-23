@@ -23,7 +23,7 @@ const HotPost: React.FC<HotPostProps> = ({ rank, title }) => {
     return (
         <div style={styles.hotPost}>
             <div style={styles.rank}>{rank}</div>
-            <div style={styles.title}>{truncateTitle(title, 20)}</div> {/* 30자 제한 적용 */}
+            <div style={styles.title}>{truncateTitle(title, 50)}</div> {/* 30자 제한 적용 */}
         </div>
     );
 };
@@ -49,7 +49,7 @@ const styles: { [key: string]: React.CSSProperties } = {
         backgroundColor: '#f4fef6',
         padding: '20px',
         borderRadius: '8px',
-        width: '600px',
+        width: '100%',
     },
     mainTitle: {
         fontSize: '18px',
@@ -85,7 +85,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     rank: {
         fontSize: '16px',
         fontWeight: 'bold',
-        color: '#0066cc',
+        color: '#008485',
         marginRight: '10px',
     },
     title: {
