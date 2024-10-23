@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../App.css';
+import { Select } from 'antd';
 
 const QuestionRegister: React.FC = () => {
   const [title, setTitle] = useState('');
@@ -37,29 +38,27 @@ const QuestionRegister: React.FC = () => {
           <br /> 빠른 시일 내에 답해드려요!
         </p>
       </h1>
-
       <div style={{ width: '100%' }}>
-        <p style={{ fontWeight: 'bold' }}>분야</p>
-        <button
-          style={{
-            borderRadius: '5px',
-            width: '100%',
-            borderWidth: '1px',
-            height: '60px',
-            marginTop: '10px',
-            fontWeight: 'bold',
-            color: '#008485',
-            borderColor: '#008485',
-            backgroundColor: 'white',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: '0 20px'
-          }}
-        >
-          어떤 분야가 궁금한가요?
-          <span style={{ transform: 'rotate(0deg)'}}>▾</span>
-        </button>
+        <label className='block mb-2 font-bold'>분야</label>
+        
+        <Select
+          showSearch
+          style={{ width: '100%', height: '60px'}}
+          placeholder="어떤 분야가 궁금한가요?"
+          optionFilterProp="label"
+          filterSort={(optionA, optionB) =>
+            (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+          }
+          options={[
+            { value: '1', label: '예금/적금' },
+            { value: '2', label: '이체' },
+            { value: '3', label: '자산관리' },
+            { value: '4', label: '퇴직연금' },
+            { value: '5', label: '전자금융' },
+            { value: '6', label: '대출' },
+          ]}
+        />
+
         <div
           style={{
             marginTop: '10px',
@@ -75,6 +74,7 @@ const QuestionRegister: React.FC = () => {
             fontSize: '15px',
           }}
         >
+      
           <p style={{ color: 'black' }}>이런 질문을 해보세요.</p>
           <p>· 해외에서 금융인증서를 활용할 수 있나요?</p>
           <p>· 여권번호로도 금융인증서 발급이 되나요?</p>
