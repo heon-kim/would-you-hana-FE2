@@ -1,27 +1,28 @@
-import { Link } from "react-router-dom"; // Import necessary routing components
-import { useState, useEffect } from "react";
-import logo from "../assets/img/logo.png";
-import userIcon from "../assets/img/icon_user.png";
+import { Link, useNavigate } from 'react-router-dom'; // Import necessary routing components
+import { useState, useEffect } from 'react';
+import logo from '../assets/img/logo.png';
+import userIcon from '../assets/img/icon_user.png';
 
-import { DownOutlined } from "@ant-design/icons";
-import type { MenuProps } from "antd";
-import { Dropdown, Space } from "antd";
+import { DownOutlined } from '@ant-design/icons';
+import type { MenuProps } from 'antd';
+import { Dropdown, Space, message } from 'antd';
+import { findUser } from '../utils/userStorage';
 
-const items: MenuProps["items"] = [
+const items: MenuProps['items'] = [
   {
-    label: "서울시 성동구",
-    key: "0",
+    label: '서울시 성동구',
+    key: '0',
   },
   {
-    label: "서울시 동작구",
-    key: "1",
+    label: '서울시 동작구',
+    key: '1',
   },
   {
-    type: "divider",
+    type: 'divider',
   },
   {
     label: <a href="/location">내 동네 설정</a>,
-    key: "3",
+    key: '3',
   },
 ];
 
@@ -30,11 +31,16 @@ interface LoggedInComponentProps {
 }
 
 function LoggedInComponent({ onLogout }: LoggedInComponentProps) {
-  const [label, setLabel] = useState<string>("내 동네 설정");
+  const [label, setLabel] = useState<string>('내 동네 설정');
+  const loggedUser = localStorage.getItem('loggedUser');
+  let user;
+  if (loggedUser) {
+    user = findUser(loggedUser);
+  }
 
-  const handleMenuClick: MenuProps["onClick"] = (e) => {
+  const handleMenuClick: MenuProps['onClick'] = (e) => {
     const selectedItem = items?.find((item) => item?.key === e.key);
-    if (selectedItem && "label" in selectedItem) {
+    if (selectedItem && 'label' in selectedItem) {
       setLabel(selectedItem.label as string);
     }
   };
@@ -42,7 +48,7 @@ function LoggedInComponent({ onLogout }: LoggedInComponentProps) {
   const menu: MenuProps = {
     items: items?.map((item) => ({
       ...item,
-      onClick: item && "label" in item ? handleMenuClick : undefined,
+      onClick: item && 'label' in item ? handleMenuClick : undefined,
     })),
   };
   return (
@@ -62,13 +68,13 @@ function LoggedInComponent({ onLogout }: LoggedInComponentProps) {
           <Link to="/my/profile">마이페이지</Link>
         </li>
         <li>
-          <span onClick={onLogout} style={{ cursor: "pointer" }}>
+          <span onClick={onLogout} style={{ cursor: 'pointer' }}>
             로그아웃
           </span>
         </li>
         <li className="flex items-center gap-2">
           <img src={userIcon} alt="user icon" width={35} />
-          <span>김하나</span>
+          <span>{user?.name}</span>
         </li>
       </ul>
     </div>
@@ -89,19 +95,20 @@ function LoggedOutComponent() {
     </nav>
   );
 }
+
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
-    const user = localStorage.getItem("loggedUser");
+    const user = localStorage.getItem('loggedUser');
     setIsLoggedIn(!!user);
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("loggedUser");
+    localStorage.removeItem('loggedUser');
     setIsLoggedIn(false);
-    alert("로그아웃 성공!");
-    window.location.href = "/";
+    message.success('로그아웃 성공!');
+    navigate('/');
   };
 
   return (
@@ -110,7 +117,7 @@ function Header() {
         <img src={logo} alt="logo" width={130} />
       </Link>
 
-      <div className="w-full flex justify-between font-extrabold">
+      <div className="w-full flex justify-between">
         <nav className="flex items-center ">
           <ul className="flex gap-8 items-center ">
             <li>
