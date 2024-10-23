@@ -43,7 +43,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/interest" element={<Interest />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/registqna" element={<QuestionRegister />} />
+            <Route path="/qna/regist" element={<QuestionRegister />} />
           </Routes>
         </div>
       </Router>

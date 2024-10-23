@@ -21,6 +21,12 @@ const QuestionRegister: React.FC = () => {
   const [category, setCategory] = useState(''); // 분야 추가
   const maxTitleLength = 30;
   const maxContentLength = 5000;
+  const [isChecked, setIsChecked] = useState(false); // 체크 상태 관리
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsChecked(e.target.checked); // 체크 상태 업데이트
+  };
+
 
   // 로컬스토리지에서 파일 리스트 불러오기
   useEffect(() => {
@@ -42,7 +48,9 @@ const QuestionRegister: React.FC = () => {
     setPreviewOpen(true);
   };
 
-  const handleChange: UploadProps['onChange'] = async ({ fileList: newFileList }) => {
+  const handleChange: UploadProps['onChange'] = async ({
+    fileList: newFileList,
+  }) => {
     if (newFileList.length > 5) {
       message.error('최대 5개의 이미지만 업로드할 수 있습니다.');
       return;
@@ -64,6 +72,11 @@ const QuestionRegister: React.FC = () => {
   const handleRegister = () => {
     if (!category || !title || !content) {
       message.error('모든 필드를 입력해주세요.');
+      return;
+    }
+
+    else if (!isChecked) {
+      message.error('이용약관에 동의해야 질문을 등록할 수 있습니다.'); // 체크박스 체크 여부 확인
       return;
     }
 
@@ -91,8 +104,27 @@ const QuestionRegister: React.FC = () => {
   );
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'start', width: '60%', alignSelf: 'center' }}>
-      <h1 style={{ color: 'black', fontSize: '30px', lineHeight: '1.2', textAlign: 'left', marginTop: '20px', marginBottom: '40px', fontWeight: 'bold' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'start',
+        width: '60%',
+        alignSelf: 'center',
+      }}
+    >
+      <h1
+        style={{
+          color: 'black',
+          fontSize: '30px',
+          lineHeight: '1.2',
+          textAlign: 'left',
+          marginTop: '20px',
+          marginBottom: '40px',
+          fontWeight: 'bold',
+        }}
+      >
         <p>
           질문을 남겨주시면,
           <br />
@@ -109,16 +141,26 @@ const QuestionRegister: React.FC = () => {
         optionFilterProp='label'
         onChange={(value) => setCategory(value)} // 분야 상태 설정
         options={[
-          { value: '예금/적금', label: '예금/적금' },
-          { value: '이체', label: '이체' },
-          { value: '자산관리', label: '자산관리' },
-          { value: '퇴직연금', label: '퇴직연금' },
-          { value: '전자금융', label: '전자금융' },
-          { value: '대출', label: '대출' },
+          { value: '1', label: '예금/적금' },
+          { value: '2', label: '이체' },
+          { value: '3', label: '자산관리' },
+          { value: '4', label: '퇴직연금' },
+          { value: '5', label: '펀드' },
+          { value: '6', label: '신탁' },
+          { value: '7', label: 'ISA' },
+          { value: '8', label: '전자금융' },
+          { value: '9', label: '대출' },
+          { value: '10', label: '외환' },
+          { value: '11', label: '보험' },
+          { value: '12', label: '카드' },
+          { value: '13', label: '기타' },
         ]}
       />
 
-      <div className='mx-100 mx-auto' style={{ width: '100%', marginTop: '40px' }}>
+      <div
+        className='mx-100 mx-auto'
+        style={{ width: '100%', marginTop: '40px' }}
+      >
         <div className='mb-6'>
           <label className='block mb-2 font-bold'>제목</label>
           <div className='relative'>
@@ -153,6 +195,8 @@ const QuestionRegister: React.FC = () => {
         <div className='mb-6'>
           <div className='relative'>
             <Upload
+              //서버로 이미지 업로드 
+              // action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
               listType='picture-card'
               fileList={fileList}
               onPreview={handlePreview}
@@ -166,8 +210,7 @@ const QuestionRegister: React.FC = () => {
                 preview={{
                   visible: previewOpen,
                   onVisibleChange: (visible) => setPreviewOpen(visible),
-                  afterOpenChange: (visible) =>
-                    !visible && setPreviewImage(''),
+                  afterOpenChange: (visible) => !visible && setPreviewImage(''),
                 }}
                 src={previewImage}
               />
@@ -176,8 +219,24 @@ const QuestionRegister: React.FC = () => {
         </div>
       </div>
 
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          marginTop: '20px',
+        }}
+      >
+        <input type='checkbox' id='agree' style={{ marginRight: '10px' }} checked={isChecked} onChange={handleCheckboxChange} />
+        <label
+          htmlFor='agree'
+          style={{ fontFamily: 'Hana2Regular', fontSize: '14px' }}
+        >
+          개인정보 처리 방침에 동의합니다.
+        </label>
+      </div>
+
       <button
-        onClick={handleRegister} // 등록 버튼 클릭 시 handleRegister 호출
+        onClick={handleRegister}
         style={{
           width: '100%',
           height: '50px',
