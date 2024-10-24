@@ -69,16 +69,15 @@ function LoggedInComponent({ onLogout }: LoggedInComponentProps) {
           </Dropdown>
         </li>
         <li>
-          <Link to="/my/profile">마이페이지</Link>
-        </li>
-        <li>
           <span onClick={onLogout} style={{ cursor: 'pointer' }}>
             로그아웃
           </span>
         </li>
-        <li className="flex items-center gap-2">
-          <img src={userIcon} alt="user icon" width={35} />
-          <span>{user?.name}</span>
+        <li>
+          <Link to="/my/profile" className="flex items-center gap-2">
+            <img src={userIcon} alt="user icon" width={35} />
+            <span>{user?.nickname}</span>
+          </Link>
         </li>
       </ul>
     </div>
