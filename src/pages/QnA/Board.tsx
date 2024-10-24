@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Pagination } from 'antd';
 import iconUser from '../../assets/img/icon_user_board.jpg';
 import HotPosts from '../../components/HotPost';
+import Category from '../../components/Category';
 interface Post {
   id: number;
   title: string;
@@ -86,21 +87,22 @@ const Board: React.FC = () => {
     <div
       style={{
         width: '100%',
-        paddingLeft: '20%',
-        paddingRight: '20%',
+        paddingLeft: '15%',
+        paddingRight: '15%',
+        marginTop: '20px',
       }}
     >
-
-    <div
-      style={{
+      <div style={{ marginBottom: '20px' }}>
+        <Category />
+      </div>
+      <div
+        style={{
           marginBottom: '20px', // HotPosts와 아래 내용 사이 간격 조절
-          padding: '10px', // 컴포넌트 외부와의 여백 추가
-          border: '1px solid #e0e0e0', // 컴포넌트 외부 스타일을 위한 테두리
         }}
       >
-      <HotPosts />
-    </div>
-    <div className='flex justify-end items-center'>
+        <HotPosts />
+      </div>
+      <div className='flex justify-end items-center'>
         <div
           className='flex space-x-3 items-end text-gray-400'
           style={{ fontSize: '13px', fontWeight: '300' }}
