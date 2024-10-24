@@ -14,6 +14,7 @@ import Register from './pages/Auth/Register';
 import './App.css';
 import './styles/fonts.css';
 import Header from './components/Header';
+import QuestionDetail from './pages/QnA/QuestionDetail';
 import QuestionRegister from './pages/QnA/QuestionRegister';
 import Board from './pages/QnA/Board';
 
@@ -42,8 +43,12 @@ function App() {
             {/* You can add other routes here as needed */}
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/qna" element={<Board/>}/>
+            <Route path="/qna" element={<Board />} />
             <Route path="/qna/regist" element={<QuestionRegister />} />
+            <Route
+              path="/qna/detail/:questionId"
+              element={<QuestionDetail />}
+            />
           </Routes>
         </div>
       </Router>

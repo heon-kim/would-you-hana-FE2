@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // useHistory import 추가
 import { Pagination, Input } from 'antd';
 import iconUser from '../../assets/img/icon_user_board.jpg';
 import HotPosts from '../../components/HotPost';
@@ -77,6 +78,7 @@ const Board: React.FC = () => {
   const [searchText, setSearchText] = useState('');
   const [isSearchActive, setIsSearchActive] = useState(false); // 검색 버튼 활성화 상태
   const postsPerPage = 5;
+  const navigate = useNavigate();
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
@@ -114,6 +116,10 @@ const Board: React.FC = () => {
     setIsSearchActive(true);
   };
 
+  const handlePostClick = (postId: number) => {
+    navigate(`/qna/detail/${postId}`); // 특정 포스트 ID로 페이지 이동
+  };
+
   return (
     <div
       style={{
@@ -143,20 +149,20 @@ const Board: React.FC = () => {
         }}
       >
         <Input.Search
-          placeholder='검색어를 입력하세요.'
+          placeholder="검색어를 입력하세요."
           allowClear
           onSearch={onSearch}
           onChange={(e) => setSearchText(e.target.value)}
           value={searchText}
           enterButton
-          size='large'
+          size="large"
           style={{ width: '80%' }}
         />
       </div>
 
-      <div className='flex justify-end items-center'>
+      <div className="flex justify-end items-center">
         <div
-          className='flex space-x-3 items-end'
+          className="flex space-x-3 items-end"
           style={{ fontSize: '13px', fontWeight: '300' }}
         >
           {['최근 답변순', '최신순', '인기순'].map((order) => (
@@ -174,19 +180,23 @@ const Board: React.FC = () => {
         </div>
       </div>
 
-      <ul className='divide-y divide-gray-300'>
+      <ul className="divide-y divide-gray-300">
         {currentPosts.map((post) => (
-          <li key={post.id} className='py-5'>
-            <button className='text-start'>
+          <li
+            key={post.id}
+            className="py-5"
+            onClick={() => handlePostClick(post.id)}
+          >
+            <button className="text-start">
               <div>
-                <p className='text-gray-500 mb-2' style={{ fontSize: '15px' }}>
+                <p className="text-gray-500 mb-2" style={{ fontSize: '15px' }}>
                   {post.category}
                 </p>
-                <h3 className='text-lg font-semibold text-gray-800 mb-2'>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
                   {post.title}
                 </h3>
-                <p className='text-gray-500 mb-4' style={{ fontSize: '12px' }}>
-                  <span className='text-mainColor'>조회 {post.views}</span> ·
+                <p className="text-gray-500 mb-4" style={{ fontSize: '12px' }}>
+                  <span className="text-mainColor">조회 {post.views}</span> ·
                   도움돼요 {post.likes} · 댓글 {post.comments}
                 </p>
 
@@ -199,11 +209,11 @@ const Board: React.FC = () => {
                 >
                   <img
                     src={iconUser}
-                    alt='iconUser'
+                    alt="iconUser"
                     width={25}
                     style={{ borderRadius: '50%' }}
                   />
-                  <label className='ml-2 text-xs text-gray-500'>
+                  <label className="ml-2 text-xs text-gray-500">
                     신제철차장
                   </label>
                 </div>
@@ -213,7 +223,7 @@ const Board: React.FC = () => {
         ))}
       </ul>
 
-      <footer className='mt-6 flex justify-center'>
+      <footer className="mt-6 flex justify-center">
         <Pagination
           current={currentPage}
           total={filteredAndSearchedPosts.length}
