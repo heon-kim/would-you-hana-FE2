@@ -16,6 +16,7 @@ import './styles/fonts.css';
 import Header from './components/Header';
 import QuestionRegister from './pages/QnA/QuestionRegister';
 import Board from './pages/QnA/Board';
+import Category from './components/Category';
 
 function App() {
   return (
