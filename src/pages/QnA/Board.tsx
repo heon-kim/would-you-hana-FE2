@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Pagination } from 'antd';
+import { Pagination, Input } from 'antd';
 import iconUser from '../../assets/img/icon_user_board.jpg';
 import HotPosts from '../../components/HotPost';
 import Category from '../../components/Category';
@@ -72,27 +72,46 @@ const posts: Post[] = [
 
 const Board: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedCategory, setSelectedCategory] = useState<string>('전체'); // 선택된 카테고리 상태
-  const [sortOrder, setSortOrder] = useState<string>('최근 답변순'); // 선택된 정렬 순서 상태
-  const postsPerPage = 5; // 페이지당 표시할 게시물 수
+  const [selectedCategory, setSelectedCategory] = useState<string>('전체');
+  const [sortOrder, setSortOrder] = useState<string>('최근 답변순');
+  const [searchText, setSearchText] = useState('');
+  const [isSearchActive, setIsSearchActive] = useState(false); // 검색 버튼 활성화 상태
+  const postsPerPage = 5;
 
-   // 선택된 카테고리에 따라 게시물 필터링
-   const filteredPosts = selectedCategory === '전체'
-   ? posts
-   : posts.filter((post) => post.category === selectedCategory);
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    setSearchText(''); // 카테고리 변경 시 검색어 초기화
+    setCurrentPage(1); // 카테고리 변경 시 첫 페이지로 이동
+    setIsSearchActive(false); // 검색 비활성화
+  };
 
-  // 현재 페이지에 해당하는 게시물 계산
+  const filteredAndSearchedPosts = posts.filter((post) => {
+    const categoryMatches =
+      selectedCategory === '전체' || post.category === selectedCategory;
+    const searchMatches = post.title
+      .toLowerCase()
+      .includes(searchText.toLowerCase());
+    return categoryMatches && (isSearchActive ? searchMatches : true);
+  });
+
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost); 
+  const currentPosts = filteredAndSearchedPosts.slice(
+    indexOfFirstPost,
+    indexOfLastPost
+  );
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
   const handleSortChange = (order: string) => {
-    setSortOrder(order); // 선택된 정렬 순서 업데이트
-    // 여기서 정렬 로직을 추가할 수 있습니다.
+    setSortOrder(order);
+  };
+
+  const onSearch = (value: string) => {
+    setSearchText(value);
+    setIsSearchActive(true);
   };
 
   return (
@@ -110,17 +129,33 @@ const Board: React.FC = () => {
         금융 Q&A
       </h1>
       <div style={{ marginBottom: '25px' }}>
-        <Category onSelectCategory={setSelectedCategory} /> {/* 카테고리 선택 콜백 전달 */}
+        <Category onSelectCategory={handleCategoryChange} />{' '}
       </div>
+      <div style={{ marginBottom: '25px' }}>
+        <HotPosts />
+      </div>
+
       <div
         style={{
           marginBottom: '25px',
+          display: 'flex',
+          justifyContent: 'center',
         }}
       >
-        <HotPosts />
+        <Input.Search
+          placeholder='검색어를 입력하세요.'
+          allowClear
+          onSearch={onSearch}
+          onChange={(e) => setSearchText(e.target.value)}
+          value={searchText}
+          enterButton
+          size='large'
+          style={{ width: '80%' }}
+        />
       </div>
+
       <div className='flex justify-end items-center'>
-      <div
+        <div
           className='flex space-x-3 items-end'
           style={{ fontSize: '13px', fontWeight: '300' }}
         >
@@ -130,7 +165,7 @@ const Board: React.FC = () => {
               onClick={() => handleSortChange(order)}
               style={{
                 fontWeight: sortOrder === order ? 'bold' : 'normal',
-                color: sortOrder === order ? 'black':'gray'
+                color: sortOrder === order ? 'black' : 'gray',
               }}
             >
               {order}
@@ -138,6 +173,7 @@ const Board: React.FC = () => {
           ))}
         </div>
       </div>
+
       <ul className='divide-y divide-gray-300'>
         {currentPosts.map((post) => (
           <li key={post.id} className='py-5'>
@@ -180,7 +216,7 @@ const Board: React.FC = () => {
       <footer className='mt-6 flex justify-center'>
         <Pagination
           current={currentPage}
-          total={filteredPosts.length} 
+          total={filteredAndSearchedPosts.length}
           pageSize={postsPerPage}
           onChange={handlePageChange}
         />
