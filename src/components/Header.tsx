@@ -78,7 +78,7 @@ function LoggedInComponent({ onLogout }: LoggedInComponentProps) {
         </li>
         <li className="flex items-center gap-2">
           <img src={userIcon} alt="user icon" width={35} />
-          <span>{user?.name}</span>
+          <span>{user?.nickname}</span>
         </li>
       </ul>
     </div>
