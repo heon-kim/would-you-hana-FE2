@@ -35,7 +35,7 @@ const HotPosts: React.FC = () => {
             <div style={styles.date}>10.16. (수) 실시간 기준</div>
             <div style={styles.gridContainer}>
                 {Posts.map((post) => (
-                    <div style={styles.postCard} key={post.rank}>
+                    <div style={styles.postCard} key={post.rank} >
                         <HotPost rank={post.rank} title={post.title} />
                     </div>
                 ))}
@@ -63,23 +63,28 @@ const styles: { [key: string]: React.CSSProperties } = {
     },
     gridContainer: {
         display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
+        gridTemplateColumns: 'repeat(2, 1fr)', 
+        gridTemplateRows: 'repeat(3, 1fr)',
+        gridAutoFlow: 'column', 
         gap: '20px',
+        alignContent: 'center',
     },
     postCard: {
         backgroundColor: '#ffffff',
-        padding: '5px',
+        padding: '10px',
         borderRadius: '8px',
         minHeight: '50px',
         display: 'flex',
+        flexDirection: 'column',  // 수직 정렬
         alignItems: 'center',
-        border: '1px solid #D3D3D3'
+        justifyContent: 'center', // 중앙 정렬
+        border: '1px solid #D3D3D3',
     },
     hotPost: {
         display: 'flex',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        marginBottom: '10px',
+        flexDirection: 'row',  // 수직 정렬 추가
+        justifyContent: 'center', // 중앙 정렬 추가
+        alignItems: 'center',     // 중앙 정렬 추가
         width: '100%',
     },
     rank: {
