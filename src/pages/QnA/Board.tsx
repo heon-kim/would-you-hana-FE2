@@ -73,6 +73,7 @@ const posts: Post[] = [
 const Board: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState<string>('전체'); // 선택된 카테고리 상태
+  const [sortOrder, setSortOrder] = useState<string>('최근 답변순'); // 선택된 정렬 순서 상태
   const postsPerPage = 5; // 페이지당 표시할 게시물 수
 
    // 선택된 카테고리에 따라 게시물 필터링
@@ -89,6 +90,11 @@ const Board: React.FC = () => {
     setCurrentPage(page);
   };
 
+  const handleSortChange = (order: string) => {
+    setSortOrder(order); // 선택된 정렬 순서 업데이트
+    // 여기서 정렬 로직을 추가할 수 있습니다.
+  };
+
   return (
     <div
       style={{
@@ -98,24 +104,38 @@ const Board: React.FC = () => {
         marginTop: '20px',
       }}
     >
-      <div style={{ marginBottom: '20px' }}>
+      <h1
+        style={{ fontSize: '23px', fontWeight: 'bold', marginBottom: '25px' }}
+      >
+        금융 Q&A
+      </h1>
+      <div style={{ marginBottom: '25px' }}>
         <Category onSelectCategory={setSelectedCategory} /> {/* 카테고리 선택 콜백 전달 */}
       </div>
       <div
         style={{
-          marginBottom: '20px', // HotPosts와 아래 내용 사이 간격 조절
+          marginBottom: '25px',
         }}
       >
         <HotPosts />
       </div>
       <div className='flex justify-end items-center'>
-        <div
-          className='flex space-x-3 items-end text-gray-400'
+      <div
+          className='flex space-x-3 items-end'
           style={{ fontSize: '13px', fontWeight: '300' }}
         >
-          <button>최근 답변순</button>
-          <button>최신순</button>
-          <button>인기순</button>
+          {['최근 답변순', '최신순', '인기순'].map((order) => (
+            <button
+              key={order}
+              onClick={() => handleSortChange(order)}
+              style={{
+                fontWeight: sortOrder === order ? 'bold' : 'normal',
+                color: sortOrder === order ? 'black':'gray'
+              }}
+            >
+              {order}
+            </button>
+          ))}
         </div>
       </div>
       <ul className='divide-y divide-gray-300'>

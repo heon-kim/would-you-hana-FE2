@@ -70,12 +70,6 @@ const categories: Category[] = [
 
 const Category: React.FC<CategoryProps> = ({ onSelectCategory }) => {
   return (
-    <div>
-      <h1
-        style={{ fontSize: '23px', fontWeight: 'bold', marginBottom: '20px' }}
-      >
-        금융 Q&A
-      </h1>
       <div>
         <ul
           style={{
@@ -115,7 +109,6 @@ const Category: React.FC<CategoryProps> = ({ onSelectCategory }) => {
           ))}
         </ul>
       </div>
-    </div>
   );
 };
 
