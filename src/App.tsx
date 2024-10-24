@@ -5,9 +5,9 @@ import Home from './pages/Home/Home';
 import MyPage from './pages/MyPage/MyPage';
 import Profile from './pages/MyPage/Profile';
 import Posts from './pages/MyPage/Posts';
-// import Likes from "./pages/Likes";
-// import Scrap from "./pages/Scrap";
-// import EditProfile from "./pages/EditProfile";
+import Likes from "./pages/MyPage/Likes";
+import Scrap from "./pages/MyPage/Scraps";
+import EditProfile from './pages/MyPage/EditProfile';
 // import Auth from "./pages/Auth";
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
@@ -35,10 +35,10 @@ function App() {
             <Route path="/my" element={<MyPage />}>
               <Route path="profile" element={<Profile />} />
               <Route path="posts" element={<Posts />} />
-              {/*Route path="likes" element={<Likes />} />
-            <Route path="scrap" element={<Scrap />} />
-            <Route path="edit" element={<EditProfile />} />
-            <Route path="auth" element={<Auth />} /> */}
+              <Route path="likes" element={<Likes />} />
+              <Route path="scrap" element={<Scrap />} />
+              <Route path="edit" element={<EditProfile />} />
+            {/*<Route path="auth" element={<Auth />} /> */}
             </Route>
             {/* You can add other routes here as needed */}
             <Route path="/register" element={<Register />} />

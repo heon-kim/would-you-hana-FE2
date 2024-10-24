@@ -68,7 +68,7 @@ const posts: Post[] = [
   },
 ];
 
-const Posts: React.FC = () => {
+const Likes: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 5; // 페이지당 표시할 게시물 수
 
@@ -97,7 +97,7 @@ const Posts: React.FC = () => {
           marginBottom: '20px', // HotPosts와 아래 내용 사이 간격 조절
         }}
       >
-      <div style={{fontSize: '20px', fontWeight: 'bold'}}>게시글</div>
+      <div style={{fontSize: '20px', fontWeight: 'bold'}}>좋아요</div>
       </div>
       <div className='flex justify-end items-center'>
         <div
@@ -160,4 +160,4 @@ const Posts: React.FC = () => {
   );
 };
 
-export default Posts;
+export default Likes;
