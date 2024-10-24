@@ -1,9 +1,13 @@
 import React from 'react';
 
+
 interface Category {
   name: string;
   icon: string;
 }
+interface CategoryProps {
+    onSelectCategory: (category: string) => void;
+  }
 
 const categories: Category[] = [
   {
@@ -64,7 +68,7 @@ const categories: Category[] = [
   },
 ];
 
-const Category: React.FC = () => {
+const Category: React.FC<CategoryProps> = ({ onSelectCategory }) => {
   return (
     <div>
       <h1
@@ -95,6 +99,9 @@ const Category: React.FC = () => {
                 }}
               >
                 <button className='w-14 flex flex-col items-center'
+                onClick={() =>{ onSelectCategory(category.name);
+                  console.log(category.name);
+                }} // 카테고리 선택 시 호출
                 >
                   <div
                     className="w-full h-14 bg-gray-100 rounded-xl flex items-center justify-center hover:bg-[#DDFCD2]"

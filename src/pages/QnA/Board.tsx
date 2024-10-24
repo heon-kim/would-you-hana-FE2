@@ -21,7 +21,7 @@ const posts: Post[] = [
     likes: 80,
     comments: 17,
     createdAt: '2024-01-01',
-    category: '외환 및 국제금융',
+    category: '전자금융',
   },
   {
     id: 2,
@@ -39,7 +39,7 @@ const posts: Post[] = [
     likes: 20,
     comments: 9,
     createdAt: '2024-01-01',
-    category: '기타',
+    category: '이체',
   },
   {
     id: 4,
@@ -66,18 +66,24 @@ const posts: Post[] = [
     likes: 80,
     comments: 3,
     createdAt: '2024-01-01',
-    category: '재무 계획',
+    category: '자산관리',
   },
 ];
 
 const Board: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState<string>('전체'); // 선택된 카테고리 상태
   const postsPerPage = 5; // 페이지당 표시할 게시물 수
+
+   // 선택된 카테고리에 따라 게시물 필터링
+   const filteredPosts = selectedCategory === '전체'
+   ? posts
+   : posts.filter((post) => post.category === selectedCategory);
 
   // 현재 페이지에 해당하는 게시물 계산
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost); 
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -93,7 +99,7 @@ const Board: React.FC = () => {
       }}
     >
       <div style={{ marginBottom: '20px' }}>
-        <Category />
+        <Category onSelectCategory={setSelectedCategory} /> {/* 카테고리 선택 콜백 전달 */}
       </div>
       <div
         style={{
@@ -154,7 +160,7 @@ const Board: React.FC = () => {
       <footer className='mt-6 flex justify-center'>
         <Pagination
           current={currentPage}
-          total={posts.length}
+          total={filteredPosts.length} 
           pageSize={postsPerPage}
           onChange={handlePageChange}
         />
