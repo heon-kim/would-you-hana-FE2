@@ -23,6 +23,7 @@ const QuestionRegister: React.FC = () => {
         paddingBottom: '20px',
       }}
     >
+      <div className="flex-row"></div>
       <div className="article flex flex-col gap-6">
         <div className="question flex flex-col gap-6 font-light">
           <div className="question__header flex flex-col gap-3">

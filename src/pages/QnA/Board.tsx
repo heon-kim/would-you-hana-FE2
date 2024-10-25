@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // useHistory import 추가
-// import { Pagination, Input } from 'antd';
 import HotPosts from '../../components/HotPost';
 import Category from '../../components/Category';
 import PostList from '../../components/PostList';
 import { Input } from 'antd';
+import PostRegisterButton from '../../components/PostRegisterButton';
 interface Post {
   id: number;
   title: string;
@@ -135,60 +135,76 @@ const Board: React.FC = () => {
       >
         금융 Q&A
       </h1>
-      <div style={{ marginBottom: '25px' }}>
-        <Category onSelectCategory={handleCategoryChange} />
-      </div>
-      <div style={{ marginBottom: '25px' }}>
-        <HotPosts />
-      </div>
 
       <div
         style={{
-          marginBottom: '25px',
           display: 'flex',
-          justifyContent: 'center',
+          flexDirection: 'row',
+          gap:'50px',
+          width:'100%'
         }}
       >
-        <Input.Search
-          placeholder="검색어를 입력하세요."
-          allowClear
-          onSearch={onSearch}
-          onChange={(e) => setSearchText(e.target.value)}
-          value={searchText}
-          enterButton
-          size="large"
-          style={{ width: '80%' }}
-        />
-      </div>
+        <div style={{ width: '75%'}}>
+          <div style={{ marginBottom: '25px' }}>
+            <Category onSelectCategory={handleCategoryChange} />
+          </div>
+          <div style={{ marginBottom: '25px' }}>
+            <HotPosts />
+          </div>
 
-      <div className="flex justify-end items-center">
-        <div
-          className="flex space-x-3 items-end"
-          style={{ fontSize: '13px', fontWeight: '300' }}
-        >
-          {['최근 답변순', '최신순', '인기순'].map((order) => (
-            <button
-              key={order}
-              onClick={() => handleSortChange(order)}
-              style={{
-                fontWeight: sortOrder === order ? 'bold' : 'normal',
-                color: sortOrder === order ? 'black' : 'gray',
-              }}
+          <div
+            style={{
+              marginBottom: '25px',
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <Input.Search
+              placeholder='검색어를 입력하세요.'
+              allowClear
+              onSearch={onSearch}
+              onChange={(e) => setSearchText(e.target.value)}
+              value={searchText}
+              enterButton
+              size='large'
+              style={{ width: '80%' }}
+            />
+          </div>
+
+          <div className='flex justify-end items-center'>
+            <div
+              className='flex space-x-3 items-end'
+              style={{ fontSize: '13px', fontWeight: '300' }}
             >
-              {order}
-            </button>
-          ))}
+              {['최근 답변순', '최신순', '인기순'].map((order) => (
+                <button
+                  key={order}
+                  onClick={() => handleSortChange(order)}
+                  style={{
+                    fontWeight: sortOrder === order ? 'bold' : 'normal',
+                    color: sortOrder === order ? 'black' : 'gray',
+                  }}
+                >
+                  {order}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <PostList
+            posts={currentPosts}
+            currentPage={currentPage}
+            postsPerPage={postsPerPage}
+            totalPosts={filteredAndSearchedPosts.length}
+            onPageChange={handlePageChange}
+            onPostClick={handlePostClick}
+          />
+        </div>
+
+        <div style={{ width:'30%' }}>
+          <PostRegisterButton />
         </div>
       </div>
-
-      <PostList
-        posts={currentPosts}
-        currentPage={currentPage}
-        postsPerPage={postsPerPage}
-        totalPosts={filteredAndSearchedPosts.length}
-        onPageChange={handlePageChange}
-        onPostClick={handlePostClick}
-      />
     </div>
   );
 };
