@@ -1,16 +1,7 @@
 import React from 'react';
 import { Pagination } from 'antd';
 import iconUser from '../assets/img/icon_user_board.jpg';
-
-interface Post {
-  id: number;
-  title: string;
-  views: number;
-  likes: number;
-  comments: number;
-  createdAt: string;
-  category: string;
-}
+import { Post } from '../constants/posts';
 
 interface PostListProps {
   posts: Post[];
@@ -47,10 +38,12 @@ const PostList: React.FC<PostListProps> = ({
                   {post.title}
                 </h3>
                 <p className="text-gray-500 mb-4" style={{ fontSize: '12px' }}>
-                  <span className="text-mainColor">조회 {post.views}</span> ·
-                  도움돼요 {post.likes} · 댓글 {post.comments}
+                  <span className="text-mainColor">
+                    조회 {post.counts.views}
+                  </span>{' '}
+                  · 도움돼요 {post.counts.likes} · 댓글 {post.counts.comments}
+                  {post.answered ? ' · 답변완료' : ''}
                 </p>
-
                 <div
                   style={{
                     display: 'flex',
@@ -64,7 +57,9 @@ const PostList: React.FC<PostListProps> = ({
                     width={25}
                     style={{ borderRadius: '50%' }}
                   />
-                  <label className="ml-2 text-xs text-gray-500">신제철차장</label>
+                  <label className="ml-2 text-xs text-gray-500">
+                    {post.author}
+                  </label>
                 </div>
               </div>
             </button>

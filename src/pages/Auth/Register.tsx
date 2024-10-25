@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import InputField from '../../components/InputField';
 import UserTypeRadio from '../../components/UserTypeRadio';
-import { saveUser, findUser, findNickname } from '../../utils/userStorage';
+import { saveUser, findUser, hasNickname } from '../../utils/userStorage';
 import { message, Button, Select } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
+import { Categories } from '../../constants/posts';
 
 interface User {
   email: string;
@@ -109,7 +110,7 @@ const NicknameInput: React.FC<{
       showButton
       buttonLabel="중복 확인"
       onClickButton={() => {
-        setNicknameDuplicate(findNickname(nickname));
+        setNicknameDuplicate(hasNickname(nickname));
         setIsNicknameChecked(true);
       }}
     />
@@ -356,22 +357,6 @@ const SelectInterest: React.FC<{
   user: User;
   setUser: React.Dispatch<React.SetStateAction<User>>;
 }> = ({ user, setUser }) => {
-  const CATEGORIES = [
-    '예금',
-    '적금',
-    '이체',
-    '자산관리',
-    '퇴직연금',
-    '펀드',
-    '신탁',
-    'ISA',
-    '전자금융',
-    '대출',
-    '외환',
-    '보험',
-    '카드',
-    '기타',
-  ];
   const MAX_COUNT = 3;
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const navigate = useNavigate();
@@ -416,7 +401,7 @@ const SelectInterest: React.FC<{
           onChange={handleChange}
           suffixIcon={suffix}
           placeholder="선택"
-          options={CATEGORIES.map((category) => ({
+          options={Categories.map((category) => ({
             label: category,
             value: category,
           }))}
