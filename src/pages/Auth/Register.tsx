@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import InputField from '../../components/InputField';
 import UserTypeRadio from '../../components/UserTypeRadio';
-import { saveUser, findUser, findNickname } from '../../utils/userStorage';
+import { saveUser, findUser, hasNickname } from '../../utils/userStorage';
 import { message, Button, Select } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
@@ -109,7 +109,7 @@ const NicknameInput: React.FC<{
       showButton
       buttonLabel="중복 확인"
       onClickButton={() => {
-        setNicknameDuplicate(findNickname(nickname));
+        setNicknameDuplicate(hasNickname(nickname));
         setIsNicknameChecked(true);
       }}
     />
