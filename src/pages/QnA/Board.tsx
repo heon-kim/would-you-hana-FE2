@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // useHistory import 추가
-import { Pagination, Input } from 'antd';
-import iconUser from '../../assets/img/icon_user_board.jpg';
+// import { Pagination, Input } from 'antd';
 import HotPosts from '../../components/HotPost';
 import Category from '../../components/Category';
+import PostList from '../../components/PostList';
+import { Input } from 'antd';
 interface Post {
   id: number;
   title: string;
@@ -135,7 +136,7 @@ const Board: React.FC = () => {
         금융 Q&A
       </h1>
       <div style={{ marginBottom: '25px' }}>
-        <Category onSelectCategory={handleCategoryChange} />{' '}
+        <Category onSelectCategory={handleCategoryChange} />
       </div>
       <div style={{ marginBottom: '25px' }}>
         <HotPosts />
@@ -180,57 +181,14 @@ const Board: React.FC = () => {
         </div>
       </div>
 
-      <ul className="divide-y divide-gray-300">
-        {currentPosts.map((post) => (
-          <li
-            key={post.id}
-            className="py-5"
-            onClick={() => handlePostClick(post.id)}
-          >
-            <button className="text-start">
-              <div>
-                <p className="text-gray-500 mb-2" style={{ fontSize: '15px' }}>
-                  {post.category}
-                </p>
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                  {post.title}
-                </h3>
-                <p className="text-gray-500 mb-4" style={{ fontSize: '12px' }}>
-                  <span className="text-mainColor">조회 {post.views}</span> ·
-                  도움돼요 {post.likes} · 댓글 {post.comments}
-                </p>
-
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}
-                >
-                  <img
-                    src={iconUser}
-                    alt="iconUser"
-                    width={25}
-                    style={{ borderRadius: '50%' }}
-                  />
-                  <label className="ml-2 text-xs text-gray-500">
-                    신제철차장
-                  </label>
-                </div>
-              </div>
-            </button>
-          </li>
-        ))}
-      </ul>
-
-      <footer className="mt-6 flex justify-center">
-        <Pagination
-          current={currentPage}
-          total={filteredAndSearchedPosts.length}
-          pageSize={postsPerPage}
-          onChange={handlePageChange}
-        />
-      </footer>
+      <PostList
+        posts={currentPosts}
+        currentPage={currentPage}
+        postsPerPage={postsPerPage}
+        totalPosts={filteredAndSearchedPosts.length}
+        onPageChange={handlePageChange}
+        onPostClick={handlePostClick}
+      />
     </div>
   );
 };
