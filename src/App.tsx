@@ -17,6 +17,7 @@ import Header from './components/Header';
 import QuestionDetail from './pages/QnA/QuestionDetail';
 import QuestionRegister from './pages/QnA/QuestionRegister';
 import Board from './pages/QnA/Board';
+import FindBank from './pages/Location/FindBank';
 
 function App() {
   return (
@@ -45,10 +46,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/qna" element={<Board />} />
             <Route path="/qna/regist" element={<QuestionRegister />} />
-            <Route
-              path="/qna/detail/:questionId"
-              element={<QuestionDetail />}
-            />
+            <Route path="/qna/detail/:questionId" element={<QuestionDetail />}/>
+            <Route path="/findbank" element={<FindBank />} />
           </Routes>
         </div>
       </Router>

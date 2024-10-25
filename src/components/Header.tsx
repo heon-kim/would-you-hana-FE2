@@ -138,6 +138,9 @@ function Header() {
             <li>
               <Link to="/hana">우주하나</Link>
             </li>
+            <li>
+              <Link to="/findbank">영업점 찾기</Link>
+            </li>
           </ul>
         </nav>
         {isLoggedIn ? (
