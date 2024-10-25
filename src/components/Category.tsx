@@ -1,6 +1,4 @@
 import React from 'react';
-
-
 interface Category {
   name: string;
   icon: string;
@@ -94,7 +92,6 @@ const Category: React.FC<CategoryProps> = ({ onSelectCategory }) => {
               >
                 <button className='w-14 flex flex-col items-center'
                 onClick={() =>{ onSelectCategory(category.name);
-                  console.log(category.name);
                 }} // 카테고리 선택 시 호출
                 >
                   <div
