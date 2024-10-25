@@ -47,10 +47,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/qna" element={<Board />} />
             <Route path="/qna/regist" element={<QuestionRegister />} />
-            <Route
-              path="/qna/detail/:questionId"
-              element={<QuestionDetail />}
-            />
+            <Route path="/qna/detail/:postId" element={<QuestionDetail />} />
             <Route path="/findbank" element={<FindBank />} />
             {/* Error */}
             <Route path="/404" element={<NotFound />} />

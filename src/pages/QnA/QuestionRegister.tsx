@@ -3,6 +3,10 @@ import '../../App.css';
 import { Select, message, Image, Upload } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { UploadFile, UploadProps } from 'antd';
+import { findUser } from '../../utils/userStorage';
+import { postCount, savePost } from '../../utils/postStorage';
+import { getUserEmail } from '../../hoc/request';
+import { Categories } from '../../constants/posts';
 
 const getBase64 = (file: File) =>
   new Promise<string>((resolve, reject) => {
@@ -12,7 +16,7 @@ const getBase64 = (file: File) =>
     reader.onerror = (error) => reject(error);
   });
 
-const QuestionRegister: React.FC = () => {
+const PostRegister: React.FC = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -26,7 +30,6 @@ const QuestionRegister: React.FC = () => {
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(e.target.checked); // 체크 상태 업데이트
   };
-
 
   // 로컬스토리지에서 파일 리스트 불러오기
   useEffect(() => {
@@ -73,26 +76,36 @@ const QuestionRegister: React.FC = () => {
     if (!category || !title || !content) {
       message.error('모든 필드를 입력해주세요.');
       return;
-    }
-
-    else if (!isChecked) {
+    } else if (!isChecked) {
       message.error('이용약관에 동의해야 질문을 등록할 수 있습니다.'); // 체크박스 체크 여부 확인
       return;
     }
 
+    const userEmail = getUserEmail();
+    const user = findUser(userEmail || '');
+    const nickname = user?.nickname;
+
     // 저장할 데이터 객체 생성
-    const questionData = {
+    const postData = {
+      id: postCount(),
       category,
       title,
       content,
+      author: nickname || '',
+      createdAt: new Date().toISOString(),
+      answered: false,
+      counts: {
+        views: 0,
+        likes: 0,
+        comments: 0,
+        scraps: 0,
+      },
       images: fileList.map((file) => ({
         name: file.name,
         preview: file.preview || '',
       })),
     };
-
-    // 로컬스토리지에 저장
-    localStorage.setItem('questionData', JSON.stringify(questionData));
+    savePost(postData);
     message.success('질문이 등록되었습니다!');
   };
 
@@ -133,71 +146,57 @@ const QuestionRegister: React.FC = () => {
           <br /> 빠른 시일 내에 답해드려요!
         </p>
       </h1>
-
       <Select
         showSearch
         style={{ width: '100%', height: '60px' }}
-        placeholder='어떤 분야가 궁금한가요?'
-        optionFilterProp='label'
+        placeholder="어떤 분야가 궁금한가요?"
+        optionFilterProp="label"
         onChange={(value) => setCategory(value)} // 분야 상태 설정
-        options={[
-          { value: '1', label: '예금/적금' },
-          { value: '2', label: '이체' },
-          { value: '3', label: '자산관리' },
-          { value: '4', label: '퇴직연금' },
-          { value: '5', label: '펀드' },
-          { value: '6', label: '신탁' },
-          { value: '7', label: 'ISA' },
-          { value: '8', label: '전자금융' },
-          { value: '9', label: '대출' },
-          { value: '10', label: '외환' },
-          { value: '11', label: '보험' },
-          { value: '12', label: '카드' },
-          { value: '13', label: '기타' },
-        ]}
+        options={Categories.map((category) => {
+          return { value: category, label: category };
+        })}
       />
-
       <div
-        className='mx-100 mx-auto'
+        className="mx-100 mx-auto"
         style={{ width: '100%', marginTop: '40px' }}
       >
-        <div className='mb-6'>
-          <label className='block mb-2 font-bold'>제목</label>
-          <div className='relative'>
+        <div className="mb-6">
+          <label className="block mb-2 font-bold">제목</label>
+          <div className="relative">
             <input
-              type='text'
-              placeholder='궁금한 점을 요약해서 작성해 주세요.'
+              type="text"
+              placeholder="궁금한 점을 요약해서 작성해 주세요."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               maxLength={maxTitleLength}
-              className='w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:border-gray-500'
+              className="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:border-gray-500"
               style={{ fontWeight: '300' }}
             />
-            <span className='absolute bottom-2 right-3 text-gray-500 text-sm'>{`${title.length}/${maxTitleLength}`}</span>
+            <span className="absolute bottom-2 right-3 text-gray-500 text-sm">{`${title.length}/${maxTitleLength}`}</span>
           </div>
         </div>
 
-        <div className='mb-4'>
-          <label className='block mb-2 font-bold'>내용</label>
-          <div className='relative'>
+        <div className="mb-4">
+          <label className="block mb-2 font-bold">내용</label>
+          <div className="relative">
             <textarea
               placeholder={`· 자세하게 적으면 좋은 답변을 받을 수 있어요.\n· 개인정보(본명, 전화 번호 등)를 쓰면 안 돼요.\n· 질문에서 내 이름은 보이지 않아요.`}
               value={content}
               onChange={(e) => setContent(e.target.value)}
               maxLength={maxContentLength}
-              className='w-full border border-gray-300 rounded-md p-3 h-52 resize-none focus:outline-none focus:border-gray-500'
+              className="w-full border border-gray-300 rounded-md p-3 h-52 resize-none focus:outline-none focus:border-gray-500"
               style={{ fontWeight: '300' }}
             />
-            <span className='absolute bottom-2 right-3 text-gray-500 text-sm'>{`${content.length}/${maxContentLength}`}</span>
+            <span className="absolute bottom-2 right-3 text-gray-500 text-sm">{`${content.length}/${maxContentLength}`}</span>
           </div>
         </div>
 
-        <div className='mb-6'>
-          <div className='relative'>
+        <div className="mb-6">
+          <div className="relative">
             <Upload
-              //서버로 이미지 업로드 
+              //서버로 이미지 업로드
               action="https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload"
-              listType='picture-card'
+              listType="picture-card"
               fileList={fileList}
               onPreview={handlePreview}
               onChange={handleChange}
@@ -218,7 +217,6 @@ const QuestionRegister: React.FC = () => {
           </div>
         </div>
       </div>
-
       <div
         style={{
           display: 'flex',
@@ -226,15 +224,20 @@ const QuestionRegister: React.FC = () => {
           marginTop: '20px',
         }}
       >
-        <input type='checkbox' id='agree' style={{ marginRight: '10px' }} checked={isChecked} onChange={handleCheckboxChange} />
+        <input
+          type="checkbox"
+          id="agree"
+          style={{ marginRight: '10px' }}
+          checked={isChecked}
+          onChange={handleCheckboxChange}
+        />
         <label
-          htmlFor='agree'
+          htmlFor="agree"
           style={{ fontFamily: 'Hana2Regular', fontSize: '14px' }}
         >
           개인정보 처리 방침에 동의합니다.
         </label>
       </div>
-
       <button
         onClick={handleRegister}
         style={{
@@ -254,4 +257,4 @@ const QuestionRegister: React.FC = () => {
   );
 };
 
-export default QuestionRegister;
+export default PostRegister;
