@@ -2,62 +2,118 @@ import React, { useEffect, useState } from 'react';
 import markerImg from '../../assets/img/mark.png';
 
 const FindBank = () => {
-  const [selectedLocation, setSelectedLocation] = useState(null); // 선택된 위치 정보 상태
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [positions, setPositions] = useState([]); // Store fetched locations
+  const [userLocation, setUserLocation] = useState(null); // Store user's current location
+  const [userDistrict, setUserDistrict] = useState(''); // Store user's district information
 
   useEffect(() => {
+    // Get user location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const userLatLng = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          setUserLocation(userLatLng);
+
+          // Load Kakao Maps API for reverse geocoding
+          const script = document.createElement('script');
+          script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=26b73c9fe72dd7a39fc3df547c6175f2&libraries=services&autoload=false`;
+          document.head.appendChild(script);
+
+          script.onload = () => {
+            window.kakao.maps.load(() => {
+              const geocoder = new window.kakao.maps.services.Geocoder();
+              geocoder.coord2RegionCode(userLatLng.lng, userLatLng.lat, (result, status) => {
+                if (status === window.kakao.maps.services.Status.OK) {
+                  const districtInfo = result.find((region) => region.region_type === 'H');
+                  if (districtInfo) setUserDistrict(districtInfo.address_name);
+                }
+              });
+            });
+          };
+        },
+        (error) => {
+          console.error("Error fetching location:", error);
+          setUserLocation({ lat: 37.5665, lng: 126.9780 });
+        }
+      );
+    } else {
+      setUserLocation({ lat: 37.5665, lng: 126.9780 });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!userLocation) return;
+
     const script = document.createElement('script');
     script.async = true;
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=26b73c9fe72dd7a39fc3df547c6175f2&autoload=false`; // YOUR_APP_KEY를 실제 API 키로 대체하세요
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=26b73c9fe72dd7a39fc3df547c6175f2&libraries=services&autoload=false`;
     document.head.appendChild(script);
 
     script.onload = () => {
       try {
         window.kakao.maps.load(() => {
-          const container = document.getElementById('map'); // 지도를 표시할 div
-          const options = {
-            center: new window.kakao.maps.LatLng(37.544951689449746, 127.05651240838867), // 알파코 좌표
-            level: 4, // 확대 레벨
+          const mapContainer = document.getElementById('map');
+          const mapOption = {
+            center: new window.kakao.maps.LatLng(userLocation.lat, userLocation.lng),
+            level: 5,
           };
-          const map = new window.kakao.maps.Map(container, options); // 지도 생성
+          const map = new window.kakao.maps.Map(mapContainer, mapOption);
 
-          // 하나은행 지점 정보를 포함한 마커를 표시할 위치와 title 객체 배열입니다
-          const positions = [
-            {
-              title: '하나은행 성수지점',
-              latlng: new window.kakao.maps.LatLng(37.5451222, 127.0571291),
-              content: `
-                주소: 서울특별시 성동구 성수이로 73<br/>
-                전화번호: 02-1234-5678<br/>
-                운영시간: 월-금 09:00 ~ 16:00<br/>
-                <br/>방문 고객을 위한 다양한 금융 서비스와 친절한 상담을 제공합니다.
-              `
-            },
-            {
-              title: '하나은행 서울숲지점',
-              latlng: new window.kakao.maps.LatLng(37.5454553, 127.0452413),
-              content: `
-                주소: 서울특별시 성동구 서울숲 1길 3<br/>
-                전화번호: 02-8765-4321<br/>
-                운영시간: 월-금 09:00 ~ 16:00<br/>
-                <br/>고객 맞춤형 금융 상품을 제공하며, 편리한 온라인 뱅킹 서비스도 지원합니다.
-              `
-            },
-          ];
+          const places = new window.kakao.maps.services.Places();
 
-          for (let i = 0; i < positions.length; i++) {
-            const imageSize = new window.kakao.maps.Size(30, 35); 
-            const markerImage = new window.kakao.maps.MarkerImage(markerImg, imageSize); 
-            const marker = new window.kakao.maps.Marker({
-              map: map,
-              position: positions[i].latlng,
-              title: positions[i].title,
-              image: markerImage 
-            });
+          // Create a custom overlay for user's location
+          const userMarker = document.createElement('div');
+          userMarker.style.width = '15px';
+          userMarker.style.height = '15px';
+          userMarker.style.backgroundColor = '#FF0000';
+          userMarker.style.borderRadius = '50%';
+          userMarker.style.border = '2px solid white';
+          userMarker.style.boxShadow = '0px 0px 6px rgba(255, 0, 0, 0.5)';
 
-            window.kakao.maps.event.addListener(marker, 'click', function () {
-              setSelectedLocation(positions[i]); 
-            });
-          }
+          new window.kakao.maps.CustomOverlay({
+            map: map,
+            position: new window.kakao.maps.LatLng(userLocation.lat, userLocation.lng),
+            content: userMarker,
+            yAnchor: 0.5,
+            xAnchor: 0.5,
+          });
+
+          places.keywordSearch(`하나은행 ${userDistrict}`, (result, status) => {
+            if (status === window.kakao.maps.services.Status.OK) {
+              const locations = result.map((place) => ({
+                title: place.place_name,
+                latlng: new window.kakao.maps.LatLng(place.y, place.x),
+                content: `
+                  주소: ${place.road_address_name || place.address_name}<br/>
+                  전화번호: ${place.phone || '정보 없음'}<br/>
+                `,
+              }));
+              setPositions(locations);
+
+              locations.forEach((location) => {
+                const markerImage = new window.kakao.maps.MarkerImage(
+                  markerImg,
+                  new window.kakao.maps.Size(30, 35)
+                );
+                const marker = new window.kakao.maps.Marker({
+                  map: map,
+                  position: location.latlng,
+                  title: location.title,
+                  image: markerImage,
+                });
+
+                window.kakao.maps.event.addListener(marker, 'click', () => {
+                  setSelectedLocation(location);
+                });
+              });
+            } else {
+              console.error('No Hana Bank branches found.');
+            }
+          });
         });
       } catch (error) {
         console.error('Error loading the Kakao Maps script:', error);
@@ -67,7 +123,7 @@ const FindBank = () => {
     script.onerror = () => {
       console.error('Failed to load Kakao Maps SDK');
     };
-  }, []);
+  }, [userLocation, userDistrict]);
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', marginTop: '5%' }}>
@@ -83,6 +139,9 @@ const FindBank = () => {
         ) : (
           <p style={{ padding: '20px', color: '#888' }}>마커를 클릭하면 상세 정보가 여기에 표시됩니다.</p>
         )}
+        <div style={{ padding: '10px', textAlign: 'center' }}>
+          {/* <p>현재 위치: {userDistrict}</p> */}
+        </div>
       </div>
     </div>
   );
