@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Pagination } from 'antd';
-import iconUser from '../../assets/img/icon_user_board.jpg';
+import PostList from '../../components/PostList';
+import { useNavigate } from 'react-router-dom';
 interface Post {
   id: number;
   title: string;
@@ -70,93 +70,40 @@ const posts: Post[] = [
 
 const Likes: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const postsPerPage = 5; // 페이지당 표시할 게시물 수
-
-  // 현재 페이지에 해당하는 게시물 계산
+  const navigate = useNavigate();
+  const postsPerPage = 5;
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPosts = posts.slice(
+    indexOfFirstPost,
+    indexOfLastPost
+  );
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
+  const handlePostClick = (postId: number) => {
+    navigate(`/qna/detail/${postId}`); // 특정 포스트 ID로 페이지 이동
+  };
+
   return (
     <div
       style={{
-        width: '100%',
-        paddingLeft: '5%',
-        paddingRight: '15%',
-        marginTop: '5%',
-      }}
-    >
-      <div style={{ marginBottom: '20px' }}>
-      </div>
-      <div
-        style={{
-          marginBottom: '20px', // HotPosts와 아래 내용 사이 간격 조절
-        }}
-      >
-      <div style={{fontSize: '20px', fontWeight: 'bold'}}>좋아요</div>
-      </div>
-      <div className='flex justify-end items-center'>
-        <div
-          className='flex space-x-3 items-end text-gray-400'
-          style={{ fontSize: '13px', fontWeight: '300' }}
-        >
-          <button>최근 답변순</button>
-          <button>최신순</button>
-          <button>인기순</button>
-        </div>
-      </div>
-      <ul className='divide-y divide-gray-300'>
-        {currentPosts.map((post) => (
-          <li key={post.id} className='py-5'>
-            <button className='text-start'>
-              <div>
-                <p className='text-gray-500 mb-2' style={{ fontSize: '15px' }}>
-                  {post.category}
-                </p>
-                <h3 className='text-lg font-semibold text-gray-800 mb-2'>
-                  {post.title}
-                </h3>
-                <p className='text-gray-500 mb-4' style={{ fontSize: '12px' }}>
-                  <span className='text-mainColor'>조회 {post.views}</span> ·
-                  도움돼요 {post.likes} · 댓글 {post.comments}
-                </p>
+        padding:'5%'
+      }}>
+        <div style={{fontSize: '20px', fontWeight: 'bold', marginBottom:'20px'}}>좋아요</div>
 
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}
-                >
-                  <img
-                    src={iconUser}
-                    alt='iconUser'
-                    width={25}
-                    style={{ borderRadius: '50%' }}
-                  />
-                  <label className='ml-2 text-xs text-gray-500'>
-                    신제철차장
-                  </label>
-                </div>
-              </div>
-            </button>
-          </li>
-        ))}
-      </ul>
-
-      <footer className='mt-6 flex justify-center'>
-        <Pagination
-          current={currentPage}
-          total={posts.length}
-          pageSize={postsPerPage}
-          onChange={handlePageChange}
-        />
-      </footer>
-    </div>
+        <PostList
+        posts={currentPosts}
+        currentPage={currentPage}
+        postsPerPage={postsPerPage}
+        totalPosts={posts.length}
+        onPageChange={handlePageChange}
+        onPostClick={handlePostClick}
+      />
+      </div>
+    
   );
 };
 
