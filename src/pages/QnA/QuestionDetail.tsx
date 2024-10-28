@@ -5,6 +5,7 @@ import { StarOutlined, HomeOutlined, PhoneOutlined } from '@ant-design/icons';
 import { findPost } from '../../utils/postStorage';
 import userIcon from '../../assets/img/icon_user.png';
 import '../../App.css';
+import PostRegisterButton from '../../components/PostRegisterButton';
 
 const { TextArea } = Input;
 
@@ -48,13 +49,16 @@ const QuestionDetail: React.FC = () => {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'start',
-        width: '60%',
+        width: '100%',
+        paddingLeft: '15%',
+        paddingRight: '15%',
         alignSelf: 'center',
         paddingTop: '40px',
-        paddingBottom: '20px',
+        paddingBottom: '20px'
       }}
     >
-      <div className="article flex flex-col gap-6">
+      <div className="flex w-full" style={{gap:'20px'}}>
+      <div className="article flex flex-col gap-6 w-full" style={{width:'75%'}}>
         <div className="question flex flex-col gap-6 font-light">
           <div className="question__header flex flex-col gap-3">
             <h1
@@ -181,9 +185,13 @@ const QuestionDetail: React.FC = () => {
           </div>
         </div>
       </div>
-      <aside className="widget"></aside>
+    <aside className="widget" style={{width:'30%'}}>
+      <PostRegisterButton/>
+    </aside>
+    </div>
     </div>
   );
+
 };
 
 export default QuestionDetail;
