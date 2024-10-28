@@ -8,7 +8,7 @@ interface CategoryProps {
   onSelectCategory: (category: string) => void;
 }
 
-const categoriesWithIcon = Categories.map((category, index) => {
+const categoriesWithIcon = ['전체', ...Categories].map((category, index) => {
   return { name: category, icon: index + 1 };
 });
 
