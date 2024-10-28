@@ -30,7 +30,7 @@ const findUser = (email: string) => {
   return getUsers().find((user) => user.email === email);
 };
 
-const findNickname = (nickname: string) => {
+const hasNickname = (nickname: string) => {
   return getUsers().some((user) => user.nickname === nickname);
 };
 
@@ -54,4 +54,4 @@ const updateUser = (user: User) => {
   }
 };
 
-export { getUsers, saveUser, findUser, findNickname, updateUser };
+export { getUsers, saveUser, findUser, hasNickname as hasNickname, updateUser };

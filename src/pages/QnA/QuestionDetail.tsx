@@ -1,14 +1,45 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import { Button, Input } from 'antd';
+import React, { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Button, Input, message } from 'antd';
 import { StarOutlined, HomeOutlined, PhoneOutlined } from '@ant-design/icons';
-
+import { findPost } from '../../utils/postStorage';
 import userIcon from '../../assets/img/icon_user.png';
 import '../../App.css';
 
-const QuestionRegister: React.FC = () => {
-  const { questionId } = useParams<{ questionId: string }>();
-  const { TextArea } = Input;
+const { TextArea } = Input;
+
+const elapsedTime = (date: number): string => {
+  const start = new Date(date);
+  const seconds = Math.floor((Date.now() - start.getTime()) / 1000);
+
+  if (seconds < 60) return '방금 전';
+  if (seconds < 3600) return `${Math.floor(seconds / 60)}분 전`;
+  if (seconds < 86400) return `${Math.floor(seconds / 3600)}시간 전`;
+  if (seconds < 604800) return `${Math.floor(seconds / 86400)}일 전`;
+
+  return start.toLocaleDateString();
+};
+
+const QuestionDetail: React.FC = () => {
+  const { postId } = useParams<{ postId: string }>();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!postId) {
+      message.error('질문 ID가 없습니다.');
+      navigate('/404');
+    } else {
+      const post = findPost(Number(postId));
+      if (!post) {
+        message.error('질문을 찾을 수 없습니다.');
+        navigate('/404');
+      }
+    }
+  }, [postId, navigate]);
+
+  const post = postId ? findPost(Number(postId)) : null;
+
+  if (!post) return null; // post가 없으면 아무것도 렌더링하지 않음
 
   return (
     <div
@@ -35,34 +66,23 @@ const QuestionRegister: React.FC = () => {
                 fontWeight: 'bold',
               }}
             >
-              Q. 해외에서 금융인증서를 활용할 수 있나요?
+              Q. {post.title}
             </h1>
             <div className="flex gap-4 text-xs text-gray-400">
-              <span>별송이내꺼야</span>
-              <span>조회 44</span>
-              <span>좋아요 12</span>
-              <span>스크랩 0</span>
+              <span>{post.author}</span>
+              <span>조회 {post.counts.views || 0}</span>
+              <span>좋아요 {post.counts.likes || 0}</span>
+              <span>스크랩 {post.counts.scraps || 0}</span>
             </div>
             <div className="flex justify-end gap-4">
-              {/* <Button type="primary">답변 달기</Button> */}
-              <Button icon={<StarOutlined />}>저장</Button>
+              <Button icon={<StarOutlined />}>스크랩</Button>
             </div>
           </div>
           <div className="w-full">
-            <p>
-              제가 2024년 10월부터 2025년 2월까지 해외 출장을 가는데,
-              하나은행에서 발급받은 금융인증서 만료 기간이 2025년 3월까지로
-              알고있습니다. 혹시 해외에서도 별도의 확장 프로그램 없이
-              금융인증서를 활용할 수 있는지 여쭙고 싶습니다!{' '}
-            </p>
-            {questionId ? (
-              <p>Question ID: {questionId}</p>
-            ) : (
-              <p>No Question ID provided.</p>
-            )}
+            <p>{post.content}</p>
           </div>
-          <div className="question__footer text-gray-400">
-            <span>3일 전</span>
+          <div className="post__footer text-gray-400">
+            <span>{elapsedTime(+new Date(post.createdAt))}</span>
           </div>
         </div>
         <div className="answer flex flex-col border rounded shadow-md">
@@ -71,10 +91,10 @@ const QuestionRegister: React.FC = () => {
           </h1>
           <div className="p-5 flex flex-col gap-5">
             <div className="comment__header flex justify-between font-light border-b pb-5">
-              <div className="flex gap-3 ">
+              <div className="flex gap-3">
                 <img src={userIcon} alt="user icon" className="w-12 h-12" />
                 <div>
-                  <div className="flex gap-3 ">
+                  <div className="flex gap-3">
                     <span>홍창기 대리</span>
                     <div className="bg-gray-300 rounded-full px-3 text-sm self-center">
                       🎖️ 행원
@@ -86,22 +106,21 @@ const QuestionRegister: React.FC = () => {
                 </div>
               </div>
               <div className="flex gap-5">
-                <HomeOutlined />
-                <PhoneOutlined />
+                <Button icon={<HomeOutlined />} />
+                <Button icon={<PhoneOutlined />} />
               </div>
             </div>
-            <p className="comment__body font-light ">
+            <p className="comment__body font-light">
               안녕하세요,
               <br /> 하나은행 성동구 성수역 지점에 근무하고 있는 홍창기
               대리입니다.
               <br />
-              <br /> 클라우드에 이미 등록된 기기에서는 해외에서도
-              금융인증서비스를 이용할 수 있습니다. 또한 휴대폰을 해외로밍한 경우
-              클라우드에 새로 기기를 등록하여 금융인증서비스를 이용할 수도
-              있습니다.
-              <br /> 고객님의 고민 해결에 도움이 되셨기를 바랍니다.
               <br />
-              <br /> 감사합니다.
+              클라우드에 이미 등록된 기기에서는 해외에서도 금융인증서비스를
+              이용할 수 있습니다. 고객님의 고민 해결에 도움이 되셨기를 바랍니다.
+              <br />
+              <br />
+              감사합니다.
             </p>
             <div className="comment__footer font-light flex flex-col gap-5">
               <p className="text-xs text-gray-400">1일 전</p>
@@ -168,4 +187,4 @@ const QuestionRegister: React.FC = () => {
   );
 };
 
-export default QuestionRegister;
+export default QuestionDetail;

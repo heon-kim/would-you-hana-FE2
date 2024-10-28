@@ -5,8 +5,8 @@ import Home from './pages/Home/Home';
 import MyPage from './pages/MyPage/MyPage';
 import Profile from './pages/MyPage/Profile';
 import Posts from './pages/MyPage/Posts';
-import Likes from "./pages/MyPage/Likes";
-import Scrap from "./pages/MyPage/Scraps";
+import Likes from './pages/MyPage/Likes';
+import Scrap from './pages/MyPage/Scraps';
 import EditProfile from './pages/MyPage/EditProfile';
 // import Auth from "./pages/Auth";
 import Login from './pages/Auth/Login';
@@ -17,6 +17,8 @@ import Header from './components/Header';
 import QuestionDetail from './pages/QnA/QuestionDetail';
 import QuestionRegister from './pages/QnA/QuestionRegister';
 import Board from './pages/QnA/Board';
+import FindBank from './pages/Location/FindBank';
+import NotFound from './pages/Error/404';
 
 function App() {
   return (
@@ -38,17 +40,17 @@ function App() {
               <Route path="likes" element={<Likes />} />
               <Route path="scrap" element={<Scrap />} />
               <Route path="edit" element={<EditProfile />} />
-            {/*<Route path="auth" element={<Auth />} /> */}
+              {/*<Route path="auth" element={<Auth />} /> */}
             </Route>
             {/* You can add other routes here as needed */}
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/qna" element={<Board />} />
             <Route path="/qna/regist" element={<QuestionRegister />} />
-            <Route
-              path="/qna/detail/:questionId"
-              element={<QuestionDetail />}
-            />
+            <Route path="/qna/detail/:postId" element={<QuestionDetail />} />
+            <Route path="/findbank" element={<FindBank />} />
+            {/* Error */}
+            <Route path="/404" element={<NotFound />} />
           </Routes>
         </div>
       </Router>
