@@ -10,7 +10,7 @@ const PostRegisterButton: React.FC = () => {
     };
 
     return (
-        <div style={{ backgroundColor: '#F3F5F7', height: '200px', alignContent: 'center', paddingLeft: '20px', paddingRight: '20px', borderRadius: '5px' }}>
+        <div style={{ backgroundColor: '#F3F5F7', height: '180px', alignContent: 'center', paddingLeft: '20px', paddingRight: '20px', borderRadius: '5px' }}>
             <div style={{ marginBottom: '25px' }}>
                 <p style={{ lineHeight: '1.5', fontSize: '18px' }}>찾으시는 질문이 없으신가요?</p>
                 <p style={{ lineHeight: '1.9', fontSize: '14px', marginBottom: '10px' }}>이 게시판에 질문해보세요.</p>
