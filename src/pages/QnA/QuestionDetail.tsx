@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Button, Input, message } from 'antd';
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import { Button, Input } from 'antd';
 import { StarOutlined, HomeOutlined, PhoneOutlined } from '@ant-design/icons';
 import { findPost } from '../../utils/postStorage';
 import userIcon from '../../assets/img/icon_user.png';
