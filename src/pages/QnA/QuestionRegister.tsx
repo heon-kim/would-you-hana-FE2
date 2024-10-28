@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import necessary routing components
 import '../../App.css';
 import { Select, message, Image, Upload } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
@@ -26,6 +27,7 @@ const PostRegister: React.FC = () => {
   const maxTitleLength = 30;
   const maxContentLength = 5000;
   const [isChecked, setIsChecked] = useState(false); // 체크 상태 관리
+  const navigate = useNavigate();
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(e.target.checked); // 체크 상태 업데이트
@@ -107,6 +109,7 @@ const PostRegister: React.FC = () => {
     };
     savePost(postData);
     message.success('질문이 등록되었습니다!');
+    navigate('/qna');
   };
 
   const uploadButton = (
@@ -123,7 +126,9 @@ const PostRegister: React.FC = () => {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'start',
-        width: '60%',
+        width: '100%',
+        paddingLeft: '25%',
+        paddingRight: '25%',
         alignSelf: 'center',
       }}
     >
