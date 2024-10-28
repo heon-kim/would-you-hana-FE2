@@ -54,4 +54,4 @@ const updateUser = (user: User) => {
   }
 };
 
-export { getUsers, saveUser, findUser, hasNickname as hasNickname, updateUser };
+export { getUsers, saveUser, findUser, hasNickname, updateUser };
