@@ -4,6 +4,7 @@ import HotPosts from '../../components/HotPost';
 import Category from '../../components/Category';
 import PostList from '../../components/PostList';
 import { Input } from 'antd';
+import PostRegisterButton from '../../components/PostRegisterButton';
 import { getPosts } from '../../utils/postStorage';
 import { Post } from '../../constants/posts';
 
@@ -77,7 +78,7 @@ const Board: React.FC = () => {
         style={{
           display: 'flex',
           flexDirection: 'row',
-          gap:'50px',
+          gap:'20px',
           width:'100%'
         }}
       >
@@ -139,7 +140,7 @@ const Board: React.FC = () => {
         </div>
 
         <div style={{ width:'30%' }}>
-          {/* <PostRegisterButton /> */}
+          <PostRegisterButton />
         </div>
       </div>
     </div>
