@@ -4,7 +4,7 @@ import { Post } from '../../constants/posts';
 import PostList from '../../components/PostList';
 import { useNavigate } from 'react-router-dom';
 
-const Posts: React.FC = () => {
+const Likes: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
   const postsPerPage = 5;
@@ -12,7 +12,7 @@ const Posts: React.FC = () => {
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
 
   const posts: Post[] = getPosts();
-  // userId == loggedUserId인 post 필터링
+  // 좋아요 list 중 userId == loggedUserId인 post 필터링
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
 
   const handlePageChange = (page: number) => {
@@ -32,7 +32,7 @@ const Posts: React.FC = () => {
       <div
         style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}
       >
-        게시글
+        좋아요
       </div>
 
       <PostList
@@ -47,4 +47,4 @@ const Posts: React.FC = () => {
   );
 };
 
-export default Posts;
+export default Likes;

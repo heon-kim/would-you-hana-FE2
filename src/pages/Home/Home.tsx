@@ -15,18 +15,20 @@ import '../../App.css';
 const Home: React.FC = () => {
   const navigate = useNavigate();
 
-  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
   const userRole = useSelector((state: RootState) => state.auth.userRole);
   const userEmail = useSelector((state: RootState) => state.auth.userEmail);
 
-    // useEffect를 사용하여 상태가 업데이트 될 때마다 실행
-    useEffect(() => {
-      console.log('User Role:', userRole);
-      console.log('User Email:', userEmail);
-      console.log('Is Authenticated:', isAuthenticated);
-  
-      // 여기에서 필요에 따라 추가 로직을 구현할 수 있습니다.
-    }, [userRole, userEmail, isAuthenticated]); // 상태가 변경될 때마다 실행
+  // useEffect를 사용하여 상태가 업데이트 될 때마다 실행
+  useEffect(() => {
+    console.log('User Role:', userRole);
+    console.log('User Email:', userEmail);
+    console.log('Is Authenticated:', isAuthenticated);
+
+    // 여기에서 필요에 따라 추가 로직을 구현할 수 있습니다.
+  }, [userRole, userEmail, isAuthenticated]); // 상태가 변경될 때마다 실행
 
   // Function to handle search
   const onSearch = (value: string) => {
@@ -45,17 +47,14 @@ const Home: React.FC = () => {
           <Col span={12} style={{ marginTop: '100px' }}>
             <img
               src={notebookUser}
-              alt='notebookUser'
+              alt="notebookUser"
               width={470}
               style={{ marginLeft: '100px', marginTop: '15px' }}
             ></img>
           </Col>
 
           {/* Search Input Column */}
-          <Col
-            span={12}
-            style={{ alignContent: 'center', marginLeft:'0px'}}
-          >
+          <Col span={12} style={{ alignContent: 'center', marginLeft: '0px' }}>
             <h1
               style={{
                 color: 'black',
@@ -90,15 +89,15 @@ const Home: React.FC = () => {
                   fontFamily: 'Hana2Medium',
                   fontSize: '15px',
                 }}
-                placeholder='질문을 입력하세요.'
+                placeholder="질문을 입력하세요."
               ></input>
-              <button className='bg-[#008485] w-[120px] h-[55px] rounded-lg p-2 text-white text-[15px] hover:bg-[#006f6f]'>
-                <div className='flex items-center justify-center'>
+              <button className="bg-[#008485] w-[120px] h-[55px] rounded-lg p-2 text-white text-[15px] hover:bg-[#006f6f]">
+                <div className="flex items-center justify-center">
                   <img
                     src={iconSearch}
-                    alt='iconSearch'
+                    alt="iconSearch"
                     width={15}
-                    className='mr-1'
+                    className="mr-1"
                   />
                   검색하기
                 </div>
@@ -109,14 +108,14 @@ const Home: React.FC = () => {
         <Row gutter={[16, 16]} style={{ backgroundColor: '#C1E9E8' }}>
           <Col span={24} style={{ marginTop: '40px' }}>
             <h2 style={{ fontSize: '24px', marginBottom: '10px' }}>
-              🔘 빠른 접근
+              인기 질문 🔥
             </h2>
           </Col>
 
           <Col xs={24} sm={8}>
             <Card
               hoverable
-              title='기능 A'
+              title="관악구 인기 질문"
               style={{ textAlign: 'center' }}
               onClick={() => navigate('/feature-a')}
             >
@@ -127,7 +126,7 @@ const Home: React.FC = () => {
           <Col xs={24} sm={8}>
             <Card
               hoverable
-              title='기능 B'
+              title="성동구 인기 질문"
               style={{ textAlign: 'center' }}
               onClick={() => navigate('/feature-b')}
             >
@@ -138,7 +137,7 @@ const Home: React.FC = () => {
           <Col xs={24} sm={8}>
             <Card
               hoverable
-              title='기능 C'
+              title="동작구 인기 질문"
               style={{ textAlign: 'center' }}
               onClick={() => navigate('/feature-c')}
             >
