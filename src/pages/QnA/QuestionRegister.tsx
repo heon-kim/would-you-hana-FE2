@@ -126,7 +126,9 @@ const PostRegister: React.FC = () => {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'start',
-        width: '60%',
+        width: '100%',
+        paddingLeft: '25%',
+        paddingRight: '25%',
         alignSelf: 'center',
       }}
     >
