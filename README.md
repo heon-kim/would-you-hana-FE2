@@ -1,7 +1,7 @@
 # would-you-hana-FE
 
 📂 우주하나 FE 레포지토리
-
+멤버: 박시홍, 김채운, 김상현, 김해원, 박지환, 정연채, 정승용
 ![alt text](README_img/logo.png)
 
 ## 기능 설계
