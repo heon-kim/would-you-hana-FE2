@@ -50,7 +50,7 @@ const QuestionDetail: React.FC = () => {
           className="article flex flex-col gap-6 w-full"
           style={{ width: '75%' }}
         >
-          <div className="question flex flex-col gap-6 font-light">
+          <div className="question flex flex-col gap-6 font-ligh pb-3 border-b border-gray-200">
             <div className="question__header flex flex-col gap-3">
               <h1
                 style={{
