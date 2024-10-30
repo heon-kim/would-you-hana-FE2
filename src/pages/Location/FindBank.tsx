@@ -1,11 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import markerImg from '../../assets/img/mark.png';
+import ReservationModal from '../../components/ReservationModal';
 
 const FindBank = () => {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [positions, setPositions] = useState([]); // Store fetched locations
   const [userLocation, setUserLocation] = useState(null); // Store user's current location
   const [userDistrict, setUserDistrict] = useState(''); // Store user's district information
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   useEffect(() => {
     // Get user location
@@ -141,8 +156,10 @@ const FindBank = () => {
         )}
         <div style={{ padding: '10px', textAlign: 'center' }}>
           {/* <p>현재 위치: {userDistrict}</p> */}
+        <button style={{width:'100%', backgroundColor:'#008485', borderRadius:'3px', padding:'5px', color:'white'}} onClick={showModal}>예약하기</button>
         </div>
       </div>
+      <ReservationModal isOpen={isModalOpen} onOk={handleOk} onCancel={handleCancel}/>
     </div>
   );
 };
