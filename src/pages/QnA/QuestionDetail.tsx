@@ -60,7 +60,7 @@ const QuestionDetail: React.FC = () => {
                   fontWeight: 'bold',
                 }}
               >
-                Q. {post.title}
+                Q.. {post.title}
               </h1>
               <div className="flex gap-4 text-xs text-gray-400">
                 <span>{post.author}</span>
