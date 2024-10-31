@@ -6,7 +6,7 @@ import { findUser } from '../../utils/userStorage';
 import { message } from 'antd';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../../hoc/actions';
-import { setAuthHeader, setUserEmail, setUserRole } from '../../hoc/request';
+import { getUserLocation, setAuthHeader, setUserEmail, setUserLocation, setUserRole } from '../../hoc/request';
 
 const Login: React.FC = () => {
   const [userType, setUserType] = useState<'C' | 'B'>('C'); // 일반회원(customer: C) | 행원(banker: B)
@@ -35,11 +35,14 @@ const Login: React.FC = () => {
       localStorage.setItem('loggedUser', email);
       const token: string = 'generatedAuthToken'; // string 타입 지정
       const role: string = userType; // string 타입 지정
+      const location: string = storedUser.location;
+      window.alert(`location ${location}`);
       console.log('Dispatching loginSuccess with:', { token, role, email });
-      dispatch(loginSuccess(token, role,email)); // Dispatch login success action with role
+      dispatch(loginSuccess(token, role, email, location)); // Dispatch login success action with role
       setAuthHeader(token);
       setUserRole(role);
       setUserEmail(email);
+      setUserLocation(location);
       message.success('로그인 성공!');
       navigate('/');
     } else {
