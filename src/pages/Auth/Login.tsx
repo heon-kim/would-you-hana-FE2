@@ -48,7 +48,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="h-full flex justify-center items-center">
+    <div className="h-full flex flex-col justify-center items-center gap-10">
       <div className="w-96 p-8 flex flex-col gap-6  bg-white shadow-lg rounded-lg">
         <h2 className="text-lg text-bold text-center">WOULD YOU HANA</h2>
         <UserTypeRadio
@@ -81,6 +81,13 @@ const Login: React.FC = () => {
           </button>
         </form>
       </div>
+      <div className='flex justify-center w-full text-center gap-2 text-sm'>
+            <button
+             onClick={() => navigate('/register')}
+            >회원가입</button>
+            <p>|</p>
+            <button>비밀번호 찾기</button>
+          </div>
     </div>
   );
 };
