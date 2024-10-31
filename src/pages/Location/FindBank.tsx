@@ -80,7 +80,6 @@ const FindBank = () => {
 
           const places = new window.kakao.maps.services.Places();
 
-          // Create a custom overlay for user's location
           const userMarker = document.createElement('div');
           userMarker.style.width = '15px';
           userMarker.style.height = '15px';
