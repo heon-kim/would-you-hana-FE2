@@ -36,8 +36,7 @@ const Login: React.FC = () => {
       const token: string = 'generatedAuthToken'; // string 타입 지정
       const role: string = userType; // string 타입 지정
       const location: string = storedUser.location;
-      window.alert(`location ${location}`);
-      console.log('Dispatching loginSuccess with:', { token, role, email });
+      console.log('Dispatching loginSuccess with:', { token, role, email, location });
       dispatch(loginSuccess(token, role, email, location)); // Dispatch login success action with role
       setAuthHeader(token);
       setUserRole(role);
