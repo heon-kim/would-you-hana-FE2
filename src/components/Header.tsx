@@ -10,6 +10,7 @@ import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Space, message, Select } from 'antd';
 import type { MenuProps, SelectProps } from 'antd';
 import { setAuthHeader, setUserRole, setUserEmail, getUserLocation } from '../hoc/request';
+import { findUser } from '../utils/userStorage';
 
 // SearchInput 컴포넌트에 사용할 로컬 데이터
 const items = [
@@ -76,6 +77,12 @@ interface LoggedInComponentProps {
 }
 
 function LoggedInComponent({ onLogout }: LoggedInComponentProps) {
+  const loggedUser = localStorage.getItem('loggedUser');
+  let user;
+  if (loggedUser) {
+    user = findUser(loggedUser);
+  }
+
   return (
     <div>
       <ul className='flex gap-8 items-center '>
@@ -85,8 +92,9 @@ function LoggedInComponent({ onLogout }: LoggedInComponentProps) {
           </span>
         </li>
         <li>
-          <Link to='/my/profile' className='flex items-center gap-2'>
-            <img src={userIcon} alt='user icon' width={35} />
+          <Link to="/my/profile" className="flex items-center gap-2">
+            <img src={userIcon} alt="user icon" width={35} />
+            <span>{user?.nickname}</span>
           </Link>
         </li>
       </ul>
