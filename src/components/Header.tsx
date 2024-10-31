@@ -9,7 +9,7 @@ import { logout } from '../hoc/actions';
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Space, message, Select } from 'antd';
 import type { MenuProps, SelectProps } from 'antd';
-import { setAuthHeader, setUserRole, setUserEmail } from '../hoc/request';
+import { setAuthHeader, setUserRole, setUserEmail, getUserLocation } from '../hoc/request';
 
 // SearchInput 컴포넌트에 사용할 로컬 데이터
 const items = [
@@ -115,6 +115,7 @@ function Header() {
   const [searchValue, setSearchValue] = useState<string>('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userLocation = getUserLocation();
 
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
@@ -161,7 +162,8 @@ function Header() {
         </nav>
 
         <div className='flex ml-auto mr-10 gap-3 items-center'>
-          <SearchInput placeholder='지역을 입력하세요' style={{ width: 200 }} value={searchValue} onChange={handleSearchValueChange} />
+          {/* 검색한 위치가 없는 경우 userLocation값이 입력됨 */}
+          <SearchInput placeholder='지역을 입력하세요' style={{ width: 200 }} value={searchValue || userLocation} onChange={handleSearchValueChange} />
         </div>
 
         {isLoggedIn ? (
