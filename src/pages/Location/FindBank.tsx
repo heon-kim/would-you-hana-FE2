@@ -33,7 +33,6 @@ const FindBank = () => {
           };
           setUserLocation(userLatLng);
 
-          // Load Kakao Maps API for reverse geocoding
           const script = document.createElement('script');
           script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=26b73c9fe72dd7a39fc3df547c6175f2&libraries=services&autoload=false`;
           document.head.appendChild(script);
