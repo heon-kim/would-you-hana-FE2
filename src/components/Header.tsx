@@ -37,8 +37,8 @@ const fetch = (
 const SearchInput: React.FC<{
   placeholder: string;
   style: React.CSSProperties;
-  value: string; // value prop 추가
-  onChange: (newValue: string) => void; // onChange prop 추가
+  value: string;
+  onChange: (newValue: string) => void;
 }> = (props) => {
   const [data, setData] = useState<SelectProps['options']>([]);
 
@@ -71,7 +71,6 @@ const SearchInput: React.FC<{
   );
 };
 
-// LoggedInComponent 및 LoggedOutComponent는 그대로 둡니다.
 interface LoggedInComponentProps {
   onLogout: () => void;
 }
@@ -123,7 +122,7 @@ function Header() {
   const [searchValue, setSearchValue] = useState<string>('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const userLocation = getUserLocation();
+  const userLocation = getUserLocation(); //사용자의 초기 위치값
 
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
@@ -170,7 +169,7 @@ function Header() {
         </nav>
 
         <div className='flex ml-auto mr-10 gap-3 items-center'>
-          {/* 검색한 위치가 없는 경우 userLocation값이 입력됨 */}
+          {/* 검색한 위치가 없는 경우, userLocation값이 입력됨 */}
           <SearchInput placeholder='지역을 입력하세요' style={{ width: 200 }} value={searchValue || userLocation} onChange={handleSearchValueChange} />
         </div>
 
