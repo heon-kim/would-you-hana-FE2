@@ -9,7 +9,6 @@ import { RootState } from '../../hoc/store';
 import '../../App.css';
 // import { useSelector, useDispatch } from 'react-redux';
 // import { RootState } from '../store'; // Assuming this is your Redux store's RootState type
-// jira test HONG
 //const { Search } = Input;
 
 const Home: React.FC = () => {
