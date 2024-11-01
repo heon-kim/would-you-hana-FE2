@@ -19,6 +19,7 @@ import QuestionRegister from './pages/QnA/QuestionRegister';
 import Board from './pages/QnA/Board';
 import FindBank from './pages/Location/FindBank';
 import NotFound from './pages/Error/404';
+import Community from './pages/Community/community';
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
             <Route path="/qna/regist" element={<QuestionRegister />} />
             <Route path="/qna/detail/:postId" element={<QuestionDetail />} />
             <Route path="/findbank" element={<FindBank />} />
+            <Route path="/community" element={<Community />} />
             {/* Error */}
             <Route path="/404" element={<NotFound />} />
           </Routes>
