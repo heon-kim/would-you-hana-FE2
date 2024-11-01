@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { Button, Input, Radio } from 'antd';
 import { LikeOutlined, DownOutlined } from '@ant-design/icons';
 import userIcon from '../../assets/img/icon_user.png';
@@ -157,7 +158,9 @@ const CommentItem: React.FC<{
 
 const Comments: React.FC = () => {
   const [comments, setComments] = useState<Comment[]>([]);
-  const [replies, setReplies] = useState<{ [key: number]: Reply[] }>({});
+  const [replies, setReplies] = useState<{
+    [key: number]: { [key: number]: Reply[] };
+  }>({});
   const [newComment, setNewComment] = useState<string>('');
   const [replyContent, setReplyContent] = useState<{ [key: number]: string }>(
     {}
@@ -168,20 +171,37 @@ const Comments: React.FC = () => {
   const [isReplying, setIsReplying] = useState<{ [key: number]: boolean }>({});
   const [sortBy, setSortBy] = useState<'latest' | 'likes'>('latest');
 
+  const { postId: stringPostId } = useParams<{ postId: string }>();
+  const postId: number = Number(stringPostId);
+
   useEffect(() => {
     const storedComments = localStorage.getItem('comments');
     const storedReplies = localStorage.getItem('replies');
-    if (storedComments) setComments(JSON.parse(storedComments));
-    if (storedReplies) setReplies(JSON.parse(storedReplies));
-  }, []);
 
-  useEffect(() => {
-    localStorage.setItem('comments', JSON.stringify(comments));
-  }, [comments]);
+    const allComments = storedComments ? JSON.parse(storedComments) : {};
+    const postComments = allComments[postId] || [];
+    setComments(postComments);
 
-  useEffect(() => {
-    localStorage.setItem('replies', JSON.stringify(replies));
-  }, [replies]);
+    const allReplies = storedReplies ? JSON.parse(storedReplies) : {};
+    const postReplies = allReplies[postId] || {};
+    setReplies(postReplies);
+  }, [postId]);
+
+  const saveCommentsToLocalStorage = (updatedComments: Comment[]) => {
+    const storedComments = localStorage.getItem('comments');
+    const allComments = storedComments ? JSON.parse(storedComments) : {};
+    allComments[postId] = updatedComments;
+    localStorage.setItem('comments', JSON.stringify(allComments));
+  };
+
+  const saveRepliesToLocalStorage = (updatedReplies: {
+    [key: number]: { [key: number]: Reply[] };
+  }) => {
+    const storedReplies = localStorage.getItem('replies');
+    const allReplies = storedReplies ? JSON.parse(storedReplies) : {};
+    allReplies[postId] = updatedReplies;
+    localStorage.setItem('replies', JSON.stringify(allReplies));
+  };
 
   const loggedUser = localStorage.getItem('loggedUser') || '';
   const userNickname = findUser(loggedUser)?.nickname || '';
@@ -198,7 +218,9 @@ const Comments: React.FC = () => {
         likes: 0,
         liked: false,
       };
-      setComments((prev) => [...prev, newCommentData]);
+      const updatedComments = [...comments, newCommentData];
+      setComments(updatedComments);
+      saveCommentsToLocalStorage(updatedComments);
       setNewComment('');
     }
   };
@@ -214,10 +236,17 @@ const Comments: React.FC = () => {
         createdAt: new Date().toISOString(),
       };
 
-      setReplies((prev) => ({
-        ...prev,
-        [commentId]: [...(prev[commentId] || []), newReply],
-      }));
+      setReplies((prev) => {
+        const updatedReplies = {
+          ...prev,
+          [commentId]: {
+            ...(prev[commentId] || {}),
+            [postId]: [...(prev[commentId]?.[postId] || []), newReply],
+          },
+        };
+        saveRepliesToLocalStorage(updatedReplies);
+        return updatedReplies;
+      });
 
       setReplyContent((prev) => ({ ...prev, [commentId]: '' }));
       setIsReplying((prev) => ({ ...prev, [commentId]: false }));
@@ -261,22 +290,23 @@ const Comments: React.FC = () => {
         value={newComment}
         onChange={(e) => setNewComment(e.target.value)}
       />
-      <Radio.Group
-        value={sortBy}
-        onChange={(e) => setSortBy(e.target.value)}
-        className="mt-3 flex justify-end"
-        defaultValue="latest"
-        optionType="button"
-      >
-        <Radio value="latest">최신순</Radio>
-        <Radio value="likes">좋아요순</Radio>
-      </Radio.Group>
+      {comments.length > 0 && (
+        <Radio.Group
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="mt-3 flex justify-end"
+          optionType="button"
+        >
+          <Radio value="latest">최신순</Radio>
+          <Radio value="likes">좋아요순</Radio>
+        </Radio.Group>
+      )}
       <div className="comment__list flex flex-col gap-1">
-        {sortedComments().map((comment) => (
+        {sortedComments().map((comment: Comment) => (
           <CommentItem
             key={comment.id}
             comment={comment}
-            replies={replies[comment.id] || []}
+            replies={replies[comment.id]?.[postId] || []}
             isReplying={isReplying[comment.id]}
             showReplies={showReplies[comment.id]}
             onToggleReply={() => toggleReplying(comment.id)}
