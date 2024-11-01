@@ -1,73 +1,90 @@
-import { Link, useNavigate } from 'react-router-dom'; // Import necessary routing components
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import logo from '../assets/img/logo.png';
 import userIcon from '../assets/img/icon_user.png';
-import { useSelector } from 'react-redux';
+import locationIcon from '../assets/img/icon_location.svg';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../hoc/store';
-import { useDispatch } from 'react-redux';
 import { logout } from '../hoc/actions';
 import { DownOutlined } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
-import { Dropdown, Space, message } from 'antd';
+import { Dropdown, Space, message, Select } from 'antd';
+import type { MenuProps, SelectProps } from 'antd';
+import { setAuthHeader, setUserRole, setUserEmail, getUserLocation } from '../hoc/request';
 import { findUser } from '../utils/userStorage';
-import { setAuthHeader, setUserRole, setUserEmail } from '../hoc/request';
 
-const items: MenuProps['items'] = [
-  {
-    label: '서울시 성동구',
-    key: '0',
-  },
-  {
-    label: '서울시 동작구',
-    key: '1',
-  },
-  {
-    type: 'divider',
-  },
-  {
-    label: <a href="/location">내 동네 설정</a>,
-    key: '3',
-  },
+// SearchInput 컴포넌트에 사용할 로컬 데이터
+const items = [
+  { value: '서울시 성동구', text: '서울시 성동구' },
+  { value: '서울시 동작구', text: '서울시 동작구' },
+  { value: '서울시 강남구', text: '서울시 강남구' },
+  { value: '서울시 서초구', text: '서울시 서초구' },
+  { value: '서울시 관악구', text: '서울시 관악구' },
+  // 필요한 다른 데이터 추가
 ];
+
+// 검색 기능을 수행하는 함수
+const fetch = (
+  value: string,
+  callback: (data: { value: string; text: string }[]) => void
+) => {
+  const filteredData = items.filter((item) =>
+    item.text.toLowerCase().includes(value.toLowerCase())
+  );
+  callback(filteredData);
+};
+
+// SearchInput 컴포넌트
+const SearchInput: React.FC<{
+  placeholder: string;
+  style: React.CSSProperties;
+  value: string;
+  onChange: (newValue: string) => void;
+}> = (props) => {
+  const [data, setData] = useState<SelectProps['options']>([]);
+
+  const handleSearch = (newValue: string) => {
+    fetch(newValue, setData);
+  };
+
+  return (
+    <div className='flex gap-3 items-center'>
+      <Select
+        showSearch
+        value={props.value}
+        placeholder={props.placeholder}
+        style={props.style}
+        defaultActiveFirstOption={false}
+        filterOption={false}
+        onSearch={handleSearch}
+        onChange={props.onChange}
+        notFoundContent={null}
+        options={(data || []).map((d) => ({
+          value: d.value,
+          label: d.text,
+        }))}
+      />
+      {/* 현위치 받아오기 */}
+      <button onClick={()=>props.onChange('현위치')}> 
+        <img src={locationIcon} width={'20px'} />
+      </button>
+    </div>
+  );
+};
 
 interface LoggedInComponentProps {
   onLogout: () => void;
 }
 
 function LoggedInComponent({ onLogout }: LoggedInComponentProps) {
-  const [label, setLabel] = useState<string>('내 동네 설정');
   const loggedUser = localStorage.getItem('loggedUser');
   let user;
   if (loggedUser) {
     user = findUser(loggedUser);
   }
 
-  const handleMenuClick: MenuProps['onClick'] = (e) => {
-    const selectedItem = items?.find((item) => item?.key === e.key);
-    if (selectedItem && 'label' in selectedItem) {
-      setLabel(selectedItem.label as string);
-    }
-  };
-
-  const menu: MenuProps = {
-    items: items?.map((item) => ({
-      ...item,
-      onClick: item && 'label' in item ? handleMenuClick : undefined,
-    })),
-  };
   return (
     <div>
-      <ul className="flex gap-8 items-center ">
-        <li>
-          <Dropdown menu={menu}>
-            <a onClick={(e) => e.preventDefault()}>
-              <Space>
-                {label}
-                <DownOutlined />
-              </Space>
-            </a>
-          </Dropdown>
-        </li>
+      <ul className='flex gap-8 items-center '>
         <li>
           <span onClick={onLogout} style={{ cursor: 'pointer' }}>
             로그아웃
@@ -86,23 +103,26 @@ function LoggedInComponent({ onLogout }: LoggedInComponentProps) {
 
 function LoggedOutComponent() {
   return (
-    <nav className="flex items-center ">
-      <ul className="flex gap-8 items-center ">
+    <nav className='flex items-center'>
+      <ul className='flex gap-8 items-center '>
         <li>
-          <Link to="/register">회원가입</Link>
+          <Link to='/register'>회원가입</Link>
         </li>
         <li>
-          <Link to="/login">로그인</Link>
+          <Link to='/login'>로그인</Link>
         </li>
       </ul>
     </nav>
   );
 }
 
+// Header 컴포넌트
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  const [searchValue, setSearchValue] = useState<string>('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userLocation = getUserLocation(); //사용자의 초기 위치값
 
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
@@ -118,31 +138,41 @@ function Header() {
     setUserEmail(null);
     setAuthHeader(null);
     setIsLoggedIn(false);
-    dispatch(logout()); // Dispatch login success action with role
+    dispatch(logout());
     message.success('로그아웃 성공!');
     navigate('/');
   };
 
+  const handleSearchValueChange = (newValue: string) => {
+    setSearchValue(newValue); // searchValue 업데이트
+  };
+
   return (
-    <div className="w-screen px-6 py-3 flex items-center bg-white border-b">
-      <Link to="/">
-        <img src={logo} alt="logo" width={130} />
+    <div className='w-screen px-6 py-3 flex items-center bg-white border-b'>
+      <Link to='/'>
+        <img src={logo} alt='logo' width={130} />
       </Link>
 
-      <div className="w-full flex justify-between">
-        <nav className="flex items-center ">
-          <ul className="flex gap-8 items-center ">
+      <div className='w-full flex justify-between'>
+        <nav className='flex items-center'>
+          <ul className='flex gap-8 items-center'>
             <li>
-              <Link to="/qna">Q&A</Link>
+              <Link to='/qna'>Q&A</Link>
             </li>
             <li>
-              <Link to="/hana">우주하나</Link>
+              <Link to='/hana'>우주하나</Link>
             </li>
             <li>
-              <Link to="/findbank">영업점 찾기</Link>
+              <Link to='/findbank'>영업점 찾기</Link>
             </li>
           </ul>
         </nav>
+
+        <div className='flex ml-auto mr-10 gap-3 items-center'>
+          {/* 검색한 위치가 없는 경우, userLocation값이 입력됨 */}
+          <SearchInput placeholder='지역을 입력하세요' style={{ width: 200 }} value={searchValue || userLocation} onChange={handleSearchValueChange} />
+        </div>
+
         {isLoggedIn ? (
           <LoggedInComponent onLogout={handleLogout} />
         ) : (
