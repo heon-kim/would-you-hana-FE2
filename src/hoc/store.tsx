@@ -7,13 +7,15 @@ interface AuthState {
     authToken: string | null;
     userRole: string | null;
     userEmail: string | null;
+    userLocation: string | null;
 }
 
 const initialAuthState: AuthState = {
     isAuthenticated: false,
     authToken: null,
     userRole: null,
-    userEmail: null
+    userEmail: null,
+    userLocation: null
 };
 
 // Auth reducer to handle authentication-related actions
@@ -25,7 +27,8 @@ const authReducer = (state = initialAuthState, action: AuthActionTypes): AuthSta
                 isAuthenticated: true,
                 authToken: action.payload.token,
                 userRole: action.payload.role,
-                userEmail: action.payload.email
+                userEmail: action.payload.email,
+                userLocation: action.payload.location
             };
         case LOGOUT:
             return {
@@ -33,7 +36,8 @@ const authReducer = (state = initialAuthState, action: AuthActionTypes): AuthSta
                 isAuthenticated: false,
                 authToken: null,
                 userRole: null,
-                userEmail: null
+                userEmail: null,
+                userLocation: null
             };
         default:
             return state;
