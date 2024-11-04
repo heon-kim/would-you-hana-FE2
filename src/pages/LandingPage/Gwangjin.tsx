@@ -190,7 +190,7 @@ const Gwangjin: React.FC = () => {
                     <div style={{ fontSize: '36px', marginRight: '15px' }}>🥇</div>
                     <img src={iconUser} alt="User Icon" style={{ width: '100px', height: '100px', marginRight: '15px', marginLeft: '0px'}} />
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        <div style={{ fontSize: '20px', fontWeight: 'bold' }}>보섭살김하나</div>
+                        <div style={{ fontSize: '20px', fontWeight: 'bold' }}>안창살김하나</div>
                         <div style={{ fontSize: '18px', fontWeight: 'bold' }}>LV24</div>
                         <div style={{ fontSize: '18px'}}>활동🥁: 46</div>
                         <div style={{ fontSize: '18px'}}>좋아요👍🏻: 89</div>
@@ -199,7 +199,7 @@ const Gwangjin: React.FC = () => {
                 <div style={{ display: 'flex', alignItems: 'center',  backgroundColor: '#f6FE8060', padding: '20px', borderRadius: '10px', marginBottom: '10px', marginLeft: '0px', width: '100%',textAlign:'left' }}>
                     <span style={{ fontSize: '36px', marginRight: '20px', lineHeight: '1' }}>🥈</span>
                     <div style={{display: 'grid', gridTemplateColumns: '150px auto auto auto', alignItems: 'center', width: '100%', gap: '10px' }}>
-                        <span style={{ fontSize: '20px', fontWeight: 'bold' }}>별돌이도내꺼야</span>
+                        <span style={{ fontSize: '20px', fontWeight: 'bold' }}>별송이내꺼야</span>
                         <span style={{ fontSize: '18px', fontWeight: 'bold' }}>LV18</span>
                         <span style={{ fontSize: '18px' }}>활동🥁: 46</span>
                         <span style={{ fontSize: '18px' }}>좋아요👍🏻: 89</span>
@@ -208,7 +208,7 @@ const Gwangjin: React.FC = () => {
                 <div style={{ display: 'flex', alignItems: 'center',  backgroundColor: '#ADC8E650', padding: '20px', borderRadius: '10px', marginBottom: '10px', marginLeft: '0px', width: '100%',textAlign:'left' }}>
                     <span style={{ fontSize: '36px', marginRight: '20px', lineHeight: '1' }}>🥉</span>
                     <div style={{display: 'grid', gridTemplateColumns: '150px auto auto auto', alignItems: 'center', width: '100%', gap: '10px'}}>
-                        <span style={{ fontSize: '20px', fontWeight: 'bold' }}>나폴리맛피아</span>
+                        <span style={{ fontSize: '20px', fontWeight: 'bold' }}>최강식록</span>
                         <span style={{ fontSize: '18px', fontWeight: 'bold' }}>LV42</span>
                         <span style={{ fontSize: '18px' }}>활동🥁: 16</span>
                         <span style={{ fontSize: '18px' }}>좋아요👍🏻: 24</span>

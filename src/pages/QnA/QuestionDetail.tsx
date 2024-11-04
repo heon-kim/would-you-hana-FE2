@@ -6,7 +6,7 @@ import { findPost } from '../../utils/postStorage';
 import '../../App.css';
 import PostRegisterButton from '../../components/PostRegisterButton';
 import Comments from '../../components/post/Comments';
-// import Answer from '../../components/post/Answer';
+import Answer from '../../components/post/Answer';
 import { relativeTime } from '../../utils/stringFormat';
 
 const QuestionDetail: React.FC = () => {
@@ -79,7 +79,7 @@ const QuestionDetail: React.FC = () => {
               <span>{relativeTime(+new Date(post.createdAt))}</span>
             </div>
           </div>
-          {/* <Answer /> */}
+          <Answer />
           <Comments />
         </div>
         <aside className="widget" style={{ width: '30%' }}>
