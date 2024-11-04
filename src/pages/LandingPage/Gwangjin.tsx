@@ -70,7 +70,7 @@ const Gwangjin: React.FC = () => {
 
     return (
     <div style={{ width: '100%', padding: '20 20' }}>
-        <div style={{ textAlign: 'center' }}>
+        <div style={{ textAlign: 'center', marginTop:'20px' }}>
         <Row
             gutter={[16, 16]}
             style={{ backgroundColor: '#00848515', height: '600px' }}
