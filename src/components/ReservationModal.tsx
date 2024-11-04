@@ -191,7 +191,6 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
                 onPanelChange={onPanelChange}
               />
             </div>
-            {/* </> */}
           </div>
           <div style={{ marginTop: '20px' }}>
             <Typography.Title level={5}>오전</Typography.Title>
