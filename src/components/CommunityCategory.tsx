@@ -1,38 +1,37 @@
-import React, { useState } from 'react';
-import type { RadioChangeEvent } from 'antd';
-import { Radio, Tabs } from 'antd';
+import React from 'react';
+import { Tabs } from 'antd';
 
-type TabPosition = 'left' | 'right' | 'top' | 'bottom';
-
-const CommunityCategory: React.FC = () =>{
-    const [mode, setMode] = useState<TabPosition>('top');
-
-  const handleModeChange = (e: RadioChangeEvent) => {
-    setMode(e.target.value);
-  };
-
-    return(
-         <div>
-      {/* <Radio.Group onChange={handleModeChange} value={mode} style={{ marginBottom: 8 }}>
-        <Radio.Button value="top">Horizontal</Radio.Button>
-        <Radio.Button value="left">Vertical</Radio.Button>
-      </Radio.Group> */}
-      <Tabs
-        defaultActiveKey="1"
-        tabPosition={mode}
-        style={{ height: 220 }}
-        items={new Array(30).fill(null).map((_, i) => {
-          const id = String(i);
-          return {
-            label: `Tab-${id}`,
-            key: id,
-            disabled: i === 28,
-            children: `Content of tab ${id}`,
-          };
-        })}
-      />
-    </div>
-    )
+interface CommunityCategoryProps {
+  setCategory: (category: string) => void;
 }
+
+const CommunityCategory: React.FC<CommunityCategoryProps> = ({ setCategory }) => {
+  const categories = [
+    { label: '전체', key: '전체'},
+    { label: '주식', key: '주식'},
+    { label: '소비', key: '소비'},
+    { label: '저축', key: '저축'},
+    { label: '청약', key: '청약'},
+    { label: '연말정산', key: '연말정산'},
+    { label: '금융', key: '금융'},
+    { label: '노후 대비', key: '노후 대비'},
+    { label: '절약', key: '절약'},
+    { label: '신용점수 올리기', key: '신용점수 올리기'},
+    { label: '세금/납부', key: '세금/납부'},
+    { label: '학자금대출', key: '학자금대출'},
+    
+  ];
+
+  return (
+    <Tabs
+      defaultActiveKey="저축"
+      onChange={setCategory}
+      items={categories.map(category => ({
+        label: category.label,
+        key: category.key,
+      }))}
+    />
+  );
+};
 
 export default CommunityCategory;
