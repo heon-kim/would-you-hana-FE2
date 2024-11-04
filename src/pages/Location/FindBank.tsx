@@ -158,6 +158,7 @@ const FindBank = () => {
         </div>
       </div>
       <ReservationModal isOpen={isModalOpen} onOk={handleOk} onCancel={handleCancel}/>
+      <hr></hr>
     </div>
   );
 };
