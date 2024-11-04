@@ -165,6 +165,9 @@ function Header() {
             <li>
               <Link to='/findbank'>영업점 찾기</Link>
             </li>
+            <li>
+              <Link to='/community'>커뮤니티</Link>
+            </li>
           </ul>
         </nav>
 
