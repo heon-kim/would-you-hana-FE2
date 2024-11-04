@@ -134,49 +134,48 @@ const Gwangjin: React.FC = () => {
                     //onClick={() => navigate('/feature-a')}
                 >
                     <CardContent
-                        type="예금"
+                        type="예금/적금"
                         date="2024.10.30 10:31"
                         likes={'2.5K개'}
                         views={'21.2K회'}
-                        content="일반예금 관련해서 형이 정리해줄게 들어와봐."
+                        content="광진구에서 계좌 개설 어디가 좋을까요?"
                     />
                     <CardContent
-                        type="적금"
+                        type="소비"
                         date="2024.10.29 09:15"
                         likes={'1.0K개'}
                         views={'12.1K회'}
-                        content="청년 주택 드림 청약통장이 기존 청약통장과 다른 점이 무엇인가요?"
+                        content="광진구에서 저렴한 카페 추천 좀!"
                     />
                     <CardContent
-                        type="대출"
+                        type="주식"
                         date="2024.10.30 10:31"
                         likes={'2.5K개'}
                         views={'21.2K회'}
-                        content="만 26세 중소기업 재직 중입니다."
+                        content="광진구 근처 주식 강의 듣고 싶어요"
                     />
                 </Card>
-            </Col>
-
-            <Col xs={24} sm={8}>
+          </Col>
+          <Col xs={24} sm={8}>
                 <Card
                 title={<span style={{ fontSize: '24px', fontWeight: 'bold' }}>✒️ 방금 답변이 작성된 Q&A</span>}
                 style={{ textAlign: 'center' }}
                 //onClick={() => navigate('/feature-b')}
                 >
                     <CardContent
-                        type="예금"
+                        type="예금/적금"
                         date="2024.10.31 10:31"
                         likes={'122개'}
                         views={'1.0K회'}
-                        content="요즘 일반예금 금리가 어느 정도 되나요?"
+                        content="청년 우대 통장 관련 문의"
                     />
 
                     <CardContent
-                        type="외환"
+                        type="카드"
                         date="2024.11.03 10:31"
                         likes={'182개'}
                         views={'2.0K회'}
-                        content="해외에서도 금융인증서를 이용할 수 있나요??"
+                        content="적립형 체크카드 추천 부탁드려요"
                     />
                 </Card>
             </Col>
@@ -187,20 +186,20 @@ const Gwangjin: React.FC = () => {
                 style={{ textAlign: 'center' }}
                 //onClick={() => navigate('/feature-c')}
                 >
-                <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#ffC0CB60', padding: '20px', borderRadius: '10px', marginBottom: '10px', marginLeft:'0px', textAlign:'left' }}>
+                <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#ffC0CB60', padding: '20px', borderRadius: '10px', marginBottom: '10px', marginLeft:'0px',textAlign:'left' }}>
                     <div style={{ fontSize: '36px', marginRight: '15px' }}>🥇</div>
                     <img src={iconUser} alt="User Icon" style={{ width: '100px', height: '100px', marginRight: '15px', marginLeft: '0px'}} />
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        <div style={{ fontSize: '20px', fontWeight: 'bold' }}>안창살김하나</div>
+                        <div style={{ fontSize: '20px', fontWeight: 'bold' }}>보섭살김하나</div>
                         <div style={{ fontSize: '18px', fontWeight: 'bold' }}>LV24</div>
                         <div style={{ fontSize: '18px'}}>활동🥁: 46</div>
                         <div style={{ fontSize: '18px'}}>좋아요👍🏻: 89</div>
                     </div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center',  backgroundColor: '#f6FE8060', padding: '20px', borderRadius: '10px', marginBottom: '10px', marginLeft: '0px', width: '100%', textAlign:'left' }}>
+                <div style={{ display: 'flex', alignItems: 'center',  backgroundColor: '#f6FE8060', padding: '20px', borderRadius: '10px', marginBottom: '10px', marginLeft: '0px', width: '100%',textAlign:'left' }}>
                     <span style={{ fontSize: '36px', marginRight: '20px', lineHeight: '1' }}>🥈</span>
                     <div style={{display: 'grid', gridTemplateColumns: '150px auto auto auto', alignItems: 'center', width: '100%', gap: '10px' }}>
-                        <span style={{ fontSize: '20px', fontWeight: 'bold' }}>별송이내꺼야</span>
+                        <span style={{ fontSize: '20px', fontWeight: 'bold' }}>별돌이도내꺼야</span>
                         <span style={{ fontSize: '18px', fontWeight: 'bold' }}>LV18</span>
                         <span style={{ fontSize: '18px' }}>활동🥁: 46</span>
                         <span style={{ fontSize: '18px' }}>좋아요👍🏻: 89</span>
@@ -209,7 +208,7 @@ const Gwangjin: React.FC = () => {
                 <div style={{ display: 'flex', alignItems: 'center',  backgroundColor: '#ADC8E650', padding: '20px', borderRadius: '10px', marginBottom: '10px', marginLeft: '0px', width: '100%',textAlign:'left' }}>
                     <span style={{ fontSize: '36px', marginRight: '20px', lineHeight: '1' }}>🥉</span>
                     <div style={{display: 'grid', gridTemplateColumns: '150px auto auto auto', alignItems: 'center', width: '100%', gap: '10px'}}>
-                        <span style={{ fontSize: '20px', fontWeight: 'bold' }}>최강식록</span>
+                        <span style={{ fontSize: '20px', fontWeight: 'bold' }}>나폴리맛피아</span>
                         <span style={{ fontSize: '18px', fontWeight: 'bold' }}>LV42</span>
                         <span style={{ fontSize: '18px' }}>활동🥁: 16</span>
                         <span style={{ fontSize: '18px' }}>좋아요👍🏻: 24</span>
@@ -218,8 +217,9 @@ const Gwangjin: React.FC = () => {
                 </Card>
             </Col>
         </Row>
+      </div>
     </div>
-    </div>
-);};
+  );
+};
 
 export default Gwangjin;

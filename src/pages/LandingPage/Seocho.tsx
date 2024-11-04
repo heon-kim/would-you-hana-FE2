@@ -163,25 +163,25 @@ const Seocho: React.FC = () => {
                     //onClick={() => navigate('/feature-a')}
                 >
                     <CardContent
-                        type="예금"
-                        date="2024.10.30 10:31"
-                        likes={'2.5K개'}
-                        views={'21.2K회'}
-                        content="일반예금 관련해서 형이 정리해줄게 들어와봐."
-                    />
-                    <CardContent
-                        type="적금"
-                        date="2024.10.29 09:15"
-                        likes={'1.0K개'}
-                        views={'12.1K회'}
-                        content="청년 주택 드림 청약통장이 기존 청약통장과 다른 점이 무엇인가요?"
-                    />
-                    <CardContent
                         type="대출"
                         date="2024.10.30 10:31"
                         likes={'2.5K개'}
                         views={'21.2K회'}
-                        content="만 26세 중소기업 재직 중입니다."
+                        content="서초구에서 전세자금 대출 상담 잘해주는 곳"
+                    />
+                    <CardContent
+                        type="소비"
+                        date="2024.10.29 09:15"
+                        likes={'1.0K개'}
+                        views={'12.1K회'}
+                        content="서초구 맛집 리스트 공유해요"
+                    />
+                    <CardContent
+                        type="주식"
+                        date="2024.10.30 10:31"
+                        likes={'2.5K개'}
+                        views={'21.2K회'}
+                        content="서초구 사람들 주식 어떤 종목 투자해요?"
                     />
                 </Card>
           </Col>
@@ -192,11 +192,11 @@ const Seocho: React.FC = () => {
                 //onClick={() => navigate('/feature-b')}
                 >
                     <CardContent
-                        type="예금"
+                        type="대출"
                         date="2024.10.31 10:31"
                         likes={'122개'}
                         views={'1.0K회'}
-                        content="요즘 일반예금 금리가 어느 정도 되나요?"
+                        content="사업자 대출 조건이 궁금합니다"
                     />
 
                     <CardContent
@@ -204,7 +204,7 @@ const Seocho: React.FC = () => {
                         date="2024.11.03 10:31"
                         likes={'182개'}
                         views={'2.0K회'}
-                        content="해외에서도 금융인증서를 이용할 수 있나요??"
+                        content="외화 통장 개설 관련 문의"
                     />
                 </Card>
             </Col>
