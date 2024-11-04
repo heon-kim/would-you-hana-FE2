@@ -1,11 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import markerImg from '../../assets/img/mark.png';
+import ReservationModal from '../../components/ReservationModal';
 
 const FindBank = () => {
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [positions, setPositions] = useState([]); // Store fetched locations
   const [userLocation, setUserLocation] = useState(null); // Store user's current location
   const [userDistrict, setUserDistrict] = useState(''); // Store user's district information
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   useEffect(() => {
     // Get user location
@@ -18,7 +33,6 @@ const FindBank = () => {
           };
           setUserLocation(userLatLng);
 
-          // Load Kakao Maps API for reverse geocoding
           const script = document.createElement('script');
           script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=26b73c9fe72dd7a39fc3df547c6175f2&libraries=services&autoload=false`;
           document.head.appendChild(script);
@@ -65,7 +79,6 @@ const FindBank = () => {
 
           const places = new window.kakao.maps.services.Places();
 
-          // Create a custom overlay for user's location
           const userMarker = document.createElement('div');
           userMarker.style.width = '15px';
           userMarker.style.height = '15px';
@@ -141,8 +154,11 @@ const FindBank = () => {
         )}
         <div style={{ padding: '10px', textAlign: 'center' }}>
           {/* <p>현재 위치: {userDistrict}</p> */}
+        <button style={{width:'100%', backgroundColor:'#008485', borderRadius:'3px', padding:'5px', color:'white'}} onClick={showModal}>예약하기</button>
         </div>
       </div>
+      <ReservationModal isOpen={isModalOpen} onOk={handleOk} onCancel={handleCancel}/>
+      <hr></hr>
     </div>
   );
 };

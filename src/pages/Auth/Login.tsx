@@ -6,7 +6,7 @@ import { findUser } from '../../utils/userStorage';
 import { message } from 'antd';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../../hoc/actions';
-import { setAuthHeader, setUserEmail, setUserRole } from '../../hoc/request';
+import { getUserLocation, setAuthHeader, setUserEmail, setUserLocation, setUserRole } from '../../hoc/request';
 
 const Login: React.FC = () => {
   const [userType, setUserType] = useState<'C' | 'B'>('C'); // 일반회원(customer: C) | 행원(banker: B)
@@ -35,11 +35,13 @@ const Login: React.FC = () => {
       localStorage.setItem('loggedUser', email);
       const token: string = 'generatedAuthToken'; // string 타입 지정
       const role: string = userType; // string 타입 지정
-      console.log('Dispatching loginSuccess with:', { token, role, email });
-      dispatch(loginSuccess(token, role,email)); // Dispatch login success action with role
+      const location: string = storedUser.location;
+      console.log('Dispatching loginSuccess with:', { token, role, email, location });
+      dispatch(loginSuccess(token, role, email, location)); // Dispatch login success action with role
       setAuthHeader(token);
       setUserRole(role);
       setUserEmail(email);
+      setUserLocation(location);
       message.success('로그인 성공!');
       navigate('/');
     } else {
@@ -48,7 +50,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="h-full flex justify-center items-center">
+    <div className="h-full flex flex-col justify-center items-center gap-10">
       <div className="w-96 p-8 flex flex-col gap-6  bg-white shadow-lg rounded-lg">
         <h2 className="text-lg text-bold text-center">WOULD YOU HANA</h2>
         <UserTypeRadio
@@ -81,6 +83,13 @@ const Login: React.FC = () => {
           </button>
         </form>
       </div>
+      <div className='flex justify-center w-full text-center gap-2 text-sm'>
+            <button
+             onClick={() => navigate('/register')}
+            >회원가입</button>
+            <p>|</p>
+            <button>비밀번호 찾기</button>
+          </div>
     </div>
   );
 };

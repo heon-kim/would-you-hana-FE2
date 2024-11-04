@@ -1,12 +1,24 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import iconPencil from '../assets/img/icon_pencil.svg'
+import { getAuthToken, getUserEmail } from "../hoc/request";
+import { message } from "antd";
 
 const PostRegisterButton: React.FC = () => {
     const navigate = useNavigate();
-
+    
     const handleButtonClick = () => {
-        navigate("/qna/regist"); // QuestionRegister 경로로 이동
+        const isLoggedIn = getAuthToken();
+        //로그인 여부 확인 후,
+        //로그인 했으면 질문등록하기로 이동.
+        //로그인 안했으면 로그인/회원가입 페이지로 이동.
+        if(isLoggedIn === 'null' || isLoggedIn === undefined){
+            message.warning('로그인이 필요합니다.')
+            navigate("/login");
+        }
+        else{
+            navigate("/qna/regist");
+        }
     };
 
     return (

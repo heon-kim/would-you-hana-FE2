@@ -20,6 +20,11 @@ export const getUserEmail = (): string | null => {
     return window.localStorage.getItem('user_email');
 };
 
+//로컬 스토리지에서 'user_location'이라는 키로 저장된 사용자 위치를 가져오는 함수
+export const getUserLocation= (): string | null =>{
+    return window.localStorage.getItem('user_location');
+};
+
 //로컬 스토리지에 JWT 토큰을 'auth_token' 키로 저장하는 함수
 export const setAuthHeader = (token: string): void => {
     window.localStorage.setItem('auth_token', token);
@@ -34,6 +39,11 @@ export const setUserRole = (role: string): void => {
 export const setUserEmail = (email: string):void => {
     window.localStorage.setItem('user_email', email);
 };
+
+//로컬 스토리지에 위치를 'user_location' 키로 저장하는 함수
+export const setUserLocation = (location: string):void=>{
+    window.localStorage.setItem('user_location', location);
+}
 
 interface RequestConfig {
     method: Method;    // HTTP method (e.g., 'GET', 'POST', etc.)
