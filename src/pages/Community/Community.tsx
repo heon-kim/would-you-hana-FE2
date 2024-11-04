@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { Divider, List, Skeleton } from 'antd';
 import CommunityNotice from '../../components/CommunityNotice';
-import IconUser from '../../assets/img/icon_user.png';
+// import IconUser from '../../assets/img/icon_user.png';
 import ImgBank from '../../assets/img/img_community3.jpg';
 import ImgBank2 from '../../assets/img/img_community2.png';
 import CommunityCategory from '../../components/CommunityCategory';
