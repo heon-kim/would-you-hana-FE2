@@ -156,7 +156,7 @@ const Seocho: React.FC = () => {
                     
                     title={<span style={{ fontSize: '24px', fontWeight: 'bold' }}>🔥 HOT 금융 게시물</span>}
                     style={{ textAlign: 'center', fontSize: '20px' }}
-                    onClick={() => navigate('/feature-a')}
+                    //onClick={() => navigate('/feature-a')}
                 >
                     <CardContent
                         type="예금"
@@ -185,7 +185,7 @@ const Seocho: React.FC = () => {
                 <Card
                 title={<span style={{ fontSize: '24px', fontWeight: 'bold' }}>✒️ 방금 답변이 작성된 Q&A</span>}
                 style={{ textAlign: 'center' }}
-                onClick={() => navigate('/feature-b')}
+                //onClick={() => navigate('/feature-b')}
                 >
                     <CardContent
                         type="예금"
@@ -209,7 +209,7 @@ const Seocho: React.FC = () => {
                 <Card
                 title={<span style={{ fontSize: '24px', fontWeight: 'bold' }}>🏆 오늘의 열혈 답변가</span>}
                 style={{ textAlign: 'center' }}
-                onClick={() => navigate('/feature-c')}
+                //onClick={() => navigate('/feature-c')}
                 >
                 <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#ffC0CB60', padding: '20px', borderRadius: '10px', marginBottom: '10px', marginLeft:'0px' }}>
                     <div style={{ fontSize: '36px', marginRight: '15px' }}>🥇</div>
