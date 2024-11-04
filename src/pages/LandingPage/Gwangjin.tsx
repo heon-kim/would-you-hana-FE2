@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Row, Col, Card } from 'antd';
 import hanaFamilyTogether from '../../assets/img/HanaFamilyTogeter.png'
 import iconUser from '../../assets/img/icon_user.png'
-import trendKeyword from '../../assets/img/trendKeyword.png'
+import trendKeyword from '../../assets/img/trendKeyword_gwangjin.png'
 import { useSelector } from 'react-redux';
 import { RootState } from '../../hoc/store';
 
@@ -105,11 +105,14 @@ const Gwangjin: React.FC = () => {
             </strong>
             </h1>
 
-            <img style={{marginLeft:'0px', padding:'0px '}}
+            <div className='flex justify-center items-center w-full p-6'>
+              <img
+                style={{ marginLeft: '0px', padding: '0px ' }}
                 src={trendKeyword}
-                alt="trendKeyword"
-                width={700}
-            />
+                alt='trendKeyword'
+                width={350}
+              />
+            </div>
             <strong>
                 <span style={{ color: 'black', fontSize:'20px',textAlign:'left' }}> 오늘 광진구에서 <span style={{fontSize:'30px'}}>1,231개</span>의 질문, <span style={{fontSize:'30px'}}>210개</span>의 답변이 등록되었습니다!</span>
             </strong>
