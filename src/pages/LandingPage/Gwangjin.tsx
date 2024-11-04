@@ -38,21 +38,22 @@ const flagGuTextStyle = {
 };
 
 const CardContent = ({ type, date, likes,views, content }: { type: string, date: string, likes: string, views:string, content: string }) => (
-    <div style={{ textAlign: 'left' }}>
+    <div style={{ textAlign: 'left', padding:'10px',marginTop:'10px'}}>
         <div style={{ marginTop: '10px', justifyContent: 'space-between' }}>
             <span style={{ fontSize: '16px', fontWeight: 'bold', color: '#FF6F61' }}>{type}</span>
             <span style={{ fontSize: '14px', color: '#888888', marginLeft:'20px' }}> {date}</span>
         </div>
-        <div style={{ fontSize: '18px', color: '#000', marginTop: '10px' }}>{content}</div>
+        <div style={{ fontSize: '22px', color: '#000', marginTop: '10px' }}>{content}</div>
         <div style={{ marginTop: '10px', justifyContent: 'space-between', textAlign:'end' }}>
-            <span style={{ fontSize: '14px', color: '#888888' }}>좋아요 {likes}</span>
+            <span style={{ fontSize: '14px', color: '#888888', marginRight:'20px'}}>좋아요 {likes}</span>
             <span style={{ fontSize: '14px', color: '#888888' }}>👀조회수 {views}</span>
         </div>
+        <hr style={{marginTop:'20px', color:'black'}}/>
     </div>
 );
 
 const Gwangjin: React.FC = () => {
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
 
     const isAuthenticated = useSelector(
         (state: RootState) => state.auth.isAuthenticated
@@ -75,8 +76,8 @@ const Gwangjin: React.FC = () => {
             style={{ backgroundColor: '#00848515', height: '600px' }}
         >
         <Col span={12}>
-            <div style={{ marginLeft: '25px', display: 'flex', justifyContent: 'start' }}>
-                <div style={{ display: 'flex', gap: '30px', width: '300px' }}>
+            <div style={{ marginLeft: '100px', display: 'flex', justifyContent: 'start' }}>
+                <div style={{ marginLeft:'11px' }}>
                 <GuBadge />
                 </div>
             </div>
@@ -183,32 +184,32 @@ const Gwangjin: React.FC = () => {
                 style={{ textAlign: 'center' }}
                 //onClick={() => navigate('/feature-c')}
                 >
-                <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#ffC0CB60', padding: '20px', borderRadius: '10px', marginBottom: '10px', marginLeft:'0px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', backgroundColor: '#ffC0CB60', padding: '20px', borderRadius: '10px', marginBottom: '10px', marginLeft:'0px', textAlign:'left' }}>
                     <div style={{ fontSize: '36px', marginRight: '15px' }}>🥇</div>
                     <img src={iconUser} alt="User Icon" style={{ width: '100px', height: '100px', marginRight: '15px', marginLeft: '0px'}} />
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        <div style={{ fontSize: '18px', fontWeight: 'bold' }}>안창살김하나</div>
-                        <div style={{ fontSize: '16px', fontWeight: 'bold' }}>LV24</div>
-                        <div style={{ fontSize: '14px'}}>활동🥁: 46</div>
-                        <div style={{ fontSize: '14px'}}>좋아요👍🏻: 89</div>
+                        <div style={{ fontSize: '20px', fontWeight: 'bold' }}>안창살김하나</div>
+                        <div style={{ fontSize: '18px', fontWeight: 'bold' }}>LV24</div>
+                        <div style={{ fontSize: '18px'}}>활동🥁: 46</div>
+                        <div style={{ fontSize: '18px'}}>좋아요👍🏻: 89</div>
                     </div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center',  backgroundColor: '#f6FE8060', padding: '20px', borderRadius: '10px', marginBottom: '10px', marginLeft: '0px', width: '100%' }}>
+                <div style={{ display: 'flex', alignItems: 'center',  backgroundColor: '#f6FE8060', padding: '20px', borderRadius: '10px', marginBottom: '10px', marginLeft: '0px', width: '100%', textAlign:'left' }}>
                     <span style={{ fontSize: '36px', marginRight: '20px', lineHeight: '1' }}>🥈</span>
                     <div style={{display: 'grid', gridTemplateColumns: '150px auto auto auto', alignItems: 'center', width: '100%', gap: '10px' }}>
-                        <span style={{ fontSize: '18px', fontWeight: 'bold' }}>별송이내꺼야</span>
-                        <span style={{ fontSize: '16px', fontWeight: 'bold' }}>LV18</span>
-                        <span style={{ fontSize: '14px' }}>활동🥁: 46</span>
-                        <span style={{ fontSize: '14px' }}>좋아요👍🏻: 89</span>
+                        <span style={{ fontSize: '20px', fontWeight: 'bold' }}>별송이내꺼야</span>
+                        <span style={{ fontSize: '18px', fontWeight: 'bold' }}>LV18</span>
+                        <span style={{ fontSize: '18px' }}>활동🥁: 46</span>
+                        <span style={{ fontSize: '18px' }}>좋아요👍🏻: 89</span>
                     </div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center',  backgroundColor: '#ADC8E650', padding: '20px', borderRadius: '10px', marginBottom: '10px', marginLeft: '0px', width: '100%' }}>
+                <div style={{ display: 'flex', alignItems: 'center',  backgroundColor: '#ADC8E650', padding: '20px', borderRadius: '10px', marginBottom: '10px', marginLeft: '0px', width: '100%',textAlign:'left' }}>
                     <span style={{ fontSize: '36px', marginRight: '20px', lineHeight: '1' }}>🥉</span>
-                    <div style={{display: 'grid', gridTemplateColumns: 'auto auto auto auto', alignItems: 'center', width: '100%', gap: '10px'}}>
-                        <span style={{ fontSize: '18px', fontWeight: 'bold' }}>최강식록</span>
-                        <span style={{ fontSize: '16px', fontWeight: 'bold' }}>LV42</span>
-                        <span style={{ fontSize: '14px' }}>활동🥁: 16</span>
-                        <span style={{ fontSize: '14px' }}>좋아요👍🏻: 24</span>
+                    <div style={{display: 'grid', gridTemplateColumns: '150px auto auto auto', alignItems: 'center', width: '100%', gap: '10px'}}>
+                        <span style={{ fontSize: '20px', fontWeight: 'bold' }}>최강식록</span>
+                        <span style={{ fontSize: '18px', fontWeight: 'bold' }}>LV42</span>
+                        <span style={{ fontSize: '18px' }}>활동🥁: 16</span>
+                        <span style={{ fontSize: '18px' }}>좋아요👍🏻: 24</span>
                     </div>
                 </div>
                 </Card>
