@@ -1,130 +1,125 @@
 import React, { useEffect, useState } from 'react';
-import IconAnnouncement from '../../assets/img/icon_announcement.png'
-import IconWouldYouHana from '../../assets/img/would_you_hana.png'
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Avatar, Divider, List, Skeleton } from 'antd';
+import { Divider, List, Skeleton } from 'antd';
+import CommunityNotice from '../../components/CommunityNotice';
+import IconUser from '../../assets/img/icon_user.png';
 
-  interface DataType {
-    gender: string;
-    name: {
-      title: string;
-      first: string;
-      last: string;
-    };
-    email: string;
-    picture: {
-      large: string;
-      medium: string;
-      thumbnail: string;
-    };
-    nat: string;
-  }
-  
-  const Community: React.FC = () => {
-    const [loading, setLoading] = useState(false);
-    const [data, setData] = useState<DataType[]>([]);
-  
-    const loadMoreData = () => {
-      if (loading) {
-        return;
-      }
-      setLoading(true);
-      fetch("https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo")
-        .then((res) => res.json())
-        .then((body) => {
-          setData((prevData) => [...prevData, ...body.results]);
-          setLoading(false);
-        })
-        .catch(() => {
-          setLoading(false);
-        });
-    };
-  
-    useEffect(() => {
-      loadMoreData();
-    }, []);
-  
-    return (
-      <div
-        id="scrollableDiv"
-        style={{
-          height: 'auto',
-          overflow: "auto",
-          padding: "0 16px",
-          border: "1px solid rgba(140, 140, 140, 0.35)",
-        }}
+interface DataType {
+  gender: string;
+  name: {
+    title: string;
+    first: string;
+    last: string;
+  };
+  email: string;
+  picture: {
+    large: string;
+    medium: string;
+    thumbnail: string;
+  };
+  nat: string;
+}
+
+const Community: React.FC = () => {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState<DataType[]>([]);
+
+  const loadMoreData = () => {
+    if (loading) {
+      return;
+    }
+    setLoading(true);
+    fetch(
+      'https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo'
+    )
+      .then((res) => res.json())
+      .then((body) => {
+        setData((prevData) => [...prevData, ...body.results]);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    loadMoreData();
+  }, []);
+
+  return (
+    <div
+      id='scrollableDiv'
+      style={{
+        height: 'auto',
+        overflow: 'auto',
+        padding: '0 16px',
+      }}
+    >
+      <InfiniteScroll
+        dataLength={data.length}
+        next={loadMoreData}
+        hasMore={data.length < 50}
+        loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+        endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
+        scrollableTarget='scrollableDiv'
+        style={{ width: '100%', paddingLeft: '15%', paddingRight: '15%'}}
       >
-        <InfiniteScroll
-          dataLength={data.length}
-          next={loadMoreData}
-          hasMore={data.length < 50}
-          loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-          endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
-          scrollableTarget="scrollableDiv"
-          style={{ width: '100%', paddingLeft: '15%', paddingRight: '15%' }}
-        >
-          <div className='flex'>
-        <div style={{ width: '100%'}}>
-          <div
-            style={{
-              backgroundColor: '#E0FFD1',
-              display: 'flex',
-              alignContent: 'center',
-              justifyContent: 'center',
-              padding: '15px',
-            }}
-          >
-            <div
+        <CommunityNotice />
+        <List
+          grid={{ gutter: 0, column: 2 }} // Set gutter to 0 for no spacing
+          style={{gap:'0px'}}
+          dataSource={data}
+          renderItem={(item, index) => (
+            <List.Item
+              key={item.email}
               style={{
-              width:'60%',
-                height: '150px',
-                alignContent: 'center',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'start',
-                justifyContent: 'center',
-                gap: '10px',
-                marginLeft:'10px'
+                width: '100%',
+                height: 'auto',
+                padding: '3px', // Remove padding to avoid gaps
+                margin:'0',
+                position: 'relative',
+                borderBottom: '1px solid rgba(140, 140, 140, 0.35)', // Add horizontal divider
               }}
             >
-              <p style={{ color: '#4F4F4F', fontWeight: 'bold' }}>
-                우리 동네 최근 소식!
-              </p>
-              <h1 style={{ fontSize: '24px', fontWeight: 'bold' }}>
-                <span className='text-mainColor'>광진구</span> 행복주택 분양공고
-                OPEN
-              </h1>
-              <p style={{ color: '#4F4F4F', fontWeight: 'bold' }}>보러가기 &gt;</p>
-            </div>
-            <div style={{width:'30%', alignItems:'center', justifyContent:'center', display:'flex'}}>
-              <img src={IconAnnouncement}
-              style={{width:'170px'}}/>
+              <div className="p-3">
+                <div className='flex align-center justify-center'>
+                  <div className='flex flex-col w-3/4 text-start justify-start gap-2'>
+                    <h1 className='font-bold text-xl'>제목</h1>
+                    <h3 className='text-base'>내용</h3>
+                  </div>
+                  <div className='w-1/4 flex justify-center'>
+                    <img src={IconUser} style={{ width: '90px'}} />
+                  </div>
+                </div>
+                <p>작성자</p>
+                <div className='flex gap-3'>
+                  <p className="text-gray-500 mb-4" style={{ fontSize: '12px' }}>
+                    <span className="text-mainColor">조회 11</span>{' '}
+                    · 도움돼요 7 · 댓글 2
+                  </p>
+                </div>
+                {/* No need for a separate horizontal divider */}
               </div>
-              <div style={{width:'20%', alignItems:'end', justifyContent:'end', justifyItems:'center',padding:'15px', display:'flex'}}>
-                  <img
-                  src={IconWouldYouHana}
-                  style={{width:'120px'}}/>
-              </div>
-          </div>
-          {/* <CommunityPostList/> */}
-        </div>
-      </div>
-  
-          <List
-            dataSource={data}
-            renderItem={(item) => (
-              <List.Item key={item.email}>
-                <List.Item.Meta
-                  avatar={<Avatar src={item.picture.large} />}
-                  title={<a href="https://ant.design">{item.name.last}</a>}
-                  description={item.email}
+              {/* Vertical Divider (only on even indexes for a grid layout) */}
+              {index % 2 === 0 && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    width: '0.8px',
+                    height: '100%',
+                    justifyContent:'center',
+                    backgroundColor: 'rgba(140, 140, 140, 0.35)',
+                  }}
                 />
-                <div>Content</div>
-              </List.Item>
-            )}
-          />
-        </InfiniteScroll>
-      </div>
-    );
-  };
+              )}
+            </List.Item>
+          )}
+        />
+      </InfiniteScroll>
+    </div>
+  );
+};
+
 export default Community;

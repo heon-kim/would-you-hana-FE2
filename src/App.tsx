@@ -21,6 +21,9 @@ import FindBank from './pages/Location/FindBank';
 import NotFound from './pages/Error/404';
 import Community from './pages/Community/community';
 
+import Gwangjin from './pages/LandingPage/Gwangjin';
+import Seocho from './pages/LandingPage/Seocho';
+
 function App() {
   return (
     <ConfigProvider
@@ -51,6 +54,8 @@ function App() {
             <Route path="/qna/detail/:postId" element={<QuestionDetail />} />
             <Route path="/findbank" element={<FindBank />} />
             <Route path="/community" element={<Community />} />
+            <Route path="/gwangjin" element={<Gwangjin/>}></Route>
+            <Route path="/seocho" element={<Seocho/>}></Route>
             {/* Error */}
             <Route path="/404" element={<NotFound />} />
           </Routes>
