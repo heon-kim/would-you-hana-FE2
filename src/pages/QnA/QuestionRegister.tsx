@@ -138,7 +138,7 @@ const PostRegister: React.FC = () => {
           fontSize: '30px',
           lineHeight: '1.2',
           textAlign: 'left',
-          marginTop: '20px',
+          marginTop: '30px',
           marginBottom: '40px',
           fontWeight: 'bold',
         }}
@@ -153,7 +153,7 @@ const PostRegister: React.FC = () => {
       </h1>
       <Select
         showSearch
-        style={{ width: '100%', height: '60px' }}
+        style={{ width: '100%', height: '50px' }}
         placeholder="어떤 분야가 궁금한가요?"
         optionFilterProp="label"
         onChange={(value) => setCategory(value)} // 분야 상태 설정
@@ -245,15 +245,17 @@ const PostRegister: React.FC = () => {
       </div>
       <button
         onClick={handleRegister}
+        className='bg-mainColor text-white rounded-md transition-colors duration-200 hover:bg-hoverColor'
         style={{
           width: '100%',
           height: '50px',
           textAlign: 'center',
           color: 'white',
-          backgroundColor: '#008485',
+          //backgroundColor: '#008485',
           marginTop: '40px',
           marginBottom: '40px',
           fontWeight: '300',
+          borderRadius : '10px'          
         }}
       >
         질문 등록

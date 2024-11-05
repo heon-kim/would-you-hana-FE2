@@ -42,7 +42,7 @@ const Category: React.FC<CategoryProps> = ({ onSelectCategory }) => {
                   onSelectCategory(category.name);
                 }} // 카테고리 선택 시 호출
               >
-                <div className="w-full h-14 bg-gray-100 rounded-xl flex items-center justify-center hover:bg-[#DDFCD2]">
+                <div className="w-full h-14 bg-gray-100 rounded-xl flex items-center justify-center hover:bg-[#DDFCD2] transition-colors duration-300">
                   {category.icon}
                 </div>
                 <p className="whitespace-nowrap">{category.name}</p>

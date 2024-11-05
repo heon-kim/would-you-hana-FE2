@@ -77,7 +77,7 @@ const Login: React.FC = () => {
           />
           <button
             type="submit"
-            className="block p-2 bg-mainColor text-white rounded-md"
+            className="block p-2 bg-mainColor text-white rounded-md transition-colors duration-200 hover:bg-hoverColor"
           >
             로그인
           </button>

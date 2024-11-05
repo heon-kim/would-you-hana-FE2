@@ -88,9 +88,11 @@ const Home: React.FC = () => {
                   fontFamily: 'Hana2Medium',
                   fontSize: '15px',
                 }}
+                className="border rounded-md p-2 w-full 
+                  focus:outline-none focus:ring-2 focus:ring-mainColor focus:shadow-md hover:ring-2 hover:ring-mainColor transition duration-800"
                 placeholder="질문을 입력하세요."
               ></input>
-              <button className="bg-[#008485] w-[120px] h-[55px] rounded-lg p-2 text-white text-[15px] hover:bg-[#006f6f]">
+              <button className="bg-[#008485] w-[120px] h-[55px] rounded-lg p-2 text-white text-[15px] hover:bg-[#006f6f] transition-color duration-300">
                 <div className="flex items-center justify-center">
                   <img
                     src={iconSearch}
