@@ -24,6 +24,8 @@ import Community from './pages/Community/community';
 import Gwangjin from './pages/LandingPage/Gwangjin';
 import Seocho from './pages/LandingPage/Seocho';
 
+import BankerProfile from './pages/BankerProfile/Profile';
+
 function App() {
   return (
     <ConfigProvider
@@ -56,6 +58,7 @@ function App() {
             <Route path="/community" element={<Community />} />
             <Route path="/gwangjin" element={<Gwangjin/>}></Route>
             <Route path="/seocho" element={<Seocho/>}></Route>
+            <Route path="/bankerProfile" element={<BankerProfile/>}></Route>
             {/* Error */}
             <Route path="/404" element={<NotFound />} />
           </Routes>
