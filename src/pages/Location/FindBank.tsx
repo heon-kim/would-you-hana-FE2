@@ -117,10 +117,12 @@ const FindBank = () => {
                   position: location.latlng,
                   title: location.title,
                   image: markerImage,
-                });
-
+                });            
                 window.kakao.maps.event.addListener(marker, 'click', () => {
                   setSelectedLocation(location);
+                  
+                  // 지도 중심을 선택된 위치로 이동
+                  map.panTo(location.latlng);
                 });
               });
             } else {
