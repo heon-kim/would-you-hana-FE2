@@ -52,6 +52,16 @@ const EmailInput: React.FC<{
       required
     />
     <span className="self-center">@</span>
+    {isCustomEmail && (
+      <InputField
+        htmlFor="customEmailHost"
+        type="text"
+        placeholder="이메일 호스트 입력"
+        value={customEmailHost}
+        onChange={(e) => setCustomEmailHost(e.target.value)}
+        required
+      />
+    )}
     <select
       value={isCustomEmail ? '직접 입력' : emailHost}
       onChange={(e) => {
@@ -71,16 +81,6 @@ const EmailInput: React.FC<{
       <option value="daum.net">daum.net</option>
       <option value="직접 입력">직접 입력</option>
     </select>
-    {isCustomEmail && (
-      <InputField
-        htmlFor="customEmailHost"
-        type="text"
-        placeholder="이메일 호스트 입력"
-        value={customEmailHost}
-        onChange={(e) => setCustomEmailHost(e.target.value)}
-        required
-      />
-    )}
   </div>
 );
 
@@ -91,6 +91,8 @@ const NicknameInput: React.FC<{
   setIsNicknameChecked: React.Dispatch<React.SetStateAction<boolean>>;
   nicknameDuplicate: boolean;
   setNicknameDuplicate: React.Dispatch<React.SetStateAction<boolean>>;
+  nicknameError : boolean;
+  setNicknameError : React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({
   nickname,
   setNickname,
@@ -98,6 +100,8 @@ const NicknameInput: React.FC<{
   setIsNicknameChecked,
   nicknameDuplicate,
   setNicknameDuplicate,
+  nicknameError,
+  setNicknameError
 }) => (
   <>
     <InputField
@@ -112,13 +116,17 @@ const NicknameInput: React.FC<{
       onClickButton={() => {
         setNicknameDuplicate(hasNickname(nickname));
         setIsNicknameChecked(true);
+        const nicknamePattern = /^[a-zA-Z가-힣]{2,10}$/;
+        setNicknameError(!nicknamePattern.test(nickname));       
       }}
     />
-    {isNicknameChecked && nicknameDuplicate ? (
+    {nicknameError && <p className="text-red-500">닉네임은 한글 또는 영문으로 2자 이상 10자 이하여야 합니다.</p>}
+    {isNicknameChecked && nicknameDuplicate && !nicknameError ? (
       <p className="text-red-500">이미 사용중인 닉네임입니다.</p>
-    ) : isNicknameChecked && nickname ? (
+    ) : isNicknameChecked && nickname && !nicknameError ? (
       <p className="text-blue-500">사용 가능한 닉네임입니다.</p>
     ) : null}
+    
   </>
 );
 
@@ -135,23 +143,81 @@ const InputForm: React.FC<{
   const [isCustomEmail, setIsCustomEmail] = useState<boolean>(false);
   const [isNicknameChecked, setIsNicknameChecked] = useState<boolean>(false);
   const [nicknameDuplicate, setNicknameDuplicate] = useState<boolean>(false);
+  const [nicknameError, setNicknameError] = useState<boolean>(false);
   const [phoneError, setPhoneError] = useState<string>('');
   const [birthError, setBirthError] = useState<string>('');
+  const [passwordError, setPasswordError] = useState<string>('');
+  const [phoneValue, setPhoneValue] = useState("");
+  const [birthDateValue, setBirthDateValue] = useState("");
 
   const validatePhone = (value: string) => {
-    const phonePattern = /^[0-9]{10,11}$/;
+    const phonePattern = /^(01[0-9]{1,3})-([0-9]{3,4})-([0-9]{4})$/;
     return phonePattern.test(value)
       ? ''
       : '전화번호는 10자리 또는 11자리 숫자여야 합니다.';
   };
 
   const validateBirthDate = (value: string) => {
-    const birthPattern = /^(19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])$/;
-    return birthPattern.test(value)
-      ? ''
-      : '생년월일은 YYYYMMDD 형식이어야 합니다.';
+    if(value.length < 10) {
+      return '생년월일은 YYYYMMDD 형식이어야 합니다.';
+    }
+    else {
+      const [year, month, day] = value.split('.');
+      const date = new Date(year, month - 1, day);  // month는 0부터 시작하므로 1을 빼야 함
+      if (!(date.getFullYear() === parseInt(year) &&
+        date.getMonth() === parseInt(month) - 1 && date.getDate() === parseInt(day))) {
+          return '유효한 날짜가 아닙니다.';
+      }
+    }
   };
 
+  const formatPhoneNumber = (value) => {
+    // 숫자만 남기고 모두 제거
+    const cleaned = value.replace(/\D/g, "");
+
+    // 010-xxxx-xxxx 형식으로 변환
+    if (cleaned.length <= 3) {
+      return cleaned;
+    } else if (cleaned.length <= 7) {
+      return `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`;
+    } else {
+      return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 7)}-${cleaned.slice(7, 11)}`;
+    }
+  };
+  const phoneNumberHandleChange = (event) => {
+    setPhoneValue(event.target.value);
+  };
+
+  const formatBirthDate = (value) => {
+    // 숫자만 남기고 모두 제거
+    const cleaned = value.replace(/\D/g, "");
+
+    // yyyy-mm-dd 형식으로 변환
+    if (cleaned.length <= 4) {
+      return cleaned; // 4자리 연도까지
+    } else if (cleaned.length <= 6) {
+      return `${cleaned.slice(0, 4)}.${cleaned.slice(4)}`; // yyyy-mm
+    } else {
+      return `${cleaned.slice(0, 4)}.${cleaned.slice(4, 6)}.${cleaned.slice(6, 8)}`; // yyyy-mm-dd
+    }
+  };
+  const birthDateHandleChange = (event) => {
+    const formattedDate = formatBirthDate(event.target.value);
+    setBirthDateValue(formattedDate);  // 입력값을 상태에 반영
+  };
+
+  const validatePassword = (value: string) => {
+    const passwordPattern = /^(?=.*[a-z])(?=.*\d)(?=.*[!@#^&*]).{8,}$/;
+    return passwordPattern.test(value)
+     ? <p className='text-blue-500'>사용 가능한 비밀번호입니다.</p>
+     : <>
+     <div className="text-red-500">
+      <p>비밀번호는 최소 8자 이상이고, 영소문자, 숫자,</p>
+      <p>특수문자(!, @, #, ^, &, *)를 적어도 하나 포함하여야 합니다.</p>
+     </div>
+     </>
+
+  }
   const handleAuthNum = () => {
     // Implement your auth number logic here
   };
@@ -182,14 +248,23 @@ const InputForm: React.FC<{
 
     const phoneValidationError = validatePhone(user.phone);
     const birthValidationError = validateBirthDate(user.birthDate);
+    const passwordValidationError = validatePassword(user.password);
 
     if (phoneValidationError) {
       setPhoneError(phoneValidationError);
+      message.warning('전화번호를 수정해주세요.');
       return;
     }
 
     if (birthValidationError) {
       setBirthError(birthValidationError);
+      message.warning('생년월일을 수정해주세요.');
+      return;
+    }
+
+    if (passwordValidationError) {
+      setPasswordError(passwordValidationError);
+      message.warning('비밀번호를 수정해주세요.');
       return;
     }
 
@@ -218,6 +293,8 @@ const InputForm: React.FC<{
         setIsNicknameChecked={setIsNicknameChecked}
         nicknameDuplicate={nicknameDuplicate}
         setNicknameDuplicate={setNicknameDuplicate}
+        nicknameError={nicknameError}
+        setNicknameError={setNicknameError}
       />
       <EmailInput
         emailPrefix={emailPrefix}
@@ -245,9 +322,15 @@ const InputForm: React.FC<{
         type="password"
         placeholder="비밀번호"
         value={user.password}
-        onChange={(e) => setUser({ ...user, password: e.target.value })}
+        onChange={(e) => {
+          const value = e.target.value;
+          setUser({ ...user, password: e.target.value });
+          setPasswordError(validatePassword(value));
+          }
+        }
         required
       />
+      {passwordError && <p>{passwordError}</p>}
       <InputField
         htmlFor="passwordConfirm"
         type="password"
@@ -321,11 +404,12 @@ const InputForm: React.FC<{
         htmlFor="phone"
         type="text"
         placeholder="전화번호 (숫자만 입력)"
-        value={user.phone}
+        value={formatPhoneNumber(phoneValue)}
         onChange={(e) => {
           const value = e.target.value;
           setUser({ ...user, phone: value });
           setPhoneError(validatePhone(value));
+          phoneNumberHandleChange(e);
         }}
         required
       />
@@ -334,18 +418,19 @@ const InputForm: React.FC<{
         htmlFor="birthDate"
         type="text"
         placeholder="생년월일 (YYYYMMDD)"
-        value={user.birthDate}
+        value={formatBirthDate(birthDateValue)}
         onChange={(e) => {
           const value = e.target.value;
           setUser({ ...user, birthDate: value });
           setBirthError(validateBirthDate(value));
+          birthDateHandleChange(e);
         }}
         required
       />
       {birthError && <p className="text-red-500">{birthError}</p>}
       <button
         type="submit"
-        className="block p-2 bg-mainColor text-white rounded-md"
+        className="block p-2 bg-mainColor text-white rounded-md transition-colors duration-200 hover:bg-hoverColor"
       >
         다음
       </button>

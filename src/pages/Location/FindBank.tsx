@@ -142,7 +142,7 @@ const FindBank = () => {
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', marginTop: '5%' }}>
       <div style={{ width: '50%', height: '500px', borderRadius: '10px', overflow: 'hidden', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }} id="map"></div>
       <div style={{ marginLeft: '20px', padding: '0', border: '1px solid #ccc', borderRadius: '10px', width: '300px', height: '500px', backgroundColor: '#f9f9f9', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-        <div style={{ backgroundColor: '#008485', padding: '10px', borderTopLeftRadius: '10px', borderTopRightRadius: '10px' }}>
+        <div style={{ backgroundColor: '#008485', padding: '12px', borderTopLeftRadius: '10px', borderTopRightRadius: '10px' }}>
           <h3 style={{ fontSize: '1.25rem', fontWeight: '500', color: '#fff' }}>{selectedLocation ? selectedLocation.title : '상세 정보'}</h3>
         </div>
         {selectedLocation ? (

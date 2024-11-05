@@ -10,6 +10,7 @@ const UserTypeRadio: React.FC<{
       <input
         type="radio"
         value="C"
+        className="mr-1"
         checked={userType === "C"}
         onChange={() => setUserType("C")}
       />
@@ -19,6 +20,7 @@ const UserTypeRadio: React.FC<{
       <input
         type="radio"
         value="B"
+        className="mr-1"
         checked={userType === "B"}
         onChange={() => setUserType("B")}
       />
