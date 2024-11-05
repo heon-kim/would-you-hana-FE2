@@ -1,16 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, message } from 'antd';
-import { StarOutlined } from '@ant-design/icons';
+import { StarOutlined, FormOutlined } from '@ant-design/icons';
 import { findPost } from '../../utils/postStorage';
 import '../../App.css';
 import PostRegisterButton from '../../components/PostRegisterButton';
 import Comments from '../../components/post/Comments';
 import Answer from '../../components/post/Answer';
+import AnswerInput from '../../components/post/AnswerInput';
 import { relativeTime } from '../../utils/stringFormat';
 
 const QuestionDetail: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
+  const [isAnswered, setIsAnswered] = useState(false);
+  const [showAnswerInput, setShowAnswerInput] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,13 +26,25 @@ const QuestionDetail: React.FC = () => {
       if (!post) {
         message.error('질문을 찾을 수 없습니다.');
         navigate('/404');
+      } else {
+        setIsAnswered(!!answers[postId]); // 해당 postId에 답변이 있는지 확인
       }
     }
   }, [postId, navigate]);
 
   const post = postId ? findPost(Number(postId)) : null;
 
-  if (!post) return null; // post가 없으면 아무것도 렌더링하지 않음
+  if (!post || !postId) return null;
+
+  const answers = {
+    [postId]: {
+      id: 1,
+      authorEmail: 'example@example.com',
+      content: 'Answer content',
+      createdAt: '',
+      updatedAt: '',
+    },
+  };
 
   return (
     <div
@@ -45,13 +61,13 @@ const QuestionDetail: React.FC = () => {
         paddingBottom: '20px',
       }}
     >
-      <div className="flex w-full" style={{ gap: '20px' }}>
+      <div className='flex w-full' style={{ gap: '20px' }}>
         <div
-          className="article flex flex-col gap-6 w-full"
+          className='article flex flex-col gap-6 w-full'
           style={{ width: '75%' }}
         >
-          <div className="question flex flex-col gap-6 font-ligh pb-3 border-b border-gray-200">
-            <div className="question__header flex flex-col gap-3">
+          <div className='question flex flex-col gap-6 font-ligh pb-3 border-b border-gray-200'>
+            <div className='question__header flex flex-col gap-3'>
               <h1
                 style={{
                   color: 'black',
@@ -62,27 +78,40 @@ const QuestionDetail: React.FC = () => {
               >
                 Q. {post.title}
               </h1>
-              <div className="flex gap-4 text-xs text-gray-400">
+              <div className='flex gap-4 text-xs text-gray-400'>
                 <span>{post.author}</span>
                 <span>조회 {post.counts.views || 0}</span>
                 <span>좋아요 {post.counts.likes || 0}</span>
                 <span>스크랩 {post.counts.scraps || 0}</span>
               </div>
-              <div className="flex justify-end gap-4">
+              <div className='flex justify-end gap-4'>
+                {!isAnswered && (
+                  <Button
+                    type='primary'
+                    icon={<FormOutlined />}
+                    onClick={() => setShowAnswerInput(true)}
+                  >
+                    답변하기
+                  </Button>
+                )}
                 <Button icon={<StarOutlined />}>스크랩</Button>
               </div>
             </div>
-            <div className="w-full">
+            <div className='w-full'>
               <p>{post.content}</p>
             </div>
-            <div className="post__footer text-gray-400">
+            <div className='post__footer text-gray-400'>
               <span>{relativeTime(+new Date(post.createdAt))}</span>
             </div>
           </div>
-          <Answer />
+          {isAnswered ? (
+            <Answer answer={answers[postId]} />
+          ) : (
+            showAnswerInput && <AnswerInput />
+          )}
           <Comments />
         </div>
-        <aside className="widget" style={{ width: '30%' }}>
+        <aside className='widget' style={{ width: '30%' }}>
           <PostRegisterButton />
         </aside>
       </div>
