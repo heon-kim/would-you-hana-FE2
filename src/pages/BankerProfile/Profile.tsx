@@ -11,7 +11,7 @@ const Profile: React.FC = () => {
     const mainProfile = {
         name: '문 보 경',
         title:'RM',
-        hashTag: ['#대출', '주택담보대출', '전세대출'],
+        hashTag: ['#대출', '#주택담보대출', '#전세대출'],
         description: '고객님의 대출을 책임지는 문보경 대리입니다. 광진구 신자양점에서 고객님의 아주 작은 고민까지도 하나만의 대출 솔루션으로 해결해 드리겠습니다.',
     };
 
@@ -70,7 +70,7 @@ const Profile: React.FC = () => {
                         style={{ marginBottom: '0px', borderRadius:'20px'}}
                     />
 
-                    <Card style={{ marginBottom: '10px', borderRadius:'20px', border:'1px solid #d3d3d3'  }} bodyStyle={{ padding: 15 }}>
+                    <Card style={{ marginBottom: '10px', borderRadius:'20px', border:'1px solid #d3d3d3', marginTop:'10px'  }} bodyStyle={{ padding: 15 }}>
                         <div>
                             <div style={{ fontSize: '15px', marginBottom: '10px'}}><strong>상담시간</strong></div>
                             <Text style={{ fontSize: '15px' }}>🕐 평일 10:00 - 18:00 (주말 및 공휴일 제외)</Text>
