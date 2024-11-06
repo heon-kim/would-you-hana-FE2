@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import markerImg from '../../assets/img/mark.png';
 import markerAtmImg from '../../assets/img/mark_atm.png';
 import ReservationModal from '../../components/ReservationModal';
+import iconLocation from '../../assets/img/icon_location.svg';
 
 const FindBank = () => {
   const [selectedLocation, setSelectedLocation] = useState(null);
@@ -12,6 +13,7 @@ const FindBank = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showBranches, setShowBranches] = useState(true);
   const [showATMs, setShowATMs] = useState(true);
+  const [mapInstance, setMapInstance] = useState(null);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -61,11 +63,6 @@ const FindBank = () => {
     }
   }, []);
 
-  const isDuplicateLocation = (lat1, lng1, lat2, lng2) => {
-    const distance = Math.sqrt((lat1 - lat2) ** 2 + (lng1 - lng2) ** 2);
-    return distance < 0.0001; // 작은 거리로 설정하여 중복으로 간주
-  };
-
   useEffect(() => {
     if (!userLocation) return;
 
@@ -83,6 +80,7 @@ const FindBank = () => {
             level: 5,
           };
           const map = new window.kakao.maps.Map(mapContainer, mapOption);
+          setMapInstance(map);
 
           const places = new window.kakao.maps.services.Places();
 
@@ -129,6 +127,7 @@ const FindBank = () => {
                   position: location.latlng,
                   title: location.title,
                   image: markerImage,
+                  zIndex: 2,
                 });
 
                 window.kakao.maps.event.addListener(marker, 'click', () => {
@@ -136,14 +135,14 @@ const FindBank = () => {
                   map.panTo(location.latlng);
                 });
 
-                location.marker = marker; // Store marker reference
+                location.marker = marker;
               });
             } else {
               console.error('No Hana Bank branches found.');
             }
           });
 
-          // Search for ATMs and avoid duplicates
+          // Search for ATMs
           places.keywordSearch(`${userDistrict} 하나은행 ATM`, (result, status) => {
             if (status === window.kakao.maps.services.Status.OK) {
               const atmLocations = result.map((place) => ({
@@ -156,14 +155,9 @@ const FindBank = () => {
                 `,
                 type: 'atm',
               }));
-              const uniqueATMLocations = atmLocations.filter((atm) => {
-                return !positions.some((branch) =>
-                  isDuplicateLocation(atm.lat, atm.lng, branch.lat, branch.lng)
-                );
-              });
-              setATMPositions(uniqueATMLocations);
+              setATMPositions(atmLocations);
 
-              uniqueATMLocations.forEach((location) => {
+              atmLocations.forEach((location) => {
                 const markerImage = new window.kakao.maps.MarkerImage(
                   markerAtmImg,
                   new window.kakao.maps.Size(30, 35)
@@ -173,15 +167,15 @@ const FindBank = () => {
                   position: location.latlng,
                   title: location.title,
                   image: markerImage,
+                  zIndex: 1,
                 });
 
-                // ATM 마커 클릭 시 selectedLocation 업데이트
                 window.kakao.maps.event.addListener(marker, 'click', () => {
                   setSelectedLocation(location);
                   map.panTo(location.latlng);
                 });
 
-                location.marker = marker; // Store ATM marker reference
+                location.marker = marker;
               });
             } else {
               console.error('No Hana Bank ATMs found.');
@@ -196,20 +190,27 @@ const FindBank = () => {
     script.onerror = () => {
       console.error('Failed to load Kakao Maps SDK');
     };
-  }, [userLocation, userDistrict, showBranches, showATMs]);
+  }, [userLocation, userDistrict]); // Removed showBranches and showATMs from dependencies
 
   const toggleBranchMarkers = () => {
     setShowBranches((prevShowBranches) => !prevShowBranches);
     positions.forEach((location) => {
-      location.marker.setMap(showBranches ? map : null);
+      location.marker.setMap(showBranches ? null : mapInstance); // Toggle visibility without map reset
     });
   };
 
   const toggleATMMarkers = () => {
     setShowATMs((prevShowATMs) => !prevShowATMs);
     atmPositions.forEach((location) => {
-      location.marker.setMap(showATMs ? map : null);
+      location.marker.setMap(showATMs ? null : mapInstance); // Toggle visibility without map reset
     });
+  };
+
+  // Function to move map to user's location
+  const goToUserLocation = () => {
+    if (mapInstance && userLocation) {
+      mapInstance.panTo(new window.kakao.maps.LatLng(userLocation.lat, userLocation.lng));
+    }
   };
 
   return (
@@ -219,8 +220,11 @@ const FindBank = () => {
           <button onClick={toggleATMMarkers} style={{ width: '50px', fontWeight: 'bold', height: '50px', backgroundColor: '#FFFFFF', color: '#008485', borderRadius: '50%', border: 'none', cursor: 'pointer', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)', marginBottom: '5px' }}>
             ATM
           </button>
-          <button onClick={toggleBranchMarkers} style={{ width: '50px', height: '50px', backgroundColor: '#008485', color: '#fff', borderRadius: '50%', border: 'none', cursor: 'pointer', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)' }}>
+          <button onClick={toggleBranchMarkers} style={{ width: '50px', height: '50px', backgroundColor: '#008485', color: '#fff', borderRadius: '50%', border: 'none', cursor: 'pointer', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)', marginBottom: '5px' }}>
             영업점
+          </button>
+          <button onClick={goToUserLocation} style={{ width: '50px', height: '50px', backgroundColor: '#FFFFFF', color: '#fff', borderRadius: '50%', border: 'none', cursor: 'pointer', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <img src={iconLocation} alt="Location Icon" style={{ width: '24px', height: '24px' }} />
           </button>
         </div>
       </div>
