@@ -1,6 +1,7 @@
+import { useNavigate } from 'react-router-dom';
 import userIcon from '../../assets/img/icon_user.png';
-import { HomeOutlined, PhoneOutlined } from '@ant-design/icons';
-import { Button } from 'antd';
+import { HomeOutlined, CalendarOutlined } from '@ant-design/icons';
+import { Button, Tooltip } from 'antd';
 import { AnswerInterface } from '../../constants/posts';
 import { relativeTime } from '../../utils/stringFormat';
 
@@ -11,15 +12,24 @@ interface AnswerProps {
 const bankers = [
   {
     id: 0,
-    name: '홍창기',
+    name: '문보경',
     email: 'example@example.com',
     branchName: '성동구 성수점',
-    introduce: '안녕하세요. 홍창기 대리입니다.',
+    introduce: '안녕하세요. 문보경 대리입니다.',
   },
 ];
 
 const Answer: React.FC<AnswerProps> = ({ answer }) => {
+  const navigate = useNavigate();
   const banker = bankers.filter((b) => b.email == answer.authorEmail)[0];
+
+  const handleProfileBtn = () => {
+    navigate('/bankerProfile'); // banker.id 추가해야 함
+  };
+
+  const handleReserveBtn = () => {
+    navigate('/findbank'); // banker.branchName 추가해야 함
+  };
 
   return (
     <>
@@ -44,8 +54,15 @@ const Answer: React.FC<AnswerProps> = ({ answer }) => {
               </div>
             </div>
             <div className='flex gap-5'>
-              <Button icon={<HomeOutlined />} />
-              <Button icon={<PhoneOutlined />} />
+              <Tooltip title='프로필 보기' color='white'>
+                <Button icon={<HomeOutlined />} onClick={handleProfileBtn} />
+              </Tooltip>
+              <Tooltip title='상담 예약하기' color='white'>
+                <Button
+                  icon={<CalendarOutlined />}
+                  onClick={handleReserveBtn}
+                />
+              </Tooltip>
             </div>
           </div>
           <p className='comment__body font-light'>{answer.content}</p>

@@ -9,15 +9,23 @@ import Comments from '../../components/post/Comments';
 import Answer from '../../components/post/Answer';
 import AnswerInput from '../../components/post/AnswerInput';
 import { relativeTime } from '../../utils/stringFormat';
+import { AnswerInterface } from '../../constants/posts';
 
 const QuestionDetail: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
   const [isAnswered, setIsAnswered] = useState(false);
   const [showAnswerInput, setShowAnswerInput] = useState(false);
+  const [answers, setAnswers] = useState<{ [key: string]: AnswerInterface }>(
+    {}
+  );
 
   const navigate = useNavigate();
 
   useEffect(() => {
+    const storedAnswers = localStorage.getItem('answers');
+    const parsedAnswers = storedAnswers ? JSON.parse(storedAnswers) : {};
+    setAnswers(parsedAnswers);
+
     if (!postId) {
       message.error('질문 ID가 없습니다.');
       navigate('/404');
@@ -27,7 +35,7 @@ const QuestionDetail: React.FC = () => {
         message.error('질문을 찾을 수 없습니다.');
         navigate('/404');
       } else {
-        setIsAnswered(!!answers[postId]); // 해당 postId에 답변이 있는지 확인
+        setIsAnswered(!!parsedAnswers[postId]); // 해당 postId에 답변이 있는지 확인
       }
     }
   }, [postId, navigate]);
@@ -36,14 +44,25 @@ const QuestionDetail: React.FC = () => {
 
   if (!post || !postId) return null;
 
-  const answers = {
-    [postId]: {
-      id: 1,
-      authorEmail: 'example@example.com',
-      content: 'Answer content',
-      createdAt: '',
-      updatedAt: '',
-    },
+  const handleAnswerSubmit = (content: string) => {
+    const answerData = {
+      id: Date.now(), // 고유 ID 생성
+      content,
+      authorEmail: 'example@example.com', // 로그인된 행원 email로 변경 필요
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    const updatedAnswers = {
+      ...answers,
+      [postId]: answerData,
+    };
+
+    setAnswers(updatedAnswers);
+    localStorage.setItem('answers', JSON.stringify(updatedAnswers));
+
+    setIsAnswered(true);
+    setShowAnswerInput(false);
   };
 
   return (
@@ -107,7 +126,9 @@ const QuestionDetail: React.FC = () => {
           {isAnswered ? (
             <Answer answer={answers[postId]} />
           ) : (
-            showAnswerInput && <AnswerInput />
+            showAnswerInput && (
+              <AnswerInput onSubmitAnswer={handleAnswerSubmit} />
+            )
           )}
           <Comments />
         </div>
