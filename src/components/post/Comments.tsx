@@ -15,7 +15,7 @@ const CommentForm: React.FC<{
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }> = ({ onSubmit, value, onChange }) => (
   <form
-    className="flex gap-1"
+    className="flex gap-2"
     onSubmit={(e) => {
       e.preventDefault();
       onSubmit(value);

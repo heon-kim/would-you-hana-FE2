@@ -119,13 +119,13 @@ const Gwangjin: React.FC = () => {
             
         </Col>
         </Row>
-        <Row gutter={[16, 16]} style={{ backgroundColor: '#ffffff' }}>
+        <Row gutter={[16, 16]} style={{ backgroundColor: '#ffffff'}}>
             <Col span={24} style={{ marginTop: '40px' }}>
                 <h2 style={{ fontSize: '24px', marginBottom: '10px' }}>
                 
                 </h2>
             </Col>
-
+           
             <Col xs={24} sm={8}>
                 <Card
                     
@@ -155,8 +155,8 @@ const Gwangjin: React.FC = () => {
                         content="광진구 근처 주식 강의 듣고 싶어요"
                     />
                 </Card>
-          </Col>
-          <Col xs={24} sm={8}>
+            </Col>
+            <Col xs={24} sm={8}>
                 <Card
                 title={<span style={{ fontSize: '24px', fontWeight: 'bold' }}>✒️ 방금 답변이 작성된 Q&A</span>}
                 style={{ textAlign: 'center' }}
