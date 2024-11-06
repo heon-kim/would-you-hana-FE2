@@ -30,7 +30,7 @@ const CommentForm: React.FC<{
       onChange={onChange}
       placeholder="댓글을 입력하세요"
     />
-    <Button size="large" type="primary" htmlType="submit">
+    <Button size="large"  htmlType="submit">
       댓글 달기
     </Button>
   </form>

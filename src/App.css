@@ -7,3 +7,8 @@
   font-family: 'Hana2Bold', sans-serif;
 }
 
+
+.ant-tooltip .ant-tooltip-inner {
+  color: black;
+  font-weight: lighter;
+}

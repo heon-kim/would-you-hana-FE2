@@ -56,3 +56,11 @@ export interface Reply {
   content: string;
   createdAt: string;
 }
+
+export interface AnswerInterface {
+  id: number;
+  authorEmail: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+}
