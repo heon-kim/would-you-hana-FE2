@@ -2,7 +2,7 @@ export interface LoginSuccessPayload {
     token: string;
     role: string;
     email: string;
-    location: string;
+    location: string[];
 }
 
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -19,7 +19,7 @@ interface LogoutAction {
 
 export type AuthActionTypes = LoginSuccessAction | LogoutAction;
 
-export const loginSuccess = (token: string, role: string, email: string, location: string): LoginSuccessAction => {
+export const loginSuccess = (token: string, role: string, email: string, location: string[]): LoginSuccessAction => {
     return {
         type: LOGIN_SUCCESS,
         payload: { token, role, email, location }
