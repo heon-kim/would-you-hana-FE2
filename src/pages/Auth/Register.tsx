@@ -15,7 +15,7 @@ interface User {
   gender: 'F' | 'M';
   phone: string;
   birthDate: string;
-  location: string;
+  location: string[];
   userType: 'C' | 'B';
   interests: string;
 }
@@ -284,6 +284,12 @@ const InputForm: React.FC<{
     setCompleteInputForm(true);
   };
 
+  const handleLocationChange = (field: 'loc1' | 'loc2', value: string) => {
+    if (field === 'loc2') {
+      setUser({ ...user, location: [value]  }); // loc2(구)만 저장
+    }
+  };
+
   return (
     <form onSubmit={handleRegister} className="flex flex-col gap-3">
       <UserTypeRadio
@@ -348,33 +354,21 @@ const InputForm: React.FC<{
         <p className="text-red-500">비밀번호가 일치하지 않습니다.</p>
       )}
       <div className="flex gap-2">
-        <InputField
-          htmlFor="loc1"
+        <input
+          className="border rounded-md p-2 w-full 
+            focus:outline-none focus:ring-0 focus:shadow-none hover:ring-0 
+            text-black placeholder:text-gray-400 transition duration-800"
           type="text"
-          placeholder="주소 (시/도)"
-          value={user.location.split(' ')[0] || ''}
-          onChange={(e) =>
-            setUser({
-              ...user,
-              location: `${e.target.value} ${
-                user.location.split(' ')[1] || ''
-              }`,
-            })
-          }
-          required
+          placeholder="서울특별시"
+          value="서울특별시"
+          readOnly
         />
         <InputField
           htmlFor="loc2"
           type="text"
-          placeholder="주소 (시/군/구)"
-          value={user.location.split(' ')[1] || ''}
-          onChange={(e) =>
-            setUser({
-              ...user,
-              location: `${user.location.split(' ')[0] || ''} ${
-                e.target.value
-              }`,
-            })
+          placeholder="주소(구) ex: 서초구, 광진구"
+          value={user.location}
+          onChange={(e) => handleLocationChange('loc2', e.target.value)
           }
           required
         />

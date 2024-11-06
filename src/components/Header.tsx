@@ -6,19 +6,39 @@ import locationIcon from '../assets/img/icon_location.svg';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../hoc/store';
 import { logout } from '../hoc/actions';
-import { DownOutlined } from '@ant-design/icons';
-import { Dropdown, Space, message, Select } from 'antd';
-import type { MenuProps, SelectProps } from 'antd';
+import { message, Select } from 'antd';
+import type {SelectProps } from 'antd';
 import { setAuthHeader, setUserRole, setUserEmail, getUserLocation } from '../hoc/request';
 import { findUser } from '../utils/userStorage';
 
 // SearchInput 컴포넌트에 사용할 로컬 데이터
 const items = [
-  { value: '서울시 성동구', text: '서울시 성동구' },
-  { value: '서울시 동작구', text: '서울시 동작구' },
-  { value: '서울시 강남구', text: '서울시 강남구' },
-  { value: '서울시 서초구', text: '서울시 서초구' },
-  { value: '서울시 관악구', text: '서울시 관악구' },
+  { value: '강서구', text: '강서구' },
+  { value: '양천구', text: '양천구' },
+  { value: '구로구', text: '구로구' },
+  { value: '금천구', text: '금천구' },
+  { value: '영등포구', text: '영등포구' },
+  { value: '동작구', text: '동작구' },
+  { value: '관악구', text: '관악구' },
+  { value: '서초구', text: '서초구' },
+  { value: '강남구', text: '강남구' },
+  { value: '송파구', text: '송파구' },
+  { value: '강동구', text: '강동구' },
+  { value: '마포구', text: '마포구' },
+  { value: '서대문구', text: '서대문구' },
+  { value: '은평구', text: '은평구' },
+  { value: '종로구', text: '종로구' },
+  { value: '성북구', text: '성북구' },
+  { value: '동대문구', text: '동대문구' },
+  { value: '중구', text: '중구' },
+  { value: '광진구', text: '광진구' },
+  { value: '중랑구', text: '중랑구' },
+  { value: '용산구', text: '용산구' },
+  { value: '강북구', text: '강북구' },
+  { value: '도봉구', text: '도봉구' },
+  { value: '노원구', text: '노원구' },
+  { value: '성동구', text: '성동구' },
+
   // 필요한 다른 데이터 추가
 ];
 
@@ -134,10 +154,12 @@ function Header() {
 
   const handleLogout = () => {
     localStorage.removeItem('loggedUser');
+    localStorage.removeItem('user_location')
     setUserRole(null);
     setUserEmail(null);
     setAuthHeader(null);
     setIsLoggedIn(false);
+    setSearchValue('');
     dispatch(logout());
     message.success('로그아웃 성공!');
     navigate('/');
@@ -145,6 +167,7 @@ function Header() {
 
   const handleSearchValueChange = (newValue: string) => {
     setSearchValue(newValue); // searchValue 업데이트
+    localStorage.setItem('userLocation', newValue); 
   };
 
   return (

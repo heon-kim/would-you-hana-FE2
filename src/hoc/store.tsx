@@ -7,7 +7,7 @@ interface AuthState {
     authToken: string | null;
     userRole: string | null;
     userEmail: string | null;
-    userLocation: string | null;
+    userLocation: string[] | null;
 }
 
 const initialAuthState: AuthState = {

@@ -35,15 +35,29 @@ const Login: React.FC = () => {
       localStorage.setItem('loggedUser', email);
       const token: string = 'generatedAuthToken'; // string 타입 지정
       const role: string = userType; // string 타입 지정
-      const location: string = storedUser.location;
-      console.log('Dispatching loginSuccess with:', { token, role, email, location });
-      dispatch(loginSuccess(token, role, email, location)); // Dispatch login success action with role
+      const location: string[] = Array.isArray(storedUser.location) 
+      ? storedUser.location 
+      : [storedUser.location];
+      dispatch(loginSuccess(token, role, email, location)); 
       setAuthHeader(token);
       setUserRole(role);
       setUserEmail(email);
       setUserLocation(location);
       message.success('로그인 성공!');
-      navigate('/');
+
+          // 지역에 따라 내비게이션 경로 설정 => 모든 구로 확장해야함
+      if (location[0].includes("광진")) {
+        navigate('/gwangjin');
+      } else if (location[0].includes("서초")) {
+        navigate('/seocho');
+      } else if (location[0].includes("성동")) {
+        navigate('/seongdong');
+      } else if (location[0].includes("강남")) {
+        navigate('/gangnam');
+      } else {
+        navigate('/');
+      }
+      
     } else {
       message.warning('비밀번호가 잘못되었습니다.');
     }
