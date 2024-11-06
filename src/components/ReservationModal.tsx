@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Modal,
   Calendar,
@@ -8,6 +8,7 @@ import {
   Select,
   Button,
   Typography,
+  message
 } from 'antd';
 import Lottie from 'react-lottie';
 import checkLottie from '../assets/lottie/check.json';
@@ -15,8 +16,10 @@ import type { CalendarProps } from 'antd';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import dayLocaleData from 'dayjs/plugin/localeData';
+import moment from 'moment';
 
 import 'dayjs/locale/zh-cn';
+import { current } from '@reduxjs/toolkit';
 
 dayjs.extend(dayLocaleData);
 
@@ -31,15 +34,31 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
   onOk,
   onCancel,
 }) => {
+  const currentDateTime = dayjs();
+
   const [showAnimation, setShowAnimation] = useState(false);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
+  // 모달이 열릴 때 selectedDate와 selectedTime을 초기화
+  useEffect(() => {
+    if (isOpen) {
+      setSelectedDate(currentDateTime.format('YYYY-MM-DD'));
+      setSelectedTime(null);
+    }
+  }, [isOpen]);
+  
   const handleOk = () => {
-    setShowAnimation(true);
-    setTimeout(() => {
-      onOk();
-      setShowAnimation(false);
-    }, 1500);
+    if(!selectedTime) {
+      message.warning('예약 시간을 선택해 주세요.');
+    }
+    else {
+      setShowAnimation(true);
+      setTimeout(() => {
+        onOk();
+        setShowAnimation(false);
+      }, 1500);
+    }
   };
 
   const lottieOptions = {
@@ -56,27 +75,22 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
     setSelectedTime(time);
   };
 
+  const onDateSelect = (date) => {
+    // 선택된 날짜를 'YYYY-MM-DD' 형식으로 저장
+    setSelectedDate(date.format('YYYY-MM-DD'));
+  };
+
   const times = {
-    am: ['10:00', '10:30', '11:00', '11:30'],
+    am: ['09:30', '10:00', '10:30', '11:00', '11:30'],
     pm: [
-      '12:00',
-      '12:30',
-      '1:00',
-      '1:30',
-      '2:00',
-      '2:30',
-      '3:00',
-      '3:30',
-      '4:00',
-      '4:30',
-      '5:00',
-      '5:30',
-      '6:00',
-      '6:30',
-      '7:00',
-      '7:30',
-      '8:00',
-      '8:30',
+      '13:00',
+      '13:30',
+      '14:00',
+      '14:30',
+      '15:00',
+      '15:30',
+      '16:00',
+      '16:30',    
     ],
   };
 
@@ -113,7 +127,9 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
             <div style={{ marginTop: '10px' }}>
               <Calendar
                 fullscreen={false}
-                headerRender={({ value, type, onChange, onTypeChange }) => {
+                onSelect={onDateSelect}
+                //value={selectedDate ? dayjs(selectedDate) : null}
+                headerRender={({ value, type, onChange, onTypeChange}) => {
                   const start = 0;
                   const end = 12;
                   const monthOptions = [];
@@ -137,7 +153,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
                   const year = value.year();
                   const month = value.month();
                   const options = [];
-                  for (let i = year - 10; i < year + 10; i += 1) {
+                  for (let i = year-5; i < year + 5; i += 1) {
                     options.push(
                       <Select.Option key={i} value={i} className='year-item'>
                         {i}
@@ -189,6 +205,8 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
                   );
                 }}
                 onPanelChange={onPanelChange}
+                disabledDate={(current) => current.isBefore(dayjs().startOf('day'), 'day')}
+
               />
             </div>
           </div>
@@ -202,7 +220,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
                 marginBottom: '10px',
               }}
             >
-              {times.am.map((time) => (
+              {/* {times.am.map((time) => (
                 <Button
                   key={time}
                   type={selectedTime === time ? 'primary' : 'default'}
@@ -210,20 +228,49 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
                 >
                   {time}
                 </Button>
-              ))}
+              ))} */}
+              {times.am.map((time) => {
+                  // time을 dayjs 객체로 변환하여 비교
+                  const timeMoment = dayjs(time, 'HH:mm');  // time이 'HH:mm' 형식이라고 가정
+
+                  // time이 현재 시간보다 작은 경우 버튼을 비활성화
+                  const isDisabled = timeMoment.isBefore(currentDateTime, 'minute')
+                     && selectedDate == currentDateTime.format('YYYY-MM-DD');
+
+                  return (
+                    <Button
+                      key={time}
+                      type={selectedTime === time ? 'primary' : 'default'}
+                      onClick={() => handleTimeClick(time)}
+                      disabled={isDisabled}  // 현재 시간보다 작은 경우 버튼 비활성화
+                    >
+                      {time}
+                    </Button>
+                  );
+                })}
             </div>
 
             <Typography.Title level={5}>오후</Typography.Title>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              {times.pm.map((time) => (
-                <Button
-                  key={time}
-                  type={selectedTime === time ? 'primary' : 'default'}
-                  onClick={() => handleTimeClick(time)}
-                >
-                  {time}
-                </Button>
-              ))}
+            {times.pm.map((time) => {
+                  // time을 dayjs 객체로 변환하여 비교
+                  const timeMoment = dayjs(time, 'HH:mm');  // time이 'HH:mm' 형식이라고 가정
+
+                  // time이 현재 시간보다 작은 경우 버튼을 비활성화
+                  const isDisabled = timeMoment.isBefore(currentDateTime, 'minute')
+                     && selectedDate == currentDateTime.format('YYYY-MM-DD');
+
+                  return (
+                    <Button
+                      key={time}
+                      type={selectedTime === time ? 'primary' : 'default'}
+                      onClick={() => handleTimeClick(time)}
+                      disabled={isDisabled}  // 현재 시간보다 작은 경우 버튼 비활성화
+                    >
+                      {time}
+                    </Button>
+                  );
+                })}
             </div>
           </div>
         </>
