@@ -209,7 +209,7 @@ const InputForm: React.FC<{
   const validatePassword = (value: string) => {
     const passwordPattern = /^(?=.*[a-z])(?=.*\d)(?=.*[!@#^&*]).{8,}$/;
     return passwordPattern.test(value)
-     ? <p className='text-blue-500'>사용 가능한 비밀번호입니다.</p>
+     ? ''
      : <>
      <div className="text-red-500">
       <p>비밀번호는 최소 8자 이상이고, 영소문자, 숫자,</p>
@@ -238,6 +238,11 @@ const InputForm: React.FC<{
 
     if (findUser(email)) {
       message.warning('이미 존재하는 이메일입니다.');
+      return;
+    }
+
+    if(!isNicknameChecked) {
+      message.warning('닉네임 중복 체크가 필요합니다.');
       return;
     }
 
