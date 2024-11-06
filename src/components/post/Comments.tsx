@@ -15,7 +15,7 @@ const CommentForm: React.FC<{
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }> = ({ onSubmit, value, onChange }) => (
   <form
-    className="flex gap-1"
+    className="flex gap-2"
     onSubmit={(e) => {
       e.preventDefault();
       onSubmit(value);
@@ -30,7 +30,7 @@ const CommentForm: React.FC<{
       onChange={onChange}
       placeholder="댓글을 입력하세요"
     />
-    <Button size="large" type="primary" htmlType="submit">
+    <Button size="large"  htmlType="submit">
       댓글 달기
     </Button>
   </form>
