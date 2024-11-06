@@ -4,6 +4,9 @@ import { Row, Col, Card } from 'antd';
 import hanaFamilyTogether from '../../assets/img/HanaFamilyTogeter.png'
 import iconUser from '../../assets/img/icon_user.png'
 import trendKeyword from '../../assets/img/trendKeyword_seocho.png'
+import labelDistrict from '../../assets/img/label_district.png';
+import logoSeocho from '../../assets/img/logo_seocho.png';
+import labelRegulation from '../../assets/img/label_regulation.png';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../hoc/store';
 
@@ -13,7 +16,7 @@ import '../../App.css';
 const GuBadge: React.FC = () => {
   return (
     <div style={guContainerStyle}>
-      <span style={flagGuTextStyle}>서초구</span>
+      <img src={logoSeocho} style={{padding: '15px'}}></img>
     </div>
   );
 };
@@ -27,32 +30,35 @@ const RegulationBadge: React.FC = () => {
     );
   };
 
-const guContainerStyle = {
-  backgroundColor: '#008485',
-  color: '#fff',
-  fontWeight: 'bold',
-  padding: '10px 0',
-  textAlign: 'center' as const,
-  fontSize: '20px',
-  width: '120px',
-  margin: '0 auto',
-  display: 'inline-block',
-  lineHeight: '4',
-  clipPath: 'polygon(0 0, 100% 0, 100% 75%, 50% 100%, 0 75%)', // 오각형 모양을 만들기 위한 clip-path
-};
-
-const regulationContainerStyle = {
-    backgroundColor: '#DC231E90',
+  const guContainerStyle = {
+    backgroundImage: `url(${labelDistrict})`,
+    backgroundSize: 'cover',
     color: '#fff',
     fontWeight: 'bold',
-    padding: '10px 0',
+    padding: '0px 0', // Removed top padding by setting it to 0
     textAlign: 'center' as const,
     fontSize: '20px',
     width: '120px',
+    height: '100px',
     margin: '0 auto',
     display: 'inline-block',
     lineHeight: '4',
-    clipPath: 'polygon(0 0, 100% 0, 100% 75%, 50% 100%, 0 75%)', // 오각형 모양을 만들기 위한 clip-path
+  };
+  
+
+const regulationContainerStyle = {
+    backgroundImage: `url(${labelRegulation})`,
+    backgroundSize: 'cover',
+    color: '#fff',
+    fontWeight: 'bold',
+    padding: '7px 0', // Removed top padding by setting it to 0
+    textAlign: 'center' as const,
+    fontSize: '20px',
+    width: '120px',
+    height: '100px',
+    margin: '0 auto',
+    display: 'inline-block',
+    lineHeight: '4',
   };
   
 
