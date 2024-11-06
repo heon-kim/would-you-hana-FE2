@@ -61,11 +61,6 @@ const FindBank = () => {
     }
   }, []);
 
-  const isDuplicateLocation = (lat1, lng1, lat2, lng2) => {
-    const distance = Math.sqrt((lat1 - lat2) ** 2 + (lng1 - lng2) ** 2);
-    return distance < 0.0001; // 작은 거리로 설정하여 중복으로 간주
-  };
-
   useEffect(() => {
     if (!userLocation) return;
 
@@ -129,6 +124,7 @@ const FindBank = () => {
                   position: location.latlng,
                   title: location.title,
                   image: markerImage,
+                  zIndex: 2, // Set higher zIndex for branches
                 });
 
                 window.kakao.maps.event.addListener(marker, 'click', () => {
@@ -143,7 +139,7 @@ const FindBank = () => {
             }
           });
 
-          // Search for ATMs and avoid duplicates
+          // Search for ATMs without filtering
           places.keywordSearch(`${userDistrict} 하나은행 ATM`, (result, status) => {
             if (status === window.kakao.maps.services.Status.OK) {
               const atmLocations = result.map((place) => ({
@@ -156,14 +152,9 @@ const FindBank = () => {
                 `,
                 type: 'atm',
               }));
-              const uniqueATMLocations = atmLocations.filter((atm) => {
-                return !positions.some((branch) =>
-                  isDuplicateLocation(atm.lat, atm.lng, branch.lat, branch.lng)
-                );
-              });
-              setATMPositions(uniqueATMLocations);
+              setATMPositions(atmLocations);
 
-              uniqueATMLocations.forEach((location) => {
+              atmLocations.forEach((location) => {
                 const markerImage = new window.kakao.maps.MarkerImage(
                   markerAtmImg,
                   new window.kakao.maps.Size(30, 35)
@@ -173,6 +164,7 @@ const FindBank = () => {
                   position: location.latlng,
                   title: location.title,
                   image: markerImage,
+                  zIndex: 1, // Set lower zIndex for ATMs
                 });
 
                 // ATM 마커 클릭 시 selectedLocation 업데이트
