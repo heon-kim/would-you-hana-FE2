@@ -62,7 +62,7 @@ const PostRegisterButton: React.FC = () => {
           <p>질문하기</p>
           <img
             src={iconPencil}
-            alt='notebookUser'
+            alt='iconPencil'
             width={20}
             style={{ marginLeft: '3px' }}
           />

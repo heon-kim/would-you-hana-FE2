@@ -25,6 +25,7 @@ import Gwangjin from './pages/LandingPage/Gwangjin';
 import Seocho from './pages/LandingPage/Seocho';
 
 import BankerProfile from './pages/BankerProfile/Profile';
+import CommunityRegister from './pages/Community/CommunityRegister';
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
             <Route path="/qna/detail/:postId" element={<QuestionDetail />} />
             <Route path="/findbank" element={<FindBank />} />
             <Route path="/community" element={<Community />} />
+            <Route path="/community/regist" element={<CommunityRegister />} />
             <Route path="/gwangjin" element={<Gwangjin/>}></Route>
             <Route path="/seocho" element={<Seocho/>}></Route>
             <Route path="/bankerProfile" element={<BankerProfile/>}></Route>
