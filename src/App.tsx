@@ -11,6 +11,7 @@ import EditProfile from './pages/MyPage/EditProfile';
 // import Auth from "./pages/Auth";
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
+import FindPassword from './pages/Auth/FindPassword';
 import './App.css';
 import './styles/fonts.css';
 import Header from './components/Header';
@@ -19,7 +20,7 @@ import QuestionRegister from './pages/QnA/QuestionRegister';
 import Board from './pages/QnA/Board';
 import FindBank from './pages/Location/FindBank';
 import NotFound from './pages/Error/404';
-import Community from './pages/Community/community';
+import Community from './pages/Community/Community';
 
 import Gwangjin from './pages/LandingPage/Gwangjin';
 import Seocho from './pages/LandingPage/Seocho';
@@ -52,15 +53,16 @@ function App() {
             {/* You can add other routes here as needed */}
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/findPassword" element={<FindPassword />} />
             <Route path="/qna" element={<Board />} />
             <Route path="/qna/regist" element={<QuestionRegister />} />
             <Route path="/qna/detail/:postId" element={<QuestionDetail />} />
             <Route path="/findbank" element={<FindBank />} />
             <Route path="/community" element={<Community />} />
             <Route path="/community/regist" element={<CommunityRegister />} />
-            <Route path="/gwangjin" element={<Gwangjin/>}></Route>
-            <Route path="/seocho" element={<Seocho/>}></Route>
-            <Route path="/bankerProfile" element={<BankerProfile/>}></Route>
+            <Route path="/gwangjin" element={<Gwangjin />}></Route>
+            <Route path="/seocho" element={<Seocho />}></Route>
+            <Route path="/bankerProfile" element={<BankerProfile />}></Route>
             {/* Error */}
             <Route path="/404" element={<NotFound />} />
           </Routes>
