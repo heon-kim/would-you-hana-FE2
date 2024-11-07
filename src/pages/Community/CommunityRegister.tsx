@@ -8,7 +8,7 @@ import { findUser } from '../../utils/userStorage';
 import { postCount, savePost } from '../../utils/postStorage';
 import { getUserEmail } from '../../hoc/request';
 import { CommunityCategories } from '../../constants/posts';
-import { saveCommunityPost } from '../../utils/communityPostStorage';
+import { communityPostCount, saveCommunityPost } from '../../utils/communityPostStorage';
 
 const getBase64 = (file: File) =>
   new Promise<string>((resolve, reject) => {
@@ -82,7 +82,7 @@ const handleRegister = () => {
     const nickname = user?.nickname;
   
     const postData = {
-      id: postCount(),
+      id: communityPostCount(),
       category,
       title,
       content,

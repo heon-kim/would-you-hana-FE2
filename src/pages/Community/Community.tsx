@@ -4,151 +4,31 @@ import { Divider, List, message, Skeleton } from 'antd';
 import CommunityNotice from '../../components/CommunityNotice';
 import ImgBank from '../../assets/img/img_community3.jpg';
 import ImgBank2 from '../../assets/img/img_community2.png';
-import IconPencil from '../../assets/img/icon_pencil.svg'
+import IconPencil from '../../assets/img/icon_pencil.svg';
 import CommunityCategory from '../../components/CommunityCategory';
 import { useNavigate } from 'react-router-dom';
 import { getAuthToken } from '../../hoc/request';
+import { Post } from '../../constants/posts';
 
-interface DataType {
-  category: string;
-  title: string;
-  content: string;
-  author: string;
-  views: number;
-  likes: number;
-  comments: number;
-  image: boolean;
-}
-
-// Predefined post data
-const postData: DataType[] = [
-  {
-    category: '금융',
-    title: '광진구에서 계좌 개설 어디가 좋을까요?',
-    content:
-      '광진구 근처에서 계좌 개설할 수 있는 은행 추천 부탁드려요. 새로 시작하는 이자 높은 상품 있으면 알려주세요.',
-    author: '김둘리',
-    views: 27,
-    likes: 8,
-    comments: 8,
-    image: false,
-  },
-  {
-    category: '소비',
-    title: '광진구에서 저렴한 카페 추천 좀!',
-    content:
-      '광진구에서 분위기 좋고 가격도 괜찮은 카페 찾고 있어요. 추천해 주세요!',
-    author: '안창살김하나',
-    views: 16,
-    likes: 3,
-    comments: 5,
-    image: false,
-  },
-  {
-    category: '주식',
-    title: '광진구 사람들 주식 어디서 많이 하나요?',
-    content:
-      '광진구 사는 분들 주식 투자할 때 주로 사용하는 앱이나 플랫폼 뭐예요? 추천 좀 해주세요.',
-    author: '나폴리맛피자',
-    views: 15,
-    likes: 6,
-    comments: 2,
-    image: true,
-  },
-  {
-    category: '대출',
-    title: '광진구에서 학자금 대출 받기 쉬운 곳?',
-    content:
-      '대학생인데 학자금 대출 받으려는데 광진구 근처에서 상담 잘 해주는 곳 있나요?',
-    author: '광진고릴라',
-    views: 15,
-    likes: 2,
-    comments: 34,
-    image: false,
-  },
-  {
-    category: '소비',
-    title: '광진구 배달 맛집 리스트 좀!',
-    content:
-      '광진구에서 배달 맛집 추천 부탁드려요. 혼밥하기 좋은 곳도 알려주시면 감사!',
-    author: '광진구오함마',
-    views: 9,
-    likes: 3,
-    comments: 6,
-    image: false,
-  },
-  {
-    category: '금융',
-    title: '광진구에서 적금 상품 괜찮은 곳?',
-    content: '광진구 근처에 이율 높은 적금 상품 있는 은행 추천 부탁드려요.',
-    author: '금융핑',
-    views: 9,
-    likes: 26,
-    comments: 8,
-    image: true,
-  },
-  {
-    category: '주식',
-    title: '광진구 근처 주식 강의 듣고 싶어요',
-    content: '주식 공부하고 싶은데 광진구 근처에 주식 강의 해주는 곳 있을까요?',
-    author: '밥플러스최고',
-    views: 17,
-    likes: 7,
-    comments: 2,
-    image: false,
-  },
-  {
-    category: '대출',
-    title: '광진구에서 대출 금리 낮은 곳 추천',
-    content: '신용 대출 받으려고 하는데 광진구 근처 금리 낮은 은행 있나요?',
-    author: '우주우주',
-    views: 10,
-    likes: 3,
-    comments: 8,
-    image: false,
-  },
-  {
-    category: '대출',
-    title: '광진구에서 대출 금리 낮은 곳 추천',
-    content: '신용 대출 받으려고 하는데 광진구 근처 금리 낮은 은행 있나요?',
-    author: '호이호이',
-    views: 8,
-    likes: 5,
-    comments: 2,
-    image: false,
-  },
-  {
-    category: '소비',
-    title: '광진구 데이트하기 좋은 카페',
-    content:
-      '분위기 좋은 카페 찾고 있어요. 광진구에서 괜찮은 곳 추천 좀 부탁드립니다!',
-    author: '빙화만두',
-    views: 7,
-    likes: 3,
-    comments: 1,
-    image: false,
-  },
-  {
-    category: '금융',
-    title: '광진구 주택청약 정보 좀 알려주세요',
-    content:
-      '광진구 거주 중인데 주택청약 알아보고 있어요. 정보 공유 부탁드립니다.',
-    author: '홍시',
-    views: 11,
-    likes: 3,
-    comments: 8,
-    image: false,
-  },
-];
+// interface DataType {
+//   category: string;
+//   title: string;
+//   content: string;
+//   author: string;
+//   views: number;
+//   likes: number;
+//   comments: number;
+//   image: boolean;
+// }
 
 const Community: React.FC = () => {
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<DataType[]>([]);
+  const [data, setData] = useState<Post[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('전체');
   const navigate = useNavigate();
 
-  const handleRegisterButton= ()=>{
+  const handleRegisterButton = () => {
     const isLoggedIn = getAuthToken();
     if (isLoggedIn === 'null' || !isLoggedIn) {
       message.warning('로그인이 필요합니다.');
@@ -156,14 +36,14 @@ const Community: React.FC = () => {
     } else {
       navigate('/community/regist');
     }
-  }
+  };
 
   const loadMoreData = () => {
     if (loading) return;
     setLoading(true);
 
     setData((prevData) => {
-      const nextData = postData.slice(prevData.length, prevData.length + 5);
+      const nextData = data.slice(prevData.length, prevData.length + 5);
       if (nextData.length === 0) setHasMore(false);
       return [...prevData, ...nextData];
     });
@@ -172,7 +52,14 @@ const Community: React.FC = () => {
   };
 
   useEffect(() => {
-    loadMoreData();
+    // 로컬 스토리지에서 데이터 불러오기
+    const storedData = localStorage.getItem('community_posts');
+    if (storedData) {
+      setData(JSON.parse(storedData));
+    } else {
+      // 로컬 스토리지에 데이터가 없을 경우 기본 게시물 데이터 저장
+      localStorage.setItem('community_posts', JSON.stringify([]));
+    }
   }, []);
 
   const filteredData =
@@ -204,17 +91,17 @@ const Community: React.FC = () => {
         style={{ width: '100%', paddingLeft: '15%', paddingRight: '15%' }}
       >
         <CommunityNotice />
-        <div style={{ marginTop:'15px', marginBottom: '15px', alignItems:'center', justifyContent:'end', display:'flex' }}>
-        <button 
-        onClick={handleRegisterButton}
-        style={{borderRadius:'5px', backgroundColor:'#008485', color:'white', padding:'10px', display:'flex', alignItems:'center', justifyContent:'center', paddingLeft:'15px'}}>
+        <div style={{ marginTop: '15px', marginBottom: '15px', alignItems: 'center', justifyContent: 'end', display: 'flex' }}>
+          <button 
+            onClick={handleRegisterButton}
+            style={{borderRadius: '5px', backgroundColor: '#008485', color: 'white', padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingLeft: '15px'}}
+          >
             글쓰기
             <img
               src={IconPencil}
               alt='iconPencil'
-            width={20}
-            style={{ marginLeft: '5px' }}
-            
+              width={20}
+              style={{ marginLeft: '5px' }}
             />
           </button>
         </div>
@@ -232,7 +119,6 @@ const Community: React.FC = () => {
                 height: 'auto',
                 padding: '3px',
                 margin: '0',
-                marginTop:'0px',
                 position: 'relative',
                 borderBottom: '1px solid rgba(140, 140, 140, 0.35)',
               }}
@@ -250,7 +136,7 @@ const Community: React.FC = () => {
                     {item.image && (
                       <img
                         src={index % 2 === 0 ? ImgBank : ImgBank2}
-                        style={{ width: '80px', height:'80px'}}
+                        style={{ width: '80px', height: '80px' }}
                         alt="User Icon"
                       />
                     )}
@@ -262,8 +148,8 @@ const Community: React.FC = () => {
                     className="text-gray-500 mb-4"
                     style={{ fontSize: '12px' }}
                   >
-                    <span className="text-mainColor">조회 {item.views}</span> ·
-                    좋아요 {item.likes} · 댓글 {item.comments}
+                    <span className="text-mainColor">조회 {item.counts.views}</span> ·
+                    좋아요 {item.counts.likes} · 댓글 {item.counts.comments}
                   </p>
                 </div>
               </div>
