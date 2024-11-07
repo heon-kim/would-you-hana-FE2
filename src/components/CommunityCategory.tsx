@@ -24,7 +24,7 @@ const CommunityCategory: React.FC<CommunityCategoryProps> = ({ setCategory }) =>
 
   return (
     <Tabs
-      defaultActiveKey="저축"
+      defaultActiveKey="전체"
       onChange={setCategory}
       items={categories.map(category => ({
         label: category.label,
