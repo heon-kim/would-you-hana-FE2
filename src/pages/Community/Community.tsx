@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Divider, List, Skeleton } from 'antd';
+import { Divider, List, message, Skeleton } from 'antd';
 import CommunityNotice from '../../components/CommunityNotice';
-// import IconUser from '../../assets/img/icon_user.png';
 import ImgBank from '../../assets/img/img_community3.jpg';
 import ImgBank2 from '../../assets/img/img_community2.png';
+import IconPencil from '../../assets/img/icon_pencil.svg'
 import CommunityCategory from '../../components/CommunityCategory';
+import { useNavigate } from 'react-router-dom';
+import { getAuthToken } from '../../hoc/request';
 
 interface DataType {
   category: string;
@@ -61,7 +63,7 @@ const postData: DataType[] = [
     author: '광진고릴라',
     views: 15,
     likes: 2,
-    comments: 4,
+    comments: 34,
     image: false,
   },
   {
@@ -81,7 +83,7 @@ const postData: DataType[] = [
     content: '광진구 근처에 이율 높은 적금 상품 있는 은행 추천 부탁드려요.',
     author: '금융핑',
     views: 9,
-    likes: 6,
+    likes: 26,
     comments: 8,
     image: true,
   },
@@ -100,7 +102,7 @@ const postData: DataType[] = [
     title: '광진구에서 대출 금리 낮은 곳 추천',
     content: '신용 대출 받으려고 하는데 광진구 근처 금리 낮은 은행 있나요?',
     author: '우주우주',
-    views: 17,
+    views: 10,
     likes: 3,
     comments: 8,
     image: false,
@@ -110,8 +112,8 @@ const postData: DataType[] = [
     title: '광진구에서 대출 금리 낮은 곳 추천',
     content: '신용 대출 받으려고 하는데 광진구 근처 금리 낮은 은행 있나요?',
     author: '호이호이',
-    views: 17,
-    likes: 3,
+    views: 8,
+    likes: 5,
     comments: 2,
     image: false,
   },
@@ -121,9 +123,9 @@ const postData: DataType[] = [
     content:
       '분위기 좋은 카페 찾고 있어요. 광진구에서 괜찮은 곳 추천 좀 부탁드립니다!',
     author: '빙화만두',
-    views: 17,
+    views: 7,
     likes: 3,
-    comments: 8,
+    comments: 1,
     image: false,
   },
   {
@@ -132,7 +134,7 @@ const postData: DataType[] = [
     content:
       '광진구 거주 중인데 주택청약 알아보고 있어요. 정보 공유 부탁드립니다.',
     author: '홍시',
-    views: 17,
+    views: 11,
     likes: 3,
     comments: 8,
     image: false,
@@ -144,6 +146,17 @@ const Community: React.FC = () => {
   const [data, setData] = useState<DataType[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('전체');
+  const navigate = useNavigate();
+
+  const handleRegisterButton= ()=>{
+    const isLoggedIn = getAuthToken();
+    if (isLoggedIn === 'null' || !isLoggedIn) {
+      message.warning('로그인이 필요합니다.');
+      navigate('/login');
+    } else {
+      navigate('/community/regist');
+    }
+  }
 
   const loadMoreData = () => {
     if (loading) return;
@@ -191,7 +204,20 @@ const Community: React.FC = () => {
         style={{ width: '100%', paddingLeft: '15%', paddingRight: '15%' }}
       >
         <CommunityNotice />
-        <div style={{ marginBottom: '20px' }}></div>
+        <div style={{ marginTop:'15px', marginBottom: '15px', alignItems:'center', justifyContent:'end', display:'flex' }}>
+        <button 
+        onClick={handleRegisterButton}
+        style={{borderRadius:'5px', backgroundColor:'#008485', color:'white', padding:'10px', display:'flex', alignItems:'center', justifyContent:'center', paddingLeft:'15px'}}>
+            글쓰기
+            <img
+              src={IconPencil}
+              alt='iconPencil'
+            width={20}
+            style={{ marginLeft: '5px' }}
+            
+            />
+          </button>
+        </div>
         <CommunityCategory setCategory={setSelectedCategory} />
 
         <List
@@ -206,6 +232,7 @@ const Community: React.FC = () => {
                 height: 'auto',
                 padding: '3px',
                 margin: '0',
+                marginTop:'0px',
                 position: 'relative',
                 borderBottom: '1px solid rgba(140, 140, 140, 0.35)',
               }}
@@ -223,7 +250,7 @@ const Community: React.FC = () => {
                     {item.image && (
                       <img
                         src={index % 2 === 0 ? ImgBank : ImgBank2}
-                        style={{ width: '80px' }}
+                        style={{ width: '80px', height:'80px'}}
                         alt="User Icon"
                       />
                     )}
@@ -236,7 +263,7 @@ const Community: React.FC = () => {
                     style={{ fontSize: '12px' }}
                   >
                     <span className="text-mainColor">조회 {item.views}</span> ·
-                    도움돼요 {item.likes} · 댓글 {item.comments}
+                    좋아요 {item.likes} · 댓글 {item.comments}
                   </p>
                 </div>
               </div>
