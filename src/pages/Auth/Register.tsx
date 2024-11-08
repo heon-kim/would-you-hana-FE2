@@ -91,8 +91,8 @@ const NicknameInput: React.FC<{
   setIsNicknameChecked: React.Dispatch<React.SetStateAction<boolean>>;
   nicknameDuplicate: boolean;
   setNicknameDuplicate: React.Dispatch<React.SetStateAction<boolean>>;
-  nicknameError : boolean;
-  setNicknameError : React.Dispatch<React.SetStateAction<boolean>>;
+  nicknameError: boolean;
+  setNicknameError: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({
   nickname,
   setNickname,
@@ -101,7 +101,7 @@ const NicknameInput: React.FC<{
   nicknameDuplicate,
   setNicknameDuplicate,
   nicknameError,
-  setNicknameError
+  setNicknameError,
 }) => (
   <>
     <InputField
@@ -117,16 +117,19 @@ const NicknameInput: React.FC<{
         setNicknameDuplicate(hasNickname(nickname));
         setIsNicknameChecked(true);
         const nicknamePattern = /^[a-zA-Z가-힣]{2,10}$/;
-        setNicknameError(!nicknamePattern.test(nickname));       
+        setNicknameError(!nicknamePattern.test(nickname));
       }}
     />
-    {nicknameError && <p className="text-red-500">닉네임은 한글 또는 영문으로 2자 이상 10자 이하여야 합니다.</p>}
+    {nicknameError && (
+      <p className="text-red-500">
+        닉네임은 한글 또는 영문으로 2자 이상 10자 이하여야 합니다.
+      </p>
+    )}
     {isNicknameChecked && nicknameDuplicate && !nicknameError ? (
       <p className="text-red-500">이미 사용중인 닉네임입니다.</p>
     ) : isNicknameChecked && nickname && !nicknameError ? (
       <p className="text-blue-500">사용 가능한 닉네임입니다.</p>
     ) : null}
-    
   </>
 );
 
@@ -147,8 +150,8 @@ const InputForm: React.FC<{
   const [phoneError, setPhoneError] = useState<string>('');
   const [birthError, setBirthError] = useState<string>('');
   const [passwordError, setPasswordError] = useState<string>('');
-  const [phoneValue, setPhoneValue] = useState("");
-  const [birthDateValue, setBirthDateValue] = useState("");
+  const [phoneValue, setPhoneValue] = useState('');
+  const [birthDateValue, setBirthDateValue] = useState('');
 
   const validatePhone = (value: string) => {
     const phonePattern = /^(01[0-9]{1,3})-([0-9]{3,4})-([0-9]{4})$/;
@@ -158,22 +161,26 @@ const InputForm: React.FC<{
   };
 
   const validateBirthDate = (value: string) => {
-    if(value.length < 10) {
+    if (value.length < 10) {
       return '생년월일은 YYYYMMDD 형식이어야 합니다.';
-    }
-    else {
+    } else {
       const [year, month, day] = value.split('.');
-      const date = new Date(year, month - 1, day);  // month는 0부터 시작하므로 1을 빼야 함
-      if (!(date.getFullYear() === parseInt(year) &&
-        date.getMonth() === parseInt(month) - 1 && date.getDate() === parseInt(day))) {
-          return '유효한 날짜가 아닙니다.';
+      const date = new Date(year, month - 1, day); // month는 0부터 시작하므로 1을 빼야 함
+      if (
+        !(
+          date.getFullYear() === parseInt(year) &&
+          date.getMonth() === parseInt(month) - 1 &&
+          date.getDate() === parseInt(day)
+        )
+      ) {
+        return '유효한 날짜가 아닙니다.';
       }
     }
   };
 
   const formatPhoneNumber = (value) => {
     // 숫자만 남기고 모두 제거
-    const cleaned = value.replace(/\D/g, "");
+    const cleaned = value.replace(/\D/g, '');
 
     // 010-xxxx-xxxx 형식으로 변환
     if (cleaned.length <= 3) {
@@ -181,7 +188,10 @@ const InputForm: React.FC<{
     } else if (cleaned.length <= 7) {
       return `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`;
     } else {
-      return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 7)}-${cleaned.slice(7, 11)}`;
+      return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 7)}-${cleaned.slice(
+        7,
+        11
+      )}`;
     }
   };
   const phoneNumberHandleChange = (event) => {
@@ -190,7 +200,7 @@ const InputForm: React.FC<{
 
   const formatBirthDate = (value) => {
     // 숫자만 남기고 모두 제거
-    const cleaned = value.replace(/\D/g, "");
+    const cleaned = value.replace(/\D/g, '');
 
     // yyyy-mm-dd 형식으로 변환
     if (cleaned.length <= 4) {
@@ -198,26 +208,30 @@ const InputForm: React.FC<{
     } else if (cleaned.length <= 6) {
       return `${cleaned.slice(0, 4)}.${cleaned.slice(4)}`; // yyyy-mm
     } else {
-      return `${cleaned.slice(0, 4)}.${cleaned.slice(4, 6)}.${cleaned.slice(6, 8)}`; // yyyy-mm-dd
+      return `${cleaned.slice(0, 4)}.${cleaned.slice(4, 6)}.${cleaned.slice(
+        6,
+        8
+      )}`; // yyyy-mm-dd
     }
   };
   const birthDateHandleChange = (event) => {
     const formattedDate = formatBirthDate(event.target.value);
-    setBirthDateValue(formattedDate);  // 입력값을 상태에 반영
+    setBirthDateValue(formattedDate); // 입력값을 상태에 반영
   };
 
   const validatePassword = (value: string) => {
     const passwordPattern = /^(?=.*[a-z])(?=.*\d)(?=.*[!@#^&*]).{8,}$/;
-    return passwordPattern.test(value)
-     ? ''
-     : <>
-     <div className="text-red-500">
-      <p>비밀번호는 최소 8자 이상이고, 영소문자, 숫자,</p>
-      <p>특수문자(!, @, #, ^, &, *)를 적어도 하나 포함하여야 합니다.</p>
-     </div>
-     </>
-
-  }
+    return passwordPattern.test(value) ? (
+      ''
+    ) : (
+      <>
+        <div className="text-red-500">
+          <p>비밀번호는 최소 8자 이상이고, 영소문자, 숫자,</p>
+          <p>특수문자(!, @, #, ^, &, *)를 적어도 하나 포함하여야 합니다.</p>
+        </div>
+      </>
+    );
+  };
   const handleAuthNum = () => {
     // Implement your auth number logic here
   };
@@ -241,7 +255,7 @@ const InputForm: React.FC<{
       return;
     }
 
-    if(!isNicknameChecked) {
+    if (!isNicknameChecked) {
       message.warning('닉네임 중복 체크가 필요합니다.');
       return;
     }
@@ -286,7 +300,7 @@ const InputForm: React.FC<{
 
   const handleLocationChange = (field: 'loc1' | 'loc2', value: string) => {
     if (field === 'loc2') {
-      setUser({ ...user, location: [value]  }); // loc2(구)만 저장
+      setUser({ ...user, location: [value] }); // loc2(구)만 저장
     }
   };
 
@@ -337,8 +351,7 @@ const InputForm: React.FC<{
           const value = e.target.value;
           setUser({ ...user, password: e.target.value });
           setPasswordError(validatePassword(value));
-          }
-        }
+        }}
         required
       />
       {passwordError && <p>{passwordError}</p>}
@@ -368,8 +381,7 @@ const InputForm: React.FC<{
           type="text"
           placeholder="주소(구) ex: 서초구, 광진구"
           value={user.location}
-          onChange={(e) => handleLocationChange('loc2', e.target.value)
-          }
+          onChange={(e) => handleLocationChange('loc2', e.target.value)}
           required
         />
       </div>

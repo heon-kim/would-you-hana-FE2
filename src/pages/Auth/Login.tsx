@@ -6,7 +6,13 @@ import { findUser } from '../../utils/userStorage';
 import { message } from 'antd';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../../hoc/actions';
-import { getUserLocation, setAuthHeader, setUserEmail, setUserLocation, setUserRole } from '../../hoc/request';
+import {
+  getUserLocation,
+  setAuthHeader,
+  setUserEmail,
+  setUserLocation,
+  setUserRole,
+} from '../../hoc/request';
 
 const Login: React.FC = () => {
   const [userType, setUserType] = useState<'C' | 'B'>('C'); // 일반회원(customer: C) | 행원(banker: B)
@@ -35,29 +41,28 @@ const Login: React.FC = () => {
       localStorage.setItem('loggedUser', email);
       const token: string = 'generatedAuthToken'; // string 타입 지정
       const role: string = userType; // string 타입 지정
-      const location: string[] = Array.isArray(storedUser.location) 
-      ? storedUser.location 
-      : [storedUser.location];
-      dispatch(loginSuccess(token, role, email, location)); 
+      const location: string[] = Array.isArray(storedUser.location)
+        ? storedUser.location
+        : [storedUser.location];
+      dispatch(loginSuccess(token, role, email, location));
       setAuthHeader(token);
       setUserRole(role);
       setUserEmail(email);
       setUserLocation(location);
       message.success('로그인 성공!');
 
-          // 지역에 따라 내비게이션 경로 설정 => 모든 구로 확장해야함
-      if (location[0].includes("광진")) {
+      // 지역에 따라 내비게이션 경로 설정 => 모든 구로 확장해야함
+      if (location[0].includes('광진')) {
         navigate('/gwangjin');
-      } else if (location[0].includes("서초")) {
+      } else if (location[0].includes('서초')) {
         navigate('/seocho');
-      } else if (location[0].includes("성동")) {
+      } else if (location[0].includes('성동')) {
         navigate('/seongdong');
-      } else if (location[0].includes("강남")) {
+      } else if (location[0].includes('강남')) {
         navigate('/gangnam');
       } else {
         navigate('/');
       }
-      
     } else {
       message.warning('비밀번호가 잘못되었습니다.');
     }
@@ -97,13 +102,11 @@ const Login: React.FC = () => {
           </button>
         </form>
       </div>
-      <div className='flex justify-center w-full text-center gap-2 text-sm'>
-            <button
-             onClick={() => navigate('/register')}
-            >회원가입</button>
-            <p>|</p>
-            <button>비밀번호 찾기</button>
-          </div>
+      <div className="flex justify-center w-full text-center gap-2 text-sm">
+        <button onClick={() => navigate('/register')}>회원가입</button>
+        <p>|</p>
+        <button onClick={() => navigate('/findPassword')}>비밀번호 찾기</button>
+      </div>
     </div>
   );
 };
