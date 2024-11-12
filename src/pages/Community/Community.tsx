@@ -27,6 +27,27 @@ const Community: React.FC = () => {
   const [hasMore, setHasMore] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('전체');
   const navigate = useNavigate();
+  const [columnCount, setColumnCount] = useState(2);
+
+  // 화면 너비에 따라 열 개수를 조정하는 함수
+  const updateColumnCount = () => {
+    const width = window.innerWidth;
+    if (width < 1340) {
+      setColumnCount(1); // 작은 화면에서는 한 줄에 1개
+    } else {
+      setColumnCount(2); // 큰 화면에서는 한 줄에 2개
+    }
+  };
+
+  useEffect(() => {
+    updateColumnCount();
+    window.addEventListener('resize', updateColumnCount);
+    return () => window.removeEventListener('resize', updateColumnCount);
+  }, []);
+
+  const handlePostClick = (postId: number) => {
+    navigate(`/detail/${postId}`);
+  };
 
   const handleRegisterButton = () => {
     const isLoggedIn = getAuthToken();
@@ -65,15 +86,18 @@ const Community: React.FC = () => {
   const filteredData =
     selectedCategory === '전체'
       ? data
-      : data.filter(post => post.category === selectedCategory);
+      : data.filter((post) => post.category === selectedCategory);
 
+  const truncateTitle = (title: string) => {
+    return title.length > 20 ? title.substring(0, 23) + '...' : title;
+  };
   const truncateContent = (content: string) => {
     return content.length > 20 ? content.substring(0, 26) + '...' : content;
   };
 
   return (
     <div
-      id="scrollableDiv"
+      id='scrollableDiv'
       style={{
         height: 'auto',
         overflow: 'auto',
@@ -87,14 +111,31 @@ const Community: React.FC = () => {
         hasMore={hasMore}
         loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
         endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
-        scrollableTarget="scrollableDiv"
+        scrollableTarget='scrollableDiv'
         style={{ width: '100%', paddingLeft: '15%', paddingRight: '15%' }}
       >
         <CommunityNotice />
-        <div style={{ marginTop: '15px', marginBottom: '15px', alignItems: 'center', justifyContent: 'end', display: 'flex' }}>
-          <button 
+        <div
+          style={{
+            marginTop: '15px',
+            marginBottom: '15px',
+            alignItems: 'center',
+            justifyContent: 'end',
+            display: 'flex',
+          }}
+        >
+          <button
             onClick={handleRegisterButton}
-            style={{borderRadius: '5px', backgroundColor: '#008485', color: 'white', padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingLeft: '15px'}}
+            style={{
+              borderRadius: '5px',
+              backgroundColor: '#008485',
+              color: 'white',
+              padding: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingLeft: '15px',
+            }}
           >
             글쓰기
             <img
@@ -108,9 +149,8 @@ const Community: React.FC = () => {
         <CommunityCategory setCategory={setSelectedCategory} />
 
         <List
-          grid={{ gutter: 0, column: 2 }}
-          style={{ gap: '0px' }}
-          dataSource={filteredData}
+          grid={{ gutter: 0, column: columnCount }}
+          dataSource={data}
           renderItem={(item, index) => (
             <List.Item
               key={index}
@@ -121,50 +161,46 @@ const Community: React.FC = () => {
                 margin: '0',
                 position: 'relative',
                 borderBottom: '1px solid rgba(140, 140, 140, 0.35)',
+                ...(columnCount === 2 && index % 2 === 0
+                  ? { borderRight: '1px solid rgba(140, 140, 140, 0.35)' }
+                  : {}),
               }}
+              onClick={() => handlePostClick(item.id)}
             >
-              <div className="p-3">
-                <div className="flex align-center justify-center">
-                  <div className="flex flex-col w-3/4 text-start justify-start gap-2">
-                    <p className="text-sm text-gray-500">{item.category}</p>
-                    <h1 className="font-bold text-xl">{item.title}</h1>
-                    <h3 className="text-base">
+              <div className='p-3'>
+                <div className='flex align-center justify-center'>
+                  <div className='flex flex-col w-4/5 text-start justify-start gap-2'>
+                    <p className='text-sm text-gray-500'>{item.category}</p>
+                    <h1 style={{ fontSize: '18px', fontWeight: 'bold' }}>
+                      {truncateTitle(item.title)}
+                    </h1>
+                    <h3 style={{ fontSize: '13px' }}>
                       {truncateContent(item.content)}
                     </h3>
                   </div>
-                  <div className="w-1/4 flex justify-center">
-                    {item.image && (
-                      <img
-                        src={index % 2 === 0 ? ImgBank : ImgBank2}
-                        style={{ width: '80px', height: '80px' }}
-                        alt="User Icon"
-                      />
-                    )}
+                  <div className='w-1/5 flex justify-center mt-5'>
+                    {/* {item.image && ( */}
+                    <img
+                      src={index % 2 === 0 ? ImgBank : ImgBank2}
+                      style={{ width: '80px', height: '80px' }}
+                      alt='User Icon'
+                    />
+                    {/* )} */}
                   </div>
                 </div>
                 <p>{item.author}</p>
-                <div className="flex gap-3">
+                <div className='flex gap-3'>
                   <p
-                    className="text-gray-500 mb-4"
+                    className='text-gray-500 mb-4'
                     style={{ fontSize: '12px' }}
                   >
-                    <span className="text-mainColor">조회 {item.counts.views}</span> ·
-                    좋아요 {item.counts.likes} · 댓글 {item.counts.comments}
+                    <span className='text-mainColor'>
+                      조회 {item.counts.views}
+                    </span>{' '}
+                    · 좋아요 {item.counts.likes} · 댓글 {item.counts.comments}
                   </p>
                 </div>
               </div>
-              {index % 2 === 0 && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    right: 0,
-                    width: '0.8px',
-                    height: '100%',
-                    backgroundColor: 'rgba(140, 140, 140, 0.35)',
-                  }}
-                />
-              )}
             </List.Item>
           )}
         />
