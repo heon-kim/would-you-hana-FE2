@@ -9,15 +9,17 @@ interface AnswerProps {
   answer: AnswerInterface;
 }
 
-const bankers = [
-  {
-    id: 0,
-    name: '문보경',
-    email: 'example@example.com',
-    branchName: '성동구 성수점',
-    introduce: '안녕하세요. 문보경 대리입니다.',
-  },
-];
+// const bankers = [
+//   {
+//     id: 0,
+//     name: '문보경',
+//     email: 'example2@example.com',
+//     branchName: '성동구 성수점',
+//     introduce: '안녕하세요. 문보경 대리입니다.',
+//   },
+// ];
+const bankers = JSON.parse(localStorage.getItem('bankers') || '[]');
+
 
 const Answer: React.FC<AnswerProps> = ({ answer }) => {
   const navigate = useNavigate();
