@@ -44,13 +44,13 @@ const LandingForRegister : React.FC = () => {
                 <div className="flex flex-row justify-center gap-10 p-3 ">
                     <div className="rounded-xl shadow-lg p-3 bg-mainColor"
                     style={{width:'200px', height:'200px'}}
-                    onClick={() => navigate('/userRegister')}>
+                    onClick={() => navigate('/register/user')}>
                         <h2 className="text-center mb-2">일반 회원</h2>
                         <img src={bddi} style={{display:'block', margin:'auto', width:'90px'}}></img>
                     </div>
                     <div className="rounded-xl shadow-lg p-3"
                     style={{width:'200px', height:'200px'}}
-                    onClick={() => navigate('/bankerRegister')}>
+                    onClick={() => navigate('/register/banker')}>
                         <h2 className="text-center mb-2">행원</h2>
                         <img src={nbbsgi} style={{display:'block', margin:'auto'}} className="w-4/5"></img>
                     </div>
