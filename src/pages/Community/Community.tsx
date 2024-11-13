@@ -89,9 +89,15 @@ const Community: React.FC = () => {
       : data.filter((post) => post.category === selectedCategory);
 
   const truncateTitle = (title: string) => {
+    if(columnCount == 1){
+      return title;
+    }
     return title.length > 20 ? title.substring(0, 23) + '...' : title;
   };
   const truncateContent = (content: string) => {
+    if(columnCount == 1){
+      return content.length > 80 ? content.substring(0, 85) + '...' : content;
+    }
     return content.length > 20 ? content.substring(0, 26) + '...' : content;
   };
 
