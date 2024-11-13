@@ -28,6 +28,7 @@ import Seocho from "./pages/LandingPage/Seocho";
 import BankerProfile from "./pages/BankerProfile/Profile";
 import CommunityRegister from "./pages/Community/CommunityRegister";
 import Chatbot from "./components/chatbot";
+import CommunityDetail from "./pages/Community/CommunityDetail";
 
 function App() {
   return (
@@ -61,6 +62,7 @@ function App() {
             <Route path="/findbank" element={<FindBank />} />
             <Route path="/community" element={<Community />} />
             <Route path="/community/regist" element={<CommunityRegister />} />
+            <Route path="/community/detail/:postId" element={<CommunityDetail />} />
             <Route path="/gwangjin" element={<Gwangjin />}></Route>
             <Route path="/seocho" element={<Seocho />}></Route>
             <Route path="/bankerProfile" element={<BankerProfile />}></Route>
