@@ -21,19 +21,12 @@ import Board from "./pages/QnA/Board";
 import FindBank from "./pages/Location/FindBank";
 import NotFound from "./pages/Error/404";
 import Community from "./pages/Community/Community";
-
 import Gwangjin from "./pages/LandingPage/Gwangjin";
 import Seocho from "./pages/LandingPage/Seocho";
-
-<<<<<<< HEAD
-import BankerProfile from './pages/BankerProfile/Profile';
-import CommunityRegister from './pages/Community/CommunityRegister';
-import SetDistrict from './pages/MyPage/SetDistrict';
-=======
 import BankerProfile from "./pages/BankerProfile/Profile";
 import CommunityRegister from "./pages/Community/CommunityRegister";
 import Chatbot from "./components/chatbot";
->>>>>>> ccabbbdc2598107f92788c594f4e8966b534027d
+import SetDistrict from "./pages/MyPage/SetDistrict";
 
 function App() {
   return (
