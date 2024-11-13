@@ -125,7 +125,7 @@ function LoggedInComponent({ onLogout, loggedInUserType }: LoggedInComponentProp
   }
 
   else if(loggedInUserType == 'B') {
-    const loggedBanker = localStorage.getItem('loggedBanker');
+    const loggedBanker = localStorage.getItem('userEmail');
     let banker;
     if (loggedBanker) {
       banker = findBanker(loggedBanker);

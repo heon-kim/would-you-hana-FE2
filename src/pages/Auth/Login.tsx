@@ -124,7 +124,8 @@ const Login: React.FC = () => {
              onClick={() => navigate('/register')}
             >회원가입</button>
             <p>|</p>
-            <button>비밀번호 찾기</button>
+            <button
+              onClick={() => navigate('/findPassword')}>비밀번호 찾기</button>
           </div>
     </div>
   );

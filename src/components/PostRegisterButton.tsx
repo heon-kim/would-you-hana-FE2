@@ -9,8 +9,6 @@ const PostRegisterButton: React.FC = () => {
 
   const handleButtonClick = () => {
     const isLoggedIn = getAuthToken();
-    const getuser = getUserEmail();
-    console.log(getuser);
     console.log(isLoggedIn);
     //로그인 여부 확인 후,
     //로그인 했으면 질문등록하기로 이동.
