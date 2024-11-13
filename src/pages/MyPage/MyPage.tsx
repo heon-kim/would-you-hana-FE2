@@ -14,7 +14,7 @@ const MyPage: React.FC = () => {
 
   // 현재 로그인한 사용자 확인
   useEffect(() => {
-    const loggedUser = localStorage.getItem('loggedUser'); // 저장된 사용자 정보 가져오기
+    const loggedUser = localStorage.getItem('userEmail'); // 저장된 사용자 정보 가져오기
     if (loggedUser) {
       const user = findUser(loggedUser); // 사용자의 이메일로 정보 가져오기
       if (user) {

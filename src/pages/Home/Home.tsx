@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../hoc/store';
 
 import '../../App.css';
+import { Root } from 'react-dom/client';
 // import { useSelector, useDispatch } from 'react-redux';
 // import { RootState } from '../store'; // Assuming this is your Redux store's RootState type
 //const { Search } = Input;
@@ -19,12 +20,14 @@ const Home: React.FC = () => {
   );
   const userRole = useSelector((state: RootState) => state.auth.userRole);
   const userEmail = useSelector((state: RootState) => state.auth.userEmail);
+  const userLocation = useSelector((state: RootState) => state.auth.userLocation);
 
   // useEffect를 사용하여 상태가 업데이트 될 때마다 실행
   useEffect(() => {
     console.log('User Role:', userRole);
     console.log('User Email:', userEmail);
     console.log('Is Authenticated:', isAuthenticated);
+    console.log('location : ', userLocation);
 
     // 여기에서 필요에 따라 추가 로직을 구현할 수 있습니다.
   }, [userRole, userEmail, isAuthenticated]); // 상태가 변경될 때마다 실행

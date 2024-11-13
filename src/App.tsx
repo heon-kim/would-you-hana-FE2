@@ -8,9 +8,9 @@ import Posts from './pages/MyPage/Posts';
 import Likes from './pages/MyPage/Likes';
 import Scrap from './pages/MyPage/Scraps';
 import EditProfile from './pages/MyPage/EditProfile';
-// import Auth from "./pages/Auth";
+
 import Login from './pages/Auth/Login';
-import Register from './pages/Auth/Register';
+import UserRegister from './pages/Auth/UserRegister';
 import './App.css';
 import './styles/fonts.css';
 import Header from './components/Header';
@@ -26,6 +26,8 @@ import Seocho from './pages/LandingPage/Seocho';
 
 import BankerProfile from './pages/BankerProfile/Profile';
 import CommunityRegister from './pages/Community/CommunityRegister';
+import BankerRegister from './pages/Auth/BankerRegister';
+import LandingForRegister from './pages/Auth/LandingForRegister';
 
 function App() {
   return (
@@ -50,7 +52,9 @@ function App() {
               {/*<Route path="auth" element={<Auth />} /> */}
             </Route>
             {/* You can add other routes here as needed */}
-            <Route path="/register" element={<Register />} />
+            <Route path="/register" element={<LandingForRegister />} />
+            <Route path="/userregister" element={<UserRegister />} />
+            <Route path="/bankerRegister" element={<BankerRegister />} />
             <Route path="/login" element={<Login />} />
             <Route path="/qna" element={<Board />} />
             <Route path="/qna/regist" element={<QuestionRegister />} />

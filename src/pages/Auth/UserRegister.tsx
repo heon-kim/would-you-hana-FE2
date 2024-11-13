@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import InputField from '../../components/InputField';
-import UserTypeRadio from '../../components/UserTypeRadio';
 import { saveUser, findUser, hasNickname } from '../../utils/userStorage';
 import { message, Button, Select } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
@@ -15,8 +14,7 @@ interface User {
   gender: 'F' | 'M';
   phone: string;
   birthDate: string;
-  location: string[];
-  userType: 'C' | 'B';
+  location: string;
   interests: string;
 }
 
@@ -278,25 +276,23 @@ const InputForm: React.FC<{
       email,
       nickname: user.nickname,
       password: user.password,
-      userType: user.userType,
     });
 
     setCompleteInputForm(true);
   };
 
-  const handleLocationChange = (field: 'loc1' | 'loc2', value: string) => {
-    if (field === 'loc2') {
-      setUser({ ...user, location: [value]  }); // loc2(구)만 저장
-    }
-  };
-
   return (
     <form onSubmit={handleRegister} className="flex flex-col gap-3">
-      <UserTypeRadio
-        userType={user.userType}
-        setUserType={(type) => setUser({ ...user, userType: type })}
-        labels={{ customer: '일반 회원 가입', banker: '행원 가입' }}
+      
+      <InputField
+        htmlFor="name"
+        type="text"
+        placeholder="이름"
+        value={user.name}
+        onChange={(e) => setUser({ ...user, name: e.target.value })}
+        required
       />
+    
       <NicknameInput
         nickname={user.nickname}
         setNickname={(nickname) => setUser({ ...user, nickname })}
@@ -307,6 +303,7 @@ const InputForm: React.FC<{
         nicknameError={nicknameError}
         setNicknameError={setNicknameError}
       />
+      
       <EmailInput
         emailPrefix={emailPrefix}
         setEmailPrefix={setEmailPrefix}
@@ -354,33 +351,38 @@ const InputForm: React.FC<{
         <p className="text-red-500">비밀번호가 일치하지 않습니다.</p>
       )}
       <div className="flex gap-2">
-        <input
-          className="border rounded-md p-2 w-full 
-            focus:outline-none focus:ring-0 focus:shadow-none hover:ring-0 
-            text-black placeholder:text-gray-400 transition duration-800"
+        <InputField
+          htmlFor="loc1"
           type="text"
-          placeholder="서울특별시"
-          value="서울특별시"
-          readOnly
+          placeholder="주소 (시/도)"
+          value={user.location.split(' ')[0] || ''}
+          onChange={(e) =>
+            setUser({
+              ...user,
+              location: `${e.target.value} ${
+                user.location.split(' ')[1] || ''
+              }`,
+            })
+          }
+          required
         />
         <InputField
           htmlFor="loc2"
           type="text"
-          placeholder="주소(구) ex: 서초구, 광진구"
-          value={user.location}
-          onChange={(e) => handleLocationChange('loc2', e.target.value)
+          placeholder="주소 (시/군/구)"
+          value={user.location.split(' ')[1] || ''}
+          onChange={(e) =>
+            setUser({
+              ...user,
+              location: `${user.location.split(' ')[0] || ''} ${
+                e.target.value
+              }`,
+            })
           }
           required
         />
       </div>
-      <InputField
-        htmlFor="name"
-        type="text"
-        placeholder="이름"
-        value={user.name}
-        onChange={(e) => setUser({ ...user, name: e.target.value })}
-        required
-      />
+      
       <div className="flex gap-4">
         <div
           className={`w-full text-center border rounded-md p-2 cursor-pointer ${
@@ -506,7 +508,7 @@ const SelectInterest: React.FC<{
   );
 };
 
-const Register: React.FC = () => {
+const UserRegister: React.FC = () => {
   const [completeInputForm, setCompleteInputForm] = useState<boolean>(false);
   const [user, setUser] = useState<User>({
     email: '',
@@ -517,7 +519,6 @@ const Register: React.FC = () => {
     phone: '',
     birthDate: '',
     location: '',
-    userType: 'C',
     interests: '',
   });
 
@@ -539,4 +540,4 @@ const Register: React.FC = () => {
   );
 };
 
-export default Register;
+export default UserRegister;
