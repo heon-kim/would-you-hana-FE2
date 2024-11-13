@@ -27,6 +27,7 @@ import Seocho from './pages/LandingPage/Seocho';
 
 import BankerProfile from './pages/BankerProfile/Profile';
 import CommunityRegister from './pages/Community/CommunityRegister';
+import SetDistrict from './pages/MyPage/SetDistrict';
 
 function App() {
   return (
@@ -48,7 +49,7 @@ function App() {
               <Route path="likes" element={<Likes />} />
               <Route path="scrap" element={<Scrap />} />
               <Route path="edit" element={<EditProfile />} />
-              {/*<Route path="auth" element={<Auth />} /> */}
+              <Route path="district" element={<SetDistrict />} />
             </Route>
             {/* You can add other routes here as needed */}
             <Route path="/register" element={<Register />} />

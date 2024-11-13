@@ -58,7 +58,7 @@ const MyPage: React.FC = () => {
             <Menu.Item key="likes" onClick={() => handleMenuClick('likes')} style={{ color: selectedKey === 'likes' ? '#BFBFBF' : undefined, backgroundColor: 'transparent' }}>좋아요</Menu.Item>
             <Menu.Item key="scrap" onClick={() => handleMenuClick('scrap')} style={{ color: selectedKey === 'scrap' ? '#BFBFBF' : undefined, backgroundColor: 'transparent' }}>스크랩</Menu.Item>
             <Menu.Item key="edit" onClick={() => handleMenuClick('edit')} style={{ color: selectedKey === 'edit' ? '#BFBFBF' : undefined, backgroundColor: 'transparent' }}>개인정보 수정</Menu.Item>
-            <Menu.Item key="auth" onClick={() => handleMenuClick('auth')} style={{ color: selectedKey === 'auth' ? '#BFBFBF' : undefined, backgroundColor: 'transparent' }}>동네 인증</Menu.Item>
+            <Menu.Item key="district" onClick={() => handleMenuClick('district')} style={{ color: selectedKey === 'auth' ? '#BFBFBF' : undefined, backgroundColor: 'transparent' }}>동네 인증</Menu.Item>
           </Menu>
         </Sider>
 
