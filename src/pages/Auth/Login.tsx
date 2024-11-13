@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import InputField from '../../components/InputField';
 import UserTypeRadio from '../../components/UserTypeRadio';
-import { findUser } from '../../utils/userStorage';
+import { findBanker, findUser } from '../../utils/userStorage';
 import { message } from 'antd';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../../hoc/actions';
-import { getUserLocation, setAuthHeader, setUserEmail, setUserLocation, setUserRole } from '../../hoc/request';
+import { getUserLocation, setAuthHeader, setUserEmail, setUserLocation, setUserRole, 
+  setBankerEmail, setBankerBranch
+ } from '../../hoc/request';
 
 const Login: React.FC = () => {
   const [userType, setUserType] = useState<'C' | 'B'>('C'); // 일반회원(customer: C) | 행원(banker: B)
@@ -20,47 +22,79 @@ const Login: React.FC = () => {
     if (loggedUser) {
       navigate('/');
     }
+    const loggedBanker = localStorage.getItem('loggedBanker');
+    if(loggedBanker) {
+      navigate('/');
+    }
   }, []);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-
-    const storedUser = findUser(email);
-    if (!storedUser || email !== storedUser.email) {
-      message.warning('존재하지 않는 회원입니다.');
-      return;
-    }
-
-    if (password === storedUser.password) {
-      localStorage.setItem('loggedUser', email);
-      const token: string = 'generatedAuthToken'; // string 타입 지정
-      const role: string = userType; // string 타입 지정
-      const location: string[] = Array.isArray(storedUser.location) 
-      ? storedUser.location 
-      : [storedUser.location];
-      dispatch(loginSuccess(token, role, email, location)); 
-      setAuthHeader(token);
-      setUserRole(role);
-      setUserEmail(email);
-      setUserLocation(location);
-      message.success('로그인 성공!');
-
-          // 지역에 따라 내비게이션 경로 설정 => 모든 구로 확장해야함
-      if (location[0].includes("광진")) {
-        navigate('/gwangjin');
-      } else if (location[0].includes("서초")) {
-        navigate('/seocho');
-      } else if (location[0].includes("성동")) {
-        navigate('/seongdong');
-      } else if (location[0].includes("강남")) {
-        navigate('/gangnam');
-      } else {
-        navigate('/');
+    
+    if(userType == 'C') { // 일반 고객
+      const storedUser = findUser(email);
+      if (!storedUser || email !== storedUser.email) {
+        message.warning('존재하지 않는 회원입니다.');
+        return;
       }
-      
-    } else {
-      message.warning('비밀번호가 잘못되었습니다.');
+      console.log(userType);
+
+      if (password === storedUser.password) {
+        //localStorage.setItem('loggedUser', email);
+        const token: string = 'generatedAuthToken'; // string 타입 지정
+        const role: string = userType; // string 타입 지정
+        const location: string = storedUser.location;
+        console.log('Dispatching loginSuccess with:', { token, email, role, location });
+        dispatch(loginSuccess(token, email, role, location)); // Dispatch login success action with role
+        // setAuthHeader(token);
+        // setUserRole(role);
+        // setUserEmail(email);
+        // setUserLocation(location);
+        message.success('로그인 성공!');
+        //navigate('/');
+            // 지역에 따라 내비게이션 경로 설정 => 모든 구로 확장해야함
+        if (location.includes("광진")) {
+          navigate('/gwangjin');
+        } else if (location.includes("서초")) {
+          navigate('/seocho');
+        } else if (location.includes("성동")) {
+          navigate('/seongdong');
+        } else if (location.includes("강남")) {
+          navigate('/gangnam');
+        } else {
+          navigate('/');
+        }
+      } else {
+        message.warning('비밀번호가 잘못되었습니다.');
+      }
+
     }
+
+    else if(userType == 'B') { // 행원
+      const storedBanker = findBanker(email);
+      if (!storedBanker || email !== storedBanker.email) {
+        message.warning('존재하지 않는 행원입니다.');
+        return;
+      }
+
+      if (password === storedBanker.password) {
+        //localStorage.setItem('loggedBanker', email);
+        const token: string = 'generatedAuthToken'; // string 타입 지정
+        const role: string = userType; // string 타입 지정
+        const branchName: string = storedBanker.branchName;
+        console.log('Dispatching loginSuccess with:', { token, email, role, branchName });
+        dispatch(loginSuccess(token, email, role, branchName)); // Dispatch login success action with role
+        // setAuthHeader(token);
+        // setUserRole(role);
+        // setBankerEmail(email);
+        // setBankerBranch(branchName);
+        message.success('로그인 성공!');
+        navigate('/');
+      } else {
+        message.warning('비밀번호가 잘못되었습니다.');
+      }
+    }
+    
   };
 
   return (
@@ -102,10 +136,12 @@ const Login: React.FC = () => {
              onClick={() => navigate('/register')}
             >회원가입</button>
             <p>|</p>
-            <button>비밀번호 찾기</button>
+            <button
+              onClick={() => navigate('/findPassword')}>비밀번호 찾기</button>
           </div>
     </div>
   );
 };
 
 export default Login;
+

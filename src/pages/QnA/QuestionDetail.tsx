@@ -10,6 +10,8 @@ import Answer from '../../components/post/Answer';
 import AnswerInput from '../../components/post/AnswerInput';
 import { relativeTime } from '../../utils/stringFormat';
 import { AnswerInterface } from '../../constants/posts';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../hoc/store';
 
 const QuestionDetail: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
@@ -18,6 +20,13 @@ const QuestionDetail: React.FC = () => {
   const [answers, setAnswers] = useState<{ [key: string]: AnswerInterface }>(
     {}
   );
+
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
+  const userRole = useSelector((state: RootState) => state.auth.userRole);
+  const userEmail = useSelector((state: RootState) => state.auth.userEmail);
+  const userLocation = useSelector((state: RootState) => state.auth.userLocation);
 
   const navigate = useNavigate();
 
@@ -48,7 +57,7 @@ const QuestionDetail: React.FC = () => {
     const answerData = {
       id: Date.now(), // 고유 ID 생성
       content,
-      authorEmail: 'example@example.com', // 로그인된 행원 email로 변경 필요
+      authorEmail: userEmail, // 로그인된 행원 email로 변경 필요
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -104,15 +113,15 @@ const QuestionDetail: React.FC = () => {
                 <span>스크랩 {post.counts.scraps || 0}</span>
               </div>
               <div className='flex justify-end gap-4'>
-                {!isAnswered && (
-                  <Button
-                    type='primary'
-                    icon={<FormOutlined />}
-                    onClick={() => setShowAnswerInput(true)}
-                  >
-                    답변하기
-                  </Button>
-                )}
+              {!isAnswered && userRole === 'B' && (
+                <Button
+                  type="primary"
+                  icon={<FormOutlined />}
+                  onClick={() => setShowAnswerInput(true)}
+                >
+                  답변하기
+                </Button>
+              )}
                 <Button icon={<StarOutlined />}>스크랩</Button>
               </div>
             </div>

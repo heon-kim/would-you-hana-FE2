@@ -1,3 +1,5 @@
+import { json } from "react-router-dom";
+
 interface User {
   email: string;
   password: string;
@@ -7,23 +9,50 @@ interface User {
   phone: string;
   birthDate: string;
   location: string;
-  userType: string;
   interests?: string;
 }
 
+interface Banker {
+  email: string;
+  password: string;
+  name: string;
+  gender: 'F' | 'M';
+  phone: string;
+  branchName: string;
+  interests: string;
+}
+
 const LOCAL_STORAGE_KEY = 'users';
+const LOCAL_STORAGE_KEY2 = 'bankers';
+
+const getBankers = (): Banker[] => {
+  const bankers = localStorage.getItem(LOCAL_STORAGE_KEY2);
+  return bankers ? JSON.parse(bankers) : [];
+}
 
 const getUsers = (): User[] => {
   const users = localStorage.getItem(LOCAL_STORAGE_KEY);
   return users ? JSON.parse(users) : [];
 };
 
+const saveBankers = (bankers: Banker[]) => {
+  localStorage.setItem(LOCAL_STORAGE_KEY2, JSON.stringify(bankers));
+}
+
 const saveUsers = (users: User[]) => {
   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(users));
 };
 
+const bankerExists = (email: string) => {
+  return getBankers().some((banker) => banker.email === email);
+};
+
 const userExists = (email: string) => {
   return getUsers().some((user) => user.email === email);
+};
+
+const findBanker = (email: string) => {
+  return getBankers().find((banker) => banker.email === email);
 };
 
 const findUser = (email: string) => {
@@ -34,6 +63,13 @@ const hasNickname = (nickname: string) => {
   return getUsers().some((user) => user.nickname === nickname);
 };
 
+const saveBanker = (banker : Banker) => {
+  if(!bankerExists(banker.email)) {
+    const bankers = getBankers();
+    bankers.push(banker);
+    saveBankers(bankers);
+  }
+}
 const saveUser = (user: User) => {
   if (!userExists(user.email)) {
     const users = getUsers();
@@ -41,6 +77,19 @@ const saveUser = (user: User) => {
     saveUsers(users);
   }
 };
+
+const updateBanker = (banker : Banker) => {
+  const bankers = getBankers();
+  const index = bankers.findIndex((u) => u.email === banker.email);
+
+  if (index !== -1) {
+    bankers[index] = banker;
+    saveBankers(bankers);
+  } else {
+    console.error('Banker not found');
+  }
+};
+
 
 const updateUser = (user: User) => {
   const users = getUsers();
@@ -54,4 +103,4 @@ const updateUser = (user: User) => {
   }
 };
 
-export { getUsers, saveUser, findUser, hasNickname, updateUser };
+export { getUsers, getBankers, saveUser, saveBanker, findUser, findBanker, hasNickname, updateUser, updateBanker };
