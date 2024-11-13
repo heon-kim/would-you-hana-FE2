@@ -51,7 +51,19 @@ const Login: React.FC = () => {
         // setUserEmail(email);
         // setUserLocation(location);
         message.success('로그인 성공!');
-        navigate('/');
+        //navigate('/');
+            // 지역에 따라 내비게이션 경로 설정 => 모든 구로 확장해야함
+        if (location.includes("광진")) {
+          navigate('/gwangjin');
+        } else if (location.includes("서초")) {
+          navigate('/seocho');
+        } else if (location.includes("성동")) {
+          navigate('/seongdong');
+        } else if (location.includes("강남")) {
+          navigate('/gangnam');
+        } else {
+          navigate('/');
+        }
       } else {
         message.warning('비밀번호가 잘못되었습니다.');
       }

@@ -58,8 +58,8 @@ function App() {
             </Route>
             {/* You can add other routes here as needed */}
             <Route path="/register" element={<LandingForRegister />} />
-            <Route path="/userregister" element={<UserRegister />} />
-            <Route path="/bankerRegister" element={<BankerRegister />} />
+            <Route path="/register/user" element={<UserRegister />} />
+            <Route path="/register/banker" element={<BankerRegister />} />
             <Route path="/login" element={<Login />} />
             <Route path="/findPassword" element={<FindPassword />} />
             <Route path="/qna" element={<Board />} />
