@@ -43,7 +43,8 @@ const Login: React.FC = () => {
         //localStorage.setItem('loggedUser', email);
         const token: string = 'generatedAuthToken'; // string 타입 지정
         const role: string = userType; // string 타입 지정
-        const location: string = storedUser.location;
+        const location: string[] = Array.isArray(storedUser.location) 
+          ? storedUser.location : [storedUser.location];
         console.log('Dispatching loginSuccess with:', { token, email, role, location });
         dispatch(loginSuccess(token, email, role, location)); // Dispatch login success action with role
         // setAuthHeader(token);
@@ -52,14 +53,14 @@ const Login: React.FC = () => {
         // setUserLocation(location);
         message.success('로그인 성공!');
         //navigate('/');
-            // 지역에 따라 내비게이션 경로 설정 => 모든 구로 확장해야함
-        if (location.includes("광진")) {
+        // 지역에 따라 내비게이션 경로 설정 => 모든 구로 확장해야함
+        if (location[0].includes("광진")) {
           navigate('/gwangjin');
-        } else if (location.includes("서초")) {
+        } else if (location[0].includes("서초")) {
           navigate('/seocho');
-        } else if (location.includes("성동")) {
+        } else if (location[0].includes("성동")) {
           navigate('/seongdong');
-        } else if (location.includes("강남")) {
+        } else if (location[0].includes("강남")) {
           navigate('/gangnam');
         } else {
           navigate('/');
