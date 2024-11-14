@@ -87,3 +87,45 @@ export const request = async <T = unknown>({ method, url, data }: RequestConfig)
         throw error;
     }
 };
+
+interface SignInData {
+    email: string;
+    password: string;
+}
+
+interface SignInResponse {
+    grantType: string;
+    accessToken: string;
+    refreshToken: string;
+}
+
+// 로그인 함수: 서버에 로그인 요청 보내고 토큰 저장하기
+export const signIn = async ({ email, password }: SignInData): Promise<AxiosResponse<SignInResponse>> => {
+    try {
+        const response = await axios.post<SignInResponse>(
+            '/members/sign-in',
+            { email, password },
+            {
+                headers: {
+                    'Content-Type': 'application/json', // Content-Type 명시
+                },
+            }
+        );
+        
+        // 서버로부터 토큰이 정상적으로 도착했으면 로컬 스토리지에 저장
+        if (response.data) {
+            const { grantType, accessToken, refreshToken } = response.data;
+
+            // 로컬 스토리지에 JWT와 리프레시 토큰 저장
+            localStorage.setItem('auth_token', `${grantType} ${accessToken}`);
+            localStorage.setItem('refresh_token', refreshToken);
+
+            console.log('로그인 성공: 토큰 저장 완료');
+        }
+
+        return response;
+    } catch (error) {
+        console.error('로그인 요청 실패:', error);
+        throw error;
+    }
+};
