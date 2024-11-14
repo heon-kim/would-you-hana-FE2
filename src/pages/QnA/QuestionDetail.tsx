@@ -37,6 +37,7 @@ const QuestionDetail: React.FC = () => {
     const storedAnswers = localStorage.getItem('answers');
     const parsedAnswers = storedAnswers ? JSON.parse(storedAnswers) : {};
     setAnswers(parsedAnswers);
+    console.log(isAuthenticated);
 
     if (!postId) {
       message.error('질문 ID가 없습니다.');
@@ -146,7 +147,7 @@ const QuestionDetail: React.FC = () => {
               <AnswerInput onSubmitAnswer={handleAnswerSubmit} onChatbotToggle={toggleChatbot} />
             )
           )}
-          <Comments />
+          <Comments isAuthenticated={isAuthenticated}/>
         </div>
         <aside className='widget' style={{ width: '30%' }}>
           
