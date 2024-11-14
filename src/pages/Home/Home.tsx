@@ -1,21 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col, Card } from 'antd';
 import notebookUser from '../../assets/img/notebook_byulsongi.png';
-import iconSearch from '../../assets/img/icon_search.png';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../hoc/store';
 
 import '../../App.css';
-import { Root } from 'react-dom/client';
-import SearchDropdown from '../../components/SearchDropdown';
+
+import SearchInput from '../../components/SearchInput';
 // import { useSelector, useDispatch } from 'react-redux';
 // import { RootState } from '../store'; // Assuming this is your Redux store's RootState type
 //const { Search } = Input;
 // test
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  const [searchSelected, setSearchSelected] = useState('Q&A'); // 카테고리 상태 관리
 
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
@@ -75,42 +73,10 @@ const Home: React.FC = () => {
                 <br /> 답변 받아가세요!
               </strong>
             </h1>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'start',
-                // alignItems: 'center',
-                marginTop: '40px',
-              }}
-            >
-            <SearchDropdown value={searchSelected} onChange={setSearchSelected} />
-              <input
-                style={{
-                  width: '53%', //기존 '65%'
-                  marginRight: '10px',
-                  height: '55px',
-                  borderRadius: '0 6px 6px 0', //기존 borderRadius: '6px'
-                  padding: '8px',
-                  fontFamily: 'Hana2Medium',
-                  fontSize: '15px',
-                  borderLeft: 'none', //추가
-                }}
-                className="border rounded-md p-2 w-full 
-                  focus:outline-none focus:ring-2 focus:ring-mainColor focus:shadow-md hover:ring-2 hover:ring-mainColor transition duration-800"
-                placeholder="질문을 입력하세요."
-              ></input>
-              <button className="bg-[#008485] w-[120px] h-[55px] rounded-lg p-2 text-white text-[15px] hover:bg-[#006f6f] transition-color duration-300">
-                <div className="flex items-center justify-center">
-                  <img
-                    src={iconSearch}
-                    alt="iconSearch"
-                    width={15}
-                    className="mr-1"
-                  />
-                  검색하기
-                </div>
-              </button>
-            </div>
+          
+            {/* SearchInput 컴포넌트 사용 */}
+            <SearchInput onSearch={onSearch} />
+
           </Col>
         </Row>
         <Row gutter={[16, 16]} style={{ backgroundColor: '#C1E9E8' }}>
