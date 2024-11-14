@@ -8,8 +8,7 @@ import logoSeocho from '../../assets/img/logo_seocho.png';
 import labelRegulation from '../../assets/img/label_regulation.png';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../hoc/store';
-// import SearchDropdown from '../../components/SearchDropdown';
-import iconSearch from '../../assets/img/icon_search.png';
+import SearchInput from '../../components/SearchInput';
 
 import '../../App.css';
 
@@ -68,6 +67,12 @@ const flagRegulationTextStyle = {
   lineHeight: '1.5'
 }
 
+// Function to handle search
+const onSearch = (value: string) => {
+  console.log(value);
+  // Add logic to handle the search input, e.g., navigate to a results page
+};
+
 const CardContent = ({ type, date, likes, views, content }: { type: string, date: string, likes: string, views: string, content: string }) => (
   <div style={{ textAlign: 'left', padding: '10px', marginTop: '10px' }}>
     <div style={{ marginTop: '10px', justifyContent: 'space-between' }}>
@@ -95,7 +100,6 @@ const Seocho: React.FC = () => {
   const [carouselIndex, setCarouselIndex] = useState(0);
   const keyword = ["자산관리", "외국인금융", "경기침체", "주택담보대출"];
 
-  const [searchSelected, setSearchSelected] = useState('Q&A'); // 카테고리 상태
   const handleCarouselChange = (current: number) => {
     setCarouselIndex(current);
   };
@@ -192,33 +196,9 @@ const Seocho: React.FC = () => {
 
             </strong>
             <br />
-            {/* <SearchDropdown value={searchSelected} onChange={setSearchSelected} />
-            <input
-              style={{
-                width: '53%', //기존 '65%'
-                marginRight: '10px',
-                height: '55px',
-                borderRadius: '0 6px 6px 0', //기존 borderRadius: '6px'
-                padding: '8px',
-                fontFamily: 'Hana2Medium',
-                fontSize: '15px',
-                borderLeft: 'none', //추가
-              }}
-              className="border rounded-md p-2 w-full 
-                                focus:outline-none focus:ring-2 focus:ring-mainColor focus:shadow-md hover:ring-2 hover:ring-mainColor transition duration-800"
-              placeholder="질문을 입력하세요."
-            ></input>
-            <button className="bg-[#008485] w-[120px] h-[55px] rounded-lg p-2 text-white text-[15px] hover:bg-[#006f6f] transition-color duration-300">
-              <div className="flex items-center justify-center">
-                <img
-                  src={iconSearch}
-                  alt="iconSearch"
-                  width={15}
-                  className="mr-1"
-                />
-                검색하기
-              </div>
-            </button> */}
+            <div style={{ marginLeft: '100px' }}>
+              <SearchInput onSearch={onSearch} />
+            </div>
           </Col>
         </Row>
         <Row gutter={[16, 16]} style={{ backgroundColor: '#ffffff' }}>

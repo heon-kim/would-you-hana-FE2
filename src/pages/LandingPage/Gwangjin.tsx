@@ -7,15 +7,14 @@ import labelDistrict from '../../assets/img/label_district.png';
 import logoGwangjin from '../../assets/img/logo_gwangjin.png';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../hoc/store';
-// import SearchDropdown from '../../components/SearchDropdown';
-import iconSearch from '../../assets/img/icon_search.png';
+import SearchInput from '../../components/SearchInput';
 import '../../App.css';
 
 // 구 플래그 컴포넌트
 const GuBadge: React.FC = () => {
     return (
         <div style={guContainerStyle}>
-            <img src={logoGwangjin} style={{ padding: '15px' }}></img>
+            <img src={logoGwangjin} style={{ padding: '10px', marginTop: '0px' }}></img>
         </div>
     );
 };
@@ -33,6 +32,12 @@ const guContainerStyle = {
     margin: '0 auto',
     display: 'inline-block',
     lineHeight: '4',
+};
+
+// Function to handle search
+const onSearch = (value: string) => {
+    console.log(value);
+    // Add logic to handle the search input, e.g., navigate to a results page
 };
 
 
@@ -64,8 +69,6 @@ const Gwangjin: React.FC = () => {
     const [carouselIndex, setCarouselIndex] = useState(0);
     const keyword = ["전세대출", "학자금대출", "체크카드", "부동산규제"];
 
-
-    const [searchSelected, setSearchSelected] = useState('Q&A'); // 카테고리 상태
     const handleCarouselChange = (current: number) => {
         setCarouselIndex(current);
     };
@@ -160,33 +163,10 @@ const Gwangjin: React.FC = () => {
 
                         </strong>
                         <br />
-                        {/* <SearchDropdown value={searchSelected} onChange={setSearchSelected} />
-                        <input
-                            style={{
-                                width: '53%', //기존 '65%'
-                                marginRight: '10px',
-                                height: '55px',
-                                borderRadius: '0 6px 6px 0', //기존 borderRadius: '6px'
-                                padding: '8px',
-                                fontFamily: 'Hana2Medium',
-                                fontSize: '15px',
-                                borderLeft: 'none', //추가
-                            }}
-                            className="border rounded-md p-2 w-full 
-                                focus:outline-none focus:ring-2 focus:ring-mainColor focus:shadow-md hover:ring-2 hover:ring-mainColor transition duration-800"
-                            placeholder="질문을 입력하세요."
-                        ></input>
-                        <button className="bg-[#008485] w-[120px] h-[55px] rounded-lg p-2 text-white text-[15px] hover:bg-[#006f6f] transition-color duration-300">
-                            <div className="flex items-center justify-center">
-                                <img
-                                    src={iconSearch}
-                                    alt="iconSearch"
-                                    width={15}
-                                    className="mr-1"
-                                />
-                                검색하기
-                            </div>
-                        </button> */}
+                        <div style={{ marginLeft: '100px' }}>
+                            <SearchInput onSearch={onSearch} />
+                        </div>
+
                     </Col>
                 </Row>
                 <Row gutter={[16, 16]} style={{ backgroundColor: '#ffffff' }}>
