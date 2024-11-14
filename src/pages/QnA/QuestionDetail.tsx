@@ -12,6 +12,7 @@ import { relativeTime } from '../../utils/stringFormat';
 import { AnswerInterface } from '../../constants/posts';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../hoc/store';
+import Chatbot from '../../components/Chatbot';
 
 const QuestionDetail: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
@@ -20,6 +21,8 @@ const QuestionDetail: React.FC = () => {
   const [answers, setAnswers] = useState<{ [key: string]: AnswerInterface }>(
     {}
   );
+  const [isChatbotVisible, setIsChatbotVisible] = useState(false);
+
 
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
@@ -73,6 +76,10 @@ const QuestionDetail: React.FC = () => {
 
     setIsAnswered(true);
     setShowAnswerInput(false);
+  };
+  
+  const toggleChatbot = () => {
+    setIsChatbotVisible((prev) => !prev);
   };
 
   return (
@@ -137,15 +144,31 @@ const QuestionDetail: React.FC = () => {
             <Answer answer={answers[postId]} />
           ) : (
             showAnswerInput && (
-              <AnswerInput onSubmitAnswer={handleAnswerSubmit} />
+              <AnswerInput onSubmitAnswer={handleAnswerSubmit} onChatbotToggle={toggleChatbot} />
             )
           )}
           <Comments isAuthenticated={isAuthenticated}/>
         </div>
         <aside className='widget' style={{ width: '30%' }}>
-          <PostRegisterButton />
+          
+          {/* {!isAnswered && userRole === 'C' && ( */}
+                <PostRegisterButton />
+              {/* )} */}
         </aside>
+        
       </div>
+      {isChatbotVisible && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '120px', // 원하는 y 좌표로 설정
+            right: '10%', // aside와 동일한 위치로 설정
+            zIndex: 2000, // 화면 위로 표시
+          }}
+        >
+          <Chatbot onClose={toggleChatbot} />
+        </div>
+      )}
     </div>
   );
 };
