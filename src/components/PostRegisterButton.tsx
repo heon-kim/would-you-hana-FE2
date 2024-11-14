@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import iconPencil from '../assets/img/icon_pencil.svg';
-import { getAuthToken } from '../hoc/request';
+import { getAuthToken, getUserEmail } from '../hoc/request';
 import { message } from 'antd';
 
 const PostRegisterButton: React.FC = () => {
@@ -9,6 +9,7 @@ const PostRegisterButton: React.FC = () => {
 
   const handleButtonClick = () => {
     const isLoggedIn = getAuthToken();
+    console.log(isLoggedIn);
     //로그인 여부 확인 후,
     //로그인 했으면 질문등록하기로 이동.
     //로그인 안했으면 로그인/회원가입 페이지로 이동.
