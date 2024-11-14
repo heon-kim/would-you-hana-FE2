@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Row, Col, Card } from 'antd';
-import hanaFamilyTogether from '../../assets/img/HanaFamilyTogeter.png'
+import { Row, Col, Card, Carousel } from 'antd';
+import hanaFamilyTogether from '../../assets/img/HanaFamilyTogether.png'
 import iconUser from '../../assets/img/icon_user.png'
 import trendKeyword from '../../assets/img/trendKeyword_gwangjin.png'
 import { useSelector } from 'react-redux';
@@ -61,6 +61,14 @@ const Gwangjin: React.FC = () => {
     const userRole = useSelector((state: RootState) => state.auth.userRole);
     const userEmail = useSelector((state: RootState) => state.auth.userEmail);
 
+    const [carouselIndex, setCarouselIndex] = useState(0);
+    const keyword = ["전세대출","학자금대출","체크카드","부동산규제dddddd"];
+
+    const handleCarouselChange = (current: number) => {
+        setCarouselIndex(current);
+      };
+
+
     useEffect(() => {
         console.log('User Role:', userRole);
         console.log('User Email:', userEmail);
@@ -90,31 +98,63 @@ const Gwangjin: React.FC = () => {
             />
         </Col>
 
-        <Col span={12} style={{ alignContent: 'left', marginLeft: '0px' }}>
+        <Col span={12} style={{ alignContent: 'left', marginLeft: '0px', marginTop:'100px'}}>
             
-            <h1
-                style={{
-                color: 'black',
-                fontSize: '40px',
-                lineHeight: '1.2',
-                textAlign: 'left',
-                }}
-            >
-            <strong>
-                <span style={{ color: 'black', fontSize:'20px' }}> 지금 <span style={{fontSize:'30px'}}>광진구</span> 사람들은 <br/> 여기에 관심이 있어요</span>
-            </strong>
-            </h1>
+        <style>
+            {`
+            .custom-carousel .carousel-item {
+                transition: all 0.3s ease;
+                text-align: center;
+                font-size: 50px;
+                opacity: 0.5;
+                transform: scale(0.8);
+                cursor: pointer;
+                height: 100px;
+                line-height: 100px;
+                color: #008485;
+    
 
-            <div className='flex justify-center items-center w-full p-6'>
-              <img
-                style={{ marginLeft: '0px', padding: '0px ' }}
-                src={trendKeyword}
-                alt='trendKeyword'
-                width={350}
-              />
-            </div>
+            }
+
+            .custom-carousel .carousel-item.focused {
+                font-size: 50px;
+                font-weight: bold;
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            .custom-carousel {
+                max-height: 300px;
+                overflow: hidden;
+            }
+            `}
+        </style>
             <strong>
-                <span style={{ color: 'black', fontSize:'20px',textAlign:'left' }}> 오늘 광진구에서 <span style={{fontSize:'30px'}}>1,231개</span>의 질문, <span style={{fontSize:'30px'}}>210개</span>의 답변이 등록되었습니다!</span>
+                <span style={{ fontSize:'35px' }}> 지금 <span style={{fontSize:'30px'}}>광진구</span> 주민들은</span>
+                <div >
+                <Carousel
+                        afterChange={handleCarouselChange}
+                        vertical
+                        dots={false}
+                        className="custom-carousel"
+                        autoplay={true}
+                        autoplaySpeed={3000}
+                                               
+                    >
+                        {keyword.map((keyword, index) => (
+                        <span
+                            key={index}
+                            className={`carousel-item ${index === carouselIndex ? 'focused' : ''}`}
+                        >
+                            {keyword}
+                        </span>
+                        ))}
+                    </Carousel>
+                    
+                    </div>
+                    <div style={{fontSize:'35px', alignContent:'center'}}>에 관심이 있어요.</div>
+                    
+
             </strong>
             
         </Col>

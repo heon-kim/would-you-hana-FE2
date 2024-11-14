@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col, Card } from 'antd';
-import hanaFamilyTogether from '../../assets/img/HanaFamilyTogeter.png'
+import hanaFamilyTogether from '../../assets/img/HanaFamilyTogether.png'
 import iconUser from '../../assets/img/icon_user.png'
 import trendKeyword from '../../assets/img/trendKeyword_seocho.png'
 import labelDistrict from '../../assets/img/label_district.png';
