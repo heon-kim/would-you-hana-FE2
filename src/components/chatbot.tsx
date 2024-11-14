@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import "../styles/chatbot.css";
+import { Modal } from "antd";
 import img_chatbot from "../assets/img/img_chatbot.png";
+import Send from "../assets/img/Send.png";
+
 interface Message {
   sender: "bot" | "user";
   text: string;
@@ -19,6 +22,15 @@ const Chatbot: React.FC = () => {
     { sender: "bot", text: "무엇을 도와드릴까요?", time: getCurrentTime() },
   ]);
   const [input, setInput] = useState("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
 
   const handleSend = async () => {
     if (input.trim() === "") return;
@@ -32,31 +44,6 @@ const Chatbot: React.FC = () => {
 
     setInput("");
 
-    // 백엔드와 연결하여 메시지를 전송하고 응답을 받아오는 부분 시작
-    try {
-      // TODO: 'axios' 라이브러리를 사용하여 메시지를 백엔드로 전송합니다.
-      // const response = await axios.post('백엔드 API URL', { message: input });
-      // 백엔드 응답을 처리하여 봇 메시지를 추가합니다.
-      // const botMessage: Message = {
-      //   sender: "bot",
-      //   text: response.data.reply, // 백엔드 응답 메시지 사용
-      //   time: getCurrentTime(),
-      // };
-      // setMessages((prevMessages) => [...prevMessages, botMessage]);
-    } catch (error) {
-      console.error("Error fetching bot response:", error);
-
-      // 오류 발생 시 사용자에게 오류 메시지를 표시하는 부분
-      const errorMessage: Message = {
-        sender: "bot",
-        text: "서버에 문제가 발생했습니다. 다시 시도해주세요.",
-        time: getCurrentTime(),
-      };
-      setMessages((prevMessages) => [...prevMessages, errorMessage]);
-    }
-    // 백엔드와 연결하여 메시지를 전송하고 응답을 받아오는 부분 끝
-
-    // setTimeout은 나중에 백엔드와 연결 후 제거
     setTimeout(() => {
       const botMessage: Message = {
         sender: "bot",
@@ -66,48 +53,60 @@ const Chatbot: React.FC = () => {
       setMessages((prevMessages) => [...prevMessages, botMessage]);
     }, 1000);
   };
-  // 여기까지 제거
+
   return (
-    <div className="chatbot-container">
-      <div className="chatbot-header">
-        <h3>우주하나 챗봇</h3>
-        <button className="close-button">X</button>
-      </div>
-      <div className="chatbot-content">
-        {messages.map((message, index) => (
-          <div key={index} className={`chat-message ${message.sender}`}>
-            <div className="message-header">
-              {message.sender === "bot" && (
-                <>
-                  <img
-                    src={img_chatbot} // 실제 이미지 경로로 변경
-                    alt="별벗 이미지"
-                    className="bot-image"
-                  />
-                  <span className="bot-name">별벗</span>
-                </>
-              )}
-              <span className="time">{message.time}</span>
-            </div>
-            <p>{message.text}</p>
+    <>
+      <button onClick={showModal}>챗봇 열기</button> {/**챗봇 여는 버튼 임시 */}
+      <Modal
+        title={
+          <div className="chatbot-header">
+            우주하나 챗봇
+            <button onClick={handleCancel} className="close-button">
+              X
+            </button>
           </div>
-        ))}
-      </div>
-      <div className="chatbot-footer">
-        <div className="input-container">
-          <input
-            type="text"
-            placeholder="무엇이든지 별벗에게 물어보세요!"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSend()}
-          />
-          <button className="send-button" onClick={handleSend}>
-            ➤
-          </button>
+        }
+        visible={isModalVisible}
+        footer={null}
+        centered
+        closable={false} // 기본 닫기 버튼 숨기기
+      >
+        <div className="chatbot-content">
+          {messages.map((message, index) => (
+            <div key={index} className={`chat-message ${message.sender}`}>
+              <div className="message-header">
+                {message.sender === "bot" && (
+                  <>
+                    <img
+                      src={img_chatbot}
+                      alt="별벗 이미지"
+                      className="bot-image"
+                    />
+                    <span className="bot-name">별벗</span>
+                  </>
+                )}
+                <span className="time">{message.time}</span>
+              </div>
+              <p>{message.text}</p>
+            </div>
+          ))}
         </div>
-      </div>
-    </div>
+        <div className="chatbot-footer">
+          <div className="input-container">
+            <input
+              type="text"
+              placeholder="무엇이든지 별벗에게 물어보세요!"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSend()}
+            />
+            <button className="send-button" onClick={handleSend}>
+              <img src={Send} alt="전송" className="send-icon" />
+            </button>
+          </div>
+        </div>
+      </Modal>
+    </>
   );
 };
 
