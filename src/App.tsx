@@ -20,11 +20,8 @@ import Board from "./pages/QnA/Board";
 import FindBank from "./pages/Location/FindBank";
 import NotFound from "./pages/Error/404";
 import Community from "./pages/Community/Community";
-
-
 import Gwangjin from "./pages/LandingPage/Gwangjin";
 import Seocho from "./pages/LandingPage/Seocho";
-
 import BankerProfile from './pages/BankerProfile/Profile';
 import CommunityRegister from './pages/Community/CommunityRegister';
 import UserRegister from "./pages/Auth/UserRegister";
@@ -32,7 +29,7 @@ import BankerRegister from './pages/Auth/BankerRegister';
 import LandingForRegister from './pages/Auth/LandingForRegister';
 import Chatbot from "./components/chatbot";
 import CommunityDetail from "./pages/Community/CommunityDetail";
-
+import SetDistrict from "./pages/MyPage/SetDistrict";
 
 function App() {
   return (
@@ -54,7 +51,7 @@ function App() {
               <Route path="likes" element={<Likes />} />
               <Route path="scrap" element={<Scrap />} />
               <Route path="edit" element={<EditProfile />} />
-              {/*<Route path="auth" element={<Auth />} /> */}
+              <Route path="district" element={<SetDistrict />} />
             </Route>
             {/* You can add other routes here as needed */}
             <Route path="/register" element={<LandingForRegister />} />
