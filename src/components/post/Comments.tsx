@@ -13,7 +13,8 @@ const CommentForm: React.FC<{
   onSubmit: (content: string) => void;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-}> = ({ onSubmit, value, onChange }) => (
+  isAuthenticated : boolean;
+}> = ({ onSubmit, value, onChange, isAuthenticated }) => (
   <form
     className="flex gap-2"
     onSubmit={(e) => {
@@ -21,7 +22,9 @@ const CommentForm: React.FC<{
       onSubmit(value);
     }}
   >
-    <TextArea
+    {isAuthenticated === true ? 
+      <>
+      <TextArea
       showCount
       autoSize
       maxLength={300}
@@ -29,10 +32,29 @@ const CommentForm: React.FC<{
       value={value}
       onChange={onChange}
       placeholder="댓글을 입력하세요"
-    />
-    <Button size="large"  htmlType="submit">
-      댓글 달기
-    </Button>
+      />
+      <Button size="large"  htmlType="submit">
+        댓글 달기
+      </Button>
+      </>
+       : 
+       <>
+       <TextArea
+        showCount
+        autoSize
+        maxLength={300}
+        allowClear
+        disabled
+        value={value}
+        onChange={onChange}
+        placeholder="로그인 후 댓글을 달아보세요."
+      />
+        <Button size="large"  htmlType="submit" disabled>
+          댓글 달기
+        </Button>
+       </>}
+    
+    
   </form>
 );
 
@@ -69,6 +91,7 @@ const CommentItem: React.FC<{
   replyContent: string;
   onChangeReplyContent: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onLike: () => void;
+  isAuthenticated : boolean;
 }> = ({
   comment,
   replies,
@@ -80,6 +103,7 @@ const CommentItem: React.FC<{
   replyContent,
   onChangeReplyContent,
   onLike,
+  isAuthenticated
 }) => (
   <div className="comment__item border-b pb-3 border-gray-200">
     <div
@@ -110,9 +134,10 @@ const CommentItem: React.FC<{
           >
             {comment.likes}
           </Button>
-          <Button type="text" onClick={onToggleReply}>
+          {isAuthenticated && (
+            <Button type="text" onClick={onToggleReply}>
             {isReplying ? '취소' : '답글쓰기'}
-          </Button>
+          </Button>)}
         </div>
         {replies.length > 0 && (
           <div
@@ -156,7 +181,7 @@ const CommentItem: React.FC<{
   </div>
 );
 
-const Comments: React.FC = () => {
+const Comments: React.FC<{isAuthenticated : boolean}> = ({isAuthenticated}) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [replies, setReplies] = useState<{
     [key: number]: { [key: number]: Reply[] };
@@ -177,6 +202,7 @@ const Comments: React.FC = () => {
   useEffect(() => {
     const storedComments = localStorage.getItem('comments');
     const storedReplies = localStorage.getItem('replies');
+    console.log(isAuthenticated);
 
     const allComments = storedComments ? JSON.parse(storedComments) : {};
     const postComments = allComments[postId] || [];
@@ -203,7 +229,7 @@ const Comments: React.FC = () => {
     localStorage.setItem('replies', JSON.stringify(allReplies));
   };
 
-  const loggedUser = localStorage.getItem('loggedUser') || '';
+  const loggedUser = localStorage.getItem('userEmail') || '';
   const userNickname = findUser(loggedUser)?.nickname || '';
 
   const addComment = () => {
@@ -289,7 +315,9 @@ const Comments: React.FC = () => {
         onSubmit={addComment}
         value={newComment}
         onChange={(e) => setNewComment(e.target.value)}
+        isAuthenticated={isAuthenticated}
       />
+      
       {comments.length > 0 && (
         <Radio.Group
           value={sortBy}
@@ -320,6 +348,7 @@ const Comments: React.FC = () => {
               }))
             }
             onLike={() => likeComment(comment.id)}
+            isAuthenticated={isAuthenticated}
           />
         ))}
       </div>

@@ -3,6 +3,7 @@ import markerImg from '../../assets/img/mark.png';
 import markerAtmImg from '../../assets/img/mark_atm.png';
 import ReservationModal from '../../components/ReservationModal';
 import iconLocation from '../../assets/img/icon_location.svg';
+import iconLocationWhite from '../../assets/img/icon_location_white.svg';
 
 const FindBank = () => {
   const [selectedLocation, setSelectedLocation] = useState(null);
@@ -14,6 +15,9 @@ const FindBank = () => {
   const [showBranches, setShowBranches] = useState(true);
   const [showATMs, setShowATMs] = useState(true);
   const [mapInstance, setMapInstance] = useState(null);
+  const [isBranchActive, setIsBranchActive] = useState(false);
+  const [isATMActive, setIsATMActive] = useState(false);
+  const [isLocationActive, setIsLocationActive] = useState(true); // 기본값을 true로 설정
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -26,6 +30,18 @@ const FindBank = () => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+
+  useEffect(() => {
+    if (mapInstance && userLocation) {
+      window.kakao.maps.event.addListener(mapInstance, 'center_changed', () => {
+        const center = mapInstance.getCenter();
+        // 허용 오차(약간의 차이) 범위 내에서 비교
+        const isCentered = Math.abs(center.getLat() - userLocation.lat) < 0.0001 &&
+                           Math.abs(center.getLng() - userLocation.lng) < 0.0001;
+        setIsLocationActive(isCentered);
+      });
+    }
+  }, [mapInstance, userLocation]);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -190,26 +206,28 @@ const FindBank = () => {
     script.onerror = () => {
       console.error('Failed to load Kakao Maps SDK');
     };
-  }, [userLocation, userDistrict]); // Removed showBranches and showATMs from dependencies
+  }, [userLocation, userDistrict]);
 
   const toggleBranchMarkers = () => {
-    setShowBranches((prevShowBranches) => !prevShowBranches);
+    setShowBranches((prev) => !prev);
+    setIsBranchActive((prev) => !prev);
     positions.forEach((location) => {
-      location.marker.setMap(showBranches ? null : mapInstance); // Toggle visibility without map reset
+      location.marker.setMap(showBranches ? null : mapInstance);
     });
   };
 
   const toggleATMMarkers = () => {
-    setShowATMs((prevShowATMs) => !prevShowATMs);
+    setShowATMs((prev) => !prev);
+    setIsATMActive((prev) => !prev);
     atmPositions.forEach((location) => {
-      location.marker.setMap(showATMs ? null : mapInstance); // Toggle visibility without map reset
+      location.marker.setMap(showATMs ? null : mapInstance);
     });
   };
 
-  // Function to move map to user's location
   const goToUserLocation = () => {
     if (mapInstance && userLocation) {
       mapInstance.panTo(new window.kakao.maps.LatLng(userLocation.lat, userLocation.lng));
+      setIsLocationActive(true);
     }
   };
 
@@ -217,17 +235,65 @@ const FindBank = () => {
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', marginTop: '5%' }}>
       <div style={{ width: '50%', height: '500px', borderRadius: '10px', overflow: 'hidden', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }} id="map">
         <div style={{ position: 'absolute', bottom: '10px', right: '10px', zIndex: '1000', display: 'flex', flexDirection: 'column' }}>
-          <button onClick={toggleATMMarkers} style={{ width: '50px', fontWeight: 'bold', height: '50px', backgroundColor: '#FFFFFF', color: '#008485', borderRadius: '50%', border: 'none', cursor: 'pointer', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)', marginBottom: '5px' }}>
+          <button
+            onClick={toggleATMMarkers}
+            style={{
+              width: '50px',
+              height: '50px',
+              borderRadius: '50%',
+              backgroundColor: isATMActive ? '#FFFFFF' : '#008485',
+              color: isATMActive ? '#008485' : '#FFFFFF',
+              border: 'none',
+              cursor: 'pointer',
+              boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
+              marginBottom: '5px',
+            }}
+          >
             ATM
           </button>
-          <button onClick={toggleBranchMarkers} style={{ width: '50px', height: '50px', backgroundColor: '#008485', color: '#fff', borderRadius: '50%', border: 'none', cursor: 'pointer', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)', marginBottom: '5px' }}>
+
+          <button
+            onClick={toggleBranchMarkers}
+            style={{
+              width: '50px',
+              height: '50px',
+              borderRadius: '50%',
+              backgroundColor: isBranchActive ? '#FFFFFF' : '#008485',
+              color: isBranchActive ? '#008485' : '#FFFFFF',
+              border: 'none',
+              cursor: 'pointer',
+              boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
+              marginBottom: '5px',
+            }}
+          >
             영업점
           </button>
-          <button onClick={goToUserLocation} style={{ width: '50px', height: '50px', backgroundColor: '#FFFFFF', color: '#fff', borderRadius: '50%', border: 'none', cursor: 'pointer', boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <img src={iconLocation} alt="Location Icon" style={{ width: '24px', height: '24px' }} />
+
+          <button
+            onClick={goToUserLocation}
+            style={{
+              width: '50px',
+              height: '50px',
+              borderRadius: '50%',
+              backgroundColor: isLocationActive ? '#008485' : '#FFFFFF',
+              color: isLocationActive ? '#FFFFFF' : '#008485',
+              border: 'none',
+              cursor: 'pointer',
+              boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <img
+              src={isLocationActive ? iconLocationWhite : iconLocation}
+              alt="Location Icon"
+              style={{ width: '24px', height: '24px' }}
+            />
           </button>
         </div>
       </div>
+
       <div style={{ marginLeft: '20px', padding: '0', border: '1px solid #ccc', borderRadius: '10px', width: '300px', height: '500px', backgroundColor: '#f9f9f9', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
         <div style={{ backgroundColor: '#008485', padding: '12px', borderTopLeftRadius: '10px', borderTopRightRadius: '10px' }}>
           <h3 style={{ fontSize: '1.25rem', fontWeight: '500', color: '#fff' }}>{selectedLocation ? selectedLocation.title : '상세 정보'}</h3>
@@ -248,7 +314,6 @@ const FindBank = () => {
         </div>
       </div>
       <ReservationModal isOpen={isModalOpen} onOk={handleOk} onCancel={handleCancel} />
-      <hr />
     </div>
   );
 };
