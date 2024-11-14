@@ -6,9 +6,10 @@ const { TextArea } = Input;
 
 interface AnswerInputProps {
   onSubmitAnswer: (content: string) => void;
+  onChatbotToggle: () => void;
 }
 
-const Answer: React.FC<AnswerInputProps> = ({ onSubmitAnswer }) => {
+const Answer: React.FC<AnswerInputProps> = ({ onSubmitAnswer, onChatbotToggle }) => {
   const [content, setContent] = useState('');
 
   const handleSubmit = () => {
@@ -36,10 +37,12 @@ const Answer: React.FC<AnswerInputProps> = ({ onSubmitAnswer }) => {
             color='white'
           >
             <Button
-              type='primary'
+              style={{backgroundColor:'#1F81FE'}}
               shape='circle'
               size='large'
-              icon={<img src={chatbotImg} alt='챗봇 이미지' width={30} />}
+              icon={<img src={chatbotImg} alt='챗봇 이미지' width={30}
+              onClick={onChatbotToggle}
+              />}
             ></Button>
           </Tooltip>
 
