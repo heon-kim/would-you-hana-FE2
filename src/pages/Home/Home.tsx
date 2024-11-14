@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Row, Col, Card } from 'antd';
 import notebookUser from '../../assets/img/notebook_byulsongi.png';
@@ -8,12 +8,14 @@ import { RootState } from '../../hoc/store';
 
 import '../../App.css';
 import { Root } from 'react-dom/client';
+import SearchDropdown from '../../components/SearchDropdown';
 // import { useSelector, useDispatch } from 'react-redux';
 // import { RootState } from '../store'; // Assuming this is your Redux store's RootState type
 //const { Search } = Input;
 // test
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const [searchSelected, setSearchSelected] = useState('Q&A'); // 카테고리 상태 관리
 
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
@@ -81,15 +83,17 @@ const Home: React.FC = () => {
                 marginTop: '40px',
               }}
             >
+            <SearchDropdown value={searchSelected} onChange={setSearchSelected} />
               <input
                 style={{
-                  width: '65%',
+                  width: '53%', //기존 '65%'
                   marginRight: '10px',
                   height: '55px',
-                  borderRadius: '6px',
+                  borderRadius: '0 6px 6px 0', //기존 borderRadius: '6px'
                   padding: '8px',
                   fontFamily: 'Hana2Medium',
                   fontSize: '15px',
+                  borderLeft: 'none', //추가
                 }}
                 className="border rounded-md p-2 w-full 
                   focus:outline-none focus:ring-2 focus:ring-mainColor focus:shadow-md hover:ring-2 hover:ring-mainColor transition duration-800"
