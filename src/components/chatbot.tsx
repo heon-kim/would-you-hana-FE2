@@ -1,36 +1,43 @@
-import React, { useState } from "react";
-import "../styles/chatbot.css";
-import img_chatbot from "../assets/img/img_chatbot.png";
+import React, { useState } from 'react';
+import Draggable from 'react-draggable';
+import '../styles/chatbot.css';
+import img_chatbot from '../assets/img/img_chatbot.png';
+import IconSend from '../assets/img/icon_send.png';
+import IconClose from '../assets/img/icon_close.svg';
 interface Message {
-  sender: "bot" | "user";
+  sender: 'bot' | 'user';
   text: string;
   time: string;
 }
 
-const Chatbot: React.FC = () => {
+interface ChatbotProps {
+  onClose: () => void; // Add this prop for closing the modal
+}
+
+const Chatbot: React.FC<ChatbotProps> = ({ onClose }) => {
   const getCurrentTime = () => {
     return new Date().toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
+      hour: '2-digit',
+      minute: '2-digit',
     });
   };
 
   const [messages, setMessages] = useState<Message[]>([
-    { sender: "bot", text: "무엇을 도와드릴까요?", time: getCurrentTime() },
+    { sender: 'bot', text: '무엇을 도와드릴까요?', time: getCurrentTime() },
   ]);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState('');
 
   const handleSend = async () => {
-    if (input.trim() === "") return;
+    if (input.trim() === '') return;
 
     const userMessage: Message = {
-      sender: "user",
+      sender: 'user',
       text: input,
       time: getCurrentTime(),
     };
     setMessages([...messages, userMessage]);
 
-    setInput("");
+    setInput('');
 
     // 백엔드와 연결하여 메시지를 전송하고 응답을 받아오는 부분 시작
     try {
@@ -44,12 +51,12 @@ const Chatbot: React.FC = () => {
       // };
       // setMessages((prevMessages) => [...prevMessages, botMessage]);
     } catch (error) {
-      console.error("Error fetching bot response:", error);
+      console.error('Error fetching bot response:', error);
 
       // 오류 발생 시 사용자에게 오류 메시지를 표시하는 부분
       const errorMessage: Message = {
-        sender: "bot",
-        text: "서버에 문제가 발생했습니다. 다시 시도해주세요.",
+        sender: 'bot',
+        text: '서버에 문제가 발생했습니다. 다시 시도해주세요.',
         time: getCurrentTime(),
       };
       setMessages((prevMessages) => [...prevMessages, errorMessage]);
@@ -59,7 +66,7 @@ const Chatbot: React.FC = () => {
     // setTimeout은 나중에 백엔드와 연결 후 제거
     setTimeout(() => {
       const botMessage: Message = {
-        sender: "bot",
+        sender: 'bot',
         text: `이것은 자동 응답입니다: ${input}`,
         time: getCurrentTime(),
       };
@@ -67,47 +74,54 @@ const Chatbot: React.FC = () => {
     }, 1000);
   };
   // 여기까지 제거
+  
   return (
-    <div className="chatbot-container">
-      <div className="chatbot-header">
+    <Draggable>
+    <div className='chatbot-container' style={{ zIndex: 2000 }}>
+      <div className='chatbot-header'>
         <h3>우주하나 챗봇</h3>
-        <button className="close-button">X</button>
+        <button className='close-button' onClick={onClose}>
+          <img
+            src={IconClose}
+          />
+        </button>
       </div>
-      <div className="chatbot-content">
+      <div className='chatbot-content'>
         {messages.map((message, index) => (
           <div key={index} className={`chat-message ${message.sender}`}>
-            <div className="message-header">
-              {message.sender === "bot" && (
+            <div className='message-header'>
+              {message.sender === 'bot' && (
                 <>
                   <img
                     src={img_chatbot} // 실제 이미지 경로로 변경
-                    alt="별벗 이미지"
-                    className="bot-image"
+                    alt='별벗 이미지'
+                    className='bot-image'
                   />
-                  <span className="bot-name">별벗</span>
+                  <span className='bot-name'>별벗</span>
                 </>
               )}
-              <span className="time">{message.time}</span>
+              <span className='time'>{message.time}</span>
             </div>
             <p>{message.text}</p>
           </div>
         ))}
       </div>
-      <div className="chatbot-footer">
-        <div className="input-container">
+      <div className='chatbot-footer'>
+        <div className='input-container'>
           <input
-            type="text"
-            placeholder="무엇이든지 별벗에게 물어보세요!"
+            type='text'
+            placeholder='무엇이든지 별벗에게 물어보세요!'
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSend()}
+            onKeyDown={(e) => e.key === 'Enter' && handleSend()}
           />
-          <button className="send-button" onClick={handleSend}>
-            ➤
+          <button className='send-button' onClick={handleSend}>
+            <img src={IconSend} />
           </button>
         </div>
       </div>
     </div>
+    </Draggable>
   );
 };
 

@@ -30,7 +30,7 @@ import CommunityRegister from './pages/Community/CommunityRegister';
 import UserRegister from "./pages/Auth/UserRegister";
 import BankerRegister from './pages/Auth/BankerRegister';
 import LandingForRegister from './pages/Auth/LandingForRegister';
-import Chatbot from "./components/chatbot";
+import Chatbot from "./components/Chatbot";
 import CommunityDetail from "./pages/Community/CommunityDetail";
 
 
