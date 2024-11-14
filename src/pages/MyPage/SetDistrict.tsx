@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import sigData from './sig.json';
 
 const SetDistrict = () => {
   const [userLocation, setUserLocation] = useState(null);

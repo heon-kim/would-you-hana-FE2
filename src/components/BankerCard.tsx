@@ -16,30 +16,14 @@ const BankerCard: React.FC<BankerCardProps> = ({ name, title, description, tags,
   return (
     <Card style={{ flexGrow: 1, borderRadius: '20px', border: '1px solid #d3d3d3' }} bodyStyle={{ padding: 0 }}>
       <Row>
-        <div
-          style={{
-            width: '100%',
-            backgroundColor: '#008485',
-            textAlign: 'right',
-            color: 'white',
-            paddingTop: '10px',
-            paddingBottom: '10px',
-            borderTopRightRadius: '20px',
-            borderTopLeftRadius: '20px',
-            paddingRight: '20px',
-            fontSize: '20px',
-          }}
-        >
-          {branch}
-        </div>
         <img
           src={imageUrl}
           alt="Profile"
           style={{
             width: '100%',
             marginBottom: '20px',
-            // borderTopRightRadius: '20px',
-            // borderTopLeftRadius: '20px',
+            borderTopRightRadius: '20px',
+            borderTopLeftRadius: '20px',
           }}
         />
       </Row>
