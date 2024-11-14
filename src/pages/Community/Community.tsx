@@ -46,7 +46,7 @@ const Community: React.FC = () => {
   }, []);
 
   const handlePostClick = (postId: number) => {
-    navigate(`/detail/${postId}`);
+    navigate(`detail/${postId}`);
   };
 
   const handleRegisterButton = () => {

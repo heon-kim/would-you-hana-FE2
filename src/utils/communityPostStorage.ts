@@ -20,3 +20,11 @@ export const communityPostCount = (): number => {
   const posts = getCommunityPosts();
   return posts.length;
 };
+
+const communityPostExists = (id: number) => {
+  return getCommunityPosts().some((post) => post.id === id);
+};
+
+const findCommunityPost = (id: number) => {
+  return getCommunityPosts().find((post) => post.id === id);
+};
