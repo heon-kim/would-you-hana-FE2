@@ -26,7 +26,7 @@ if (storedAuthToken) {
   const role = userRole || ''; // null인 경우 빈 문자열을 할당
   const email = userEmail || ''; // 동일하게 userEmail도 처리
   const location = userLocation || null;
-  store.dispatch(loginSuccess(storedAuthToken, role, email, location));
+  store.dispatch(loginSuccess(storedAuthToken, email, role, location));
 }
 
 createRoot(document.getElementById('root')!).render(

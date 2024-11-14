@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import iconPencil from '../assets/img/icon_pencil.svg';
-import { getAuthToken, getUserEmail } from '../hoc/request';
+import { getAuthToken, getUserRole } from '../hoc/request';
 import { message } from 'antd';
 
 const PostRegisterButton: React.FC = () => {
@@ -9,6 +9,7 @@ const PostRegisterButton: React.FC = () => {
 
   const handleButtonClick = () => {
     const isLoggedIn = getAuthToken();
+    const isUser = getUserRole();
     console.log(isLoggedIn);
     //로그인 여부 확인 후,
     //로그인 했으면 질문등록하기로 이동.
@@ -16,9 +17,14 @@ const PostRegisterButton: React.FC = () => {
     if (isLoggedIn === 'null' || !isLoggedIn) {
       message.warning('로그인이 필요합니다.');
       navigate('/login');
-    } else {
+    } 
+    else if(isUser === 'B') {
+      message.warning('행원은 Q&A를 작성할 수 없습니다!');
+    }
+    else {
       navigate('/qna/regist');
     }
+
   };
 
   return (
