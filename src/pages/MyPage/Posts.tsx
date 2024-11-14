@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { getPosts } from '../../utils/postStorage';
 import { Post } from '../../constants/posts';
-import PostList from "../../components/PostList";
+import PostList from '../../components/PostList';
 import { useNavigate } from 'react-router-dom';
 
 const Posts: React.FC = () => {
