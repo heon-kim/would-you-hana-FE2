@@ -1,47 +1,77 @@
 import React, { useEffect, useState } from 'react';
+import iconLocation from '../../assets/img/icon_location.svg';
+import iconLocationWhite from '../../assets/img/icon_location_white.svg';
 
 const SetDistrict = () => {
-  const [userLocation, setUserLocation] = useState(null);
   const [mapInstance, setMapInstance] = useState(null);
   const [districts, setDistricts] = useState([]);
   const [inputDistrict, setInputDistrict] = useState('');
   const [searchedLocation, setSearchedLocation] = useState(null);
-  const [polygon, setPolygon] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
+  const [isLocationActive, setIsLocationActive] = useState(true);
 
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const userLatLng = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          setUserLocation(userLatLng);
+    const script = document.createElement('script');
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=26b73c9fe72dd7a39fc3df547c6175f2&libraries=services&autoload=false`;
+    document.head.appendChild(script);
 
-          const script = document.createElement('script');
-          script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=26b73c9fe72dd7a39fc3df547c6175f2&libraries=services&autoload=false`;
-          document.head.appendChild(script);
+    script.onload = () => {
+      window.kakao.maps.load(() => {
+        const mapContainer = document.getElementById('map');
+        const mapOption = {
+          center: new window.kakao.maps.LatLng(37.5665, 126.9780),
+          level: 5,
+        };
+        const map = new window.kakao.maps.Map(mapContainer, mapOption);
+        setMapInstance(map);
 
-          script.onload = () => {
-            window.kakao.maps.load(() => {
-              const mapContainer = document.getElementById('map');
-              const mapOption = {
-                center: new window.kakao.maps.LatLng(userLatLng.lat, userLatLng.lng),
-                level: 5,
-              };
-              const map = new window.kakao.maps.Map(mapContainer, mapOption);
-              setMapInstance(map);
-            });
-          };
-        },
-        (error) => {
-          console.error("Error fetching location:", error);
-          setUserLocation({ lat: 37.5665, lng: 126.9780 });
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const lat = position.coords.latitude;
+              const lng = position.coords.longitude;
+              const userLatLng = new window.kakao.maps.LatLng(lat, lng);
+              setUserLocation(userLatLng);
+              map.setCenter(userLatLng);
+
+              const userMarker = document.createElement('div');
+              userMarker.style.width = '15px';
+              userMarker.style.height = '15px';
+              userMarker.style.backgroundColor = '#FF0000';
+              userMarker.style.borderRadius = '50%';
+              userMarker.style.border = '2px solid white';
+              userMarker.style.boxShadow = '0px 0px 6px rgba(255, 0, 0, 0.5)';
+
+              new window.kakao.maps.CustomOverlay({
+                map: map,
+                position: userLatLng,
+                content: userMarker,
+                yAnchor: 0.5,
+                xAnchor: 0.5,
+              });
+
+              // Check if map is centered on user’s location
+              window.kakao.maps.event.addListener(map, 'center_changed', () => {
+                const center = map.getCenter();
+                const isCentered =
+                  Math.abs(center.getLat() - userLatLng.getLat()) < 0.0001 &&
+                  Math.abs(center.getLng() - userLatLng.getLng()) < 0.0001;
+                setIsLocationActive(isCentered);
+              });
+            },
+            (error) => {
+              console.error("현재 위치를 가져오는 데 실패했습니다.", error);
+            }
+          );
+        } else {
+          console.warn("Geolocation이 지원되지 않는 브라우저입니다.");
         }
-      );
-    } else {
-      setUserLocation({ lat: 37.5665, lng: 126.9780 });
-    }
+      });
+    };
+
+    script.onerror = () => {
+      console.error("Kakao Maps SDK 로드에 실패했습니다.");
+    };
   }, []);
 
   const searchDistrict = () => {
@@ -53,42 +83,10 @@ const SetDistrict = () => {
         const coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
         mapInstance.setCenter(coords);
         setSearchedLocation({ name: inputDistrict, coords: { lat: result[0].y, lng: result[0].x } });
-        drawPolygon(inputDistrict);
       } else {
         alert('지역을 찾을 수 없습니다. 올바른 지역명을 입력해 주세요.');
       }
     });
-  };
-
-  const drawPolygon = (districtName) => {
-    if (!window.kakao.maps || !mapInstance) return;
-
-    const districtData = sigData.features.find(
-      (d) => d.properties.SIG_KOR_NM === districtName
-    );
-
-    if (!districtData) {
-      alert("해당 구의 정보를 찾을 수 없습니다.");
-      return;
-    }
-
-    const path = districtData.geometry.coordinates[0].map(
-      (coord) => new window.kakao.maps.LatLng(coord[1], coord[0])
-    );
-
-    if (polygon) polygon.setMap(null);
-
-    const newPolygon = new window.kakao.maps.Polygon({
-      map: mapInstance,
-      path: path,
-      strokeWeight: 2,
-      strokeColor: '#FF3DE5',
-      strokeOpacity: 0.8,
-      fillColor: '#FF8AEF',
-      fillOpacity: 0.6,
-    });
-
-    setPolygon(newPolygon);
   };
 
   const addDistrict = () => {
@@ -106,18 +104,54 @@ const SetDistrict = () => {
     }
   };
 
+  const toggleUserLocation = () => {
+    if (mapInstance && userLocation) {
+      mapInstance.panTo(userLocation);
+      setIsLocationActive(true);
+    }
+  };
+
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', marginTop: '5%' }}>
       <div
         style={{
           width: '50%',
           height: '500px',
+          marginBottom: '5%',
           borderRadius: '10px',
           overflow: 'hidden',
           boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          position: 'relative'
         }}
         id="map"
-      ></div>
+      >
+        <button
+          onClick={toggleUserLocation}
+          style={{
+            position: 'absolute',
+            bottom: '10px',
+            right: '10px',
+            width: '50px',
+            height: '50px',
+            borderRadius: '50%',
+            backgroundColor: isLocationActive ? '#008485' : '#FFFFFF',
+            color: isLocationActive ? '#FFFFFF' : '#008485',
+            border: 'none',
+            cursor: 'pointer',
+            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 10,
+          }}
+        >
+          <img
+            src={isLocationActive ? iconLocationWhite : iconLocation}
+            alt="Location Icon"
+            style={{ width: '24px', height: '24px' }}
+          />
+        </button>
+      </div>
 
       <div style={{ marginLeft: '20px', display: 'flex', flexDirection: 'column', width: '20%' }}>
         <div style={{ display: 'flex', marginBottom: '10px' }}>
