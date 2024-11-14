@@ -6,10 +6,11 @@ import locationIcon from '../assets/img/icon_location.svg';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../hoc/store';
 import { logout } from '../hoc/actions';
-import { message, Select } from 'antd';
-import type {SelectProps } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
+import { Dropdown, Space, message, Select } from 'antd';
+import type { MenuProps, SelectProps } from 'antd';
 import { setAuthHeader, setUserRole, setUserEmail, getUserLocation } from '../hoc/request';
-import { findUser } from '../utils/userStorage';
+import { findUser, findBanker} from '../utils/userStorage';
 
 // SearchInput 컴포넌트에 사용할 로컬 데이터
 const items = [
@@ -93,32 +94,86 @@ const SearchInput: React.FC<{
 
 interface LoggedInComponentProps {
   onLogout: () => void;
+  loggedInUserType : string | null;
 }
 
-function LoggedInComponent({ onLogout }: LoggedInComponentProps) {
-  const loggedUser = localStorage.getItem('loggedUser');
-  let user;
-  if (loggedUser) {
-    user = findUser(loggedUser);
+function LoggedInComponent({ onLogout, loggedInUserType }: LoggedInComponentProps) {
+  if(loggedInUserType =='C') {
+    const loggedUser = localStorage.getItem('userEmail');
+    let user;
+    if (loggedUser) {
+      user = findUser(loggedUser);
+    }
+
+    return (
+      <div>
+        <ul className='flex gap-8 items-center '>
+          <li>
+            <span onClick={onLogout} style={{ cursor: 'pointer' }}>
+              로그아웃
+            </span>
+          </li>
+          <li>
+            <Link to="/my/profile" className="flex items-center gap-2">
+              <img src={userIcon} alt="user icon" width={35} />
+              <span>{user?.nickname}</span>
+            </Link>
+          </li>
+        </ul>
+      </div>
+    );
   }
 
-  return (
-    <div>
-      <ul className='flex gap-8 items-center '>
-        <li>
-          <span onClick={onLogout} style={{ cursor: 'pointer' }}>
-            로그아웃
-          </span>
-        </li>
-        <li>
-          <Link to="/my/profile" className="flex items-center gap-2">
-            <img src={userIcon} alt="user icon" width={35} />
-            <span>{user?.nickname}</span>
-          </Link>
-        </li>
-      </ul>
-    </div>
-  );
+  else if(loggedInUserType == 'B') {
+    const loggedBanker = localStorage.getItem('userEmail');
+    let banker;
+    if (loggedBanker) {
+      banker = findBanker(loggedBanker);
+    }
+
+    return (
+      <div>
+        <ul className='flex gap-8 items-center '>
+          <li>
+            <span onClick={onLogout} style={{ cursor: 'pointer' }}>
+              로그아웃
+            </span>
+          </li>
+          <li>
+            <Link to="/my/profile" className="flex items-center gap-2">
+              <img src={userIcon} alt="user icon" width={35} />
+              <span>{banker?.name}</span>
+            </Link>
+          </li>
+        </ul>
+      </div>
+    );
+  }
+  // const loggedUser = localStorage.getItem('loggedUser');
+  //   let user;
+  //   if (loggedUser) {
+  //     user = findUser(loggedUser);
+  //   }
+
+  //   return (
+  //     <div>
+  //       <ul className='flex gap-8 items-center '>
+  //         <li>
+  //           <span onClick={onLogout} style={{ cursor: 'pointer' }}>
+  //             로그아웃
+  //           </span>
+  //         </li>
+  //         <li>
+  //           <Link to="/my/profile" className="flex items-center gap-2">
+  //             <img src={userIcon} alt="user icon" width={35} />
+  //             <span>{user?.nickname}</span>
+  //           </Link>
+  //         </li>
+  //       </ul>
+  //     </div>
+  //   );
+  
+  
 }
 
 function LoggedOutComponent() {
@@ -139,6 +194,7 @@ function LoggedOutComponent() {
 // Header 컴포넌트
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  const [loggedInType, setLoggedInType] = useState<string|null>(null);
   const [searchValue, setSearchValue] = useState<string>('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -148,18 +204,22 @@ function Header() {
     (state: RootState) => state.auth.isAuthenticated
   );
 
+  const loggedInUserType = useSelector(
+    (state:RootState) => state.auth.userRole
+  );
+
   useEffect(() => {
     setIsLoggedIn(isAuthenticated);
-  }, [isAuthenticated]);
+    setLoggedInType(loggedInUserType);
+  }, [isAuthenticated, loggedInUserType]);
 
   const handleLogout = () => {
-    localStorage.removeItem('loggedUser');
-    localStorage.removeItem('user_location')
-    setUserRole(null);
-    setUserEmail(null);
-    setAuthHeader(null);
-    setIsLoggedIn(false);
-    setSearchValue('');
+    // localStorage.removeItem('loggedUser');
+    // setUserRole(null);
+    // setUserEmail(null);
+    // setAuthHeader(null);
+    // setIsLoggedIn(false);
+    // localStorage.removeItem('authToken');
     dispatch(logout());
     message.success('로그아웃 성공!');
     navigate('/');
@@ -200,7 +260,7 @@ function Header() {
         </div>
 
         {isLoggedIn ? (
-          <LoggedInComponent onLogout={handleLogout} />
+          <LoggedInComponent onLogout={handleLogout} loggedInUserType={loggedInType} />
         ) : (
           <LoggedOutComponent />
         )}

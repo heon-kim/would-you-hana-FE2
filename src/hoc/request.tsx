@@ -7,44 +7,61 @@ import axios, { Method, AxiosResponse } from 'axios';
 
 //로컬 스토리지에서 'auth_token'이라는 키로 저장된 JWT 토큰을 가져오는 함수
 export const getAuthToken = (): string | null => {
-    return window.localStorage.getItem('auth_token');
+    return window.localStorage.getItem('authToken');
 };
 
 //로컬 스토리지에서 'user_role'이라는 키로 저장된 사용자 역할을 가져오는 함수
 export const getUserRole = (): string | null => {
-    return window.localStorage.getItem('user_role');
+    return window.localStorage.getItem('userRole');
 };
 
 //로컬 스토리지에서 'user_email'이라는 키로 저장된 사용자 이메일을 가져오는 함수
 export const getUserEmail = (): string | null => {
-    return window.localStorage.getItem('user_email');
+    return window.localStorage.getItem('userEmail');
 };
 
 //로컬 스토리지에서 'user_location'이라는 키로 저장된 사용자 위치를 가져오는 함수
 export const getUserLocation= (): string[] =>{
-    const location = window.localStorage.getItem('user_location');
-    return location ? JSON.parse(location) : null;
+    const location = window.localStorage.getItem('userLocation');
+    return location ? location : null;
+    //return location ? JSON.parse(location) : null;
 };
 
 //로컬 스토리지에 JWT 토큰을 'auth_token' 키로 저장하는 함수
 export const setAuthHeader = (token: string): void => {
-    window.localStorage.setItem('auth_token', token);
+    window.localStorage.setItem('authToken', token);
 };
 
 //로컬 스토리지에 사용자 역할을 'user_role' 키로 저장하는 함수
 export const setUserRole = (role: string): void => {
-    window.localStorage.setItem('user_role', role);
+    window.localStorage.setItem('userRole', role);
 };
 
 //로컬 스토리지에 닉네임을 'email' 키로 저장하는 함수
 export const setUserEmail = (email: string):void => {
-    window.localStorage.setItem('user_email', email);
+    window.localStorage.setItem('userEmail', email);
 };
 
 //로컬 스토리지에 위치를 'user_location' 키로 저장하는 함수
 export const setUserLocation = (location: string[]):void=>{
-    window.localStorage.setItem('user_location', JSON.stringify(location));
+    window.localStorage.setItem('userLocation', JSON.stringify(location));
 }
+
+export const setBankerEmail = (email : string):void => {
+    window.localStorage.setItem('bankerEmail', email);
+}
+
+export const setBankerBranch = (branchName : string):void => {
+    window.localStorage.setItem('bankerBranchName', branchName);
+}
+
+export const getBankerEmail = (): string | null => {
+    return window.localStorage.getItem('bankerEmail');
+}
+
+export const getBankerBranch = (): string | null =>{
+    return window.localStorage.getItem('bankerBranchName');
+};
 
 interface RequestConfig {
     method: Method;    // HTTP method (e.g., 'GET', 'POST', etc.)
@@ -84,48 +101,6 @@ export const request = async <T = unknown>({ method, url, data }: RequestConfig)
         return response;
     } catch (error) {
         console.error('Error:', error);
-        throw error;
-    }
-};
-
-interface SignInData {
-    email: string;
-    password: string;
-}
-
-interface SignInResponse {
-    grantType: string;
-    accessToken: string;
-    refreshToken: string;
-}
-
-// 로그인 함수: 서버에 로그인 요청 보내고 토큰 저장하기
-export const signIn = async ({ email, password }: SignInData): Promise<AxiosResponse<SignInResponse>> => {
-    try {
-        const response = await axios.post<SignInResponse>(
-            '/members/sign-in',
-            { email, password },
-            {
-                headers: {
-                    'Content-Type': 'application/json', // Content-Type 명시
-                },
-            }
-        );
-        
-        // 서버로부터 토큰이 정상적으로 도착했으면 로컬 스토리지에 저장
-        if (response.data) {
-            const { grantType, accessToken, refreshToken } = response.data;
-
-            // 로컬 스토리지에 JWT와 리프레시 토큰 저장
-            localStorage.setItem('auth_token', `${grantType} ${accessToken}`);
-            localStorage.setItem('refresh_token', refreshToken);
-
-            console.log('로그인 성공: 토큰 저장 완료');
-        }
-
-        return response;
-    } catch (error) {
-        console.error('로그인 요청 실패:', error);
         throw error;
     }
 };

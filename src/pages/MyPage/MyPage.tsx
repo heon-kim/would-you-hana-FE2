@@ -2,24 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { Layout, Progress, Avatar, Menu } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { useNavigate, Outlet } from 'react-router-dom'; 
-import { findUser } from '../../utils/userStorage';
+import { findUser, findBanker } from '../../utils/userStorage';
 import userIcon from '../../assets/img/icon_user.png';
 
 const { Content, Sider } = Layout;
 
 const MyPage: React.FC = () => {
   const [selectedKey, setSelectedKey] = useState('profile'); 
-  const [nickname, setNickname] = useState<string>('None'); // 닉네임 상태 관리
+  const [nicknameOrRealname, setNicknameOrRealname] = useState<string>('None'); // 닉네임 상태 관리
+  
   const navigate = useNavigate();
 
   // 현재 로그인한 사용자 확인
   useEffect(() => {
-    const loggedUser = localStorage.getItem('loggedUser'); // 저장된 사용자 정보 가져오기
+    const loggedUser = localStorage.getItem('userEmail'); // 저장된 사용자 정보 가져오기
     if (loggedUser) {
-      const user = findUser(loggedUser); // 사용자의 이메일로 정보 가져오기
-      if (user) {
-        setNickname(user.nickname); // 닉네임 설정
+      const user = findUser(loggedUser);
+      if (user) { // 고객이라면
+        setNicknameOrRealname(user.nickname); // 닉네임 설정
+      } 
+      else if(user == undefined) { // 행원이라면
+        const user = findBanker(loggedUser);
+        setNicknameOrRealname(user.name);
       }
+      
     }
   }, []);
 
@@ -43,7 +49,7 @@ const MyPage: React.FC = () => {
             <div style={{ display: 'flex',  alignItems: 'center', marginBottom: "10px",  }}> 
               <Avatar size={100} src={userIcon} icon={<UserOutlined />} />
             </div>
-            <h2 style={{ fontSize: '20px', textAlign: 'left', fontWeight: 'bold', marginBottom:'10px'}}>{nickname}</h2> 
+            <h2 style={{ fontSize: '20px', textAlign: 'left', fontWeight: 'bold', marginBottom:'10px'}}>{nicknameOrRealname}</h2> 
             <p style={{textAlign: 'left'}}>지구 1380</p>
             <Progress percent={60} status="active" strokeWidth={30} showInfo={false} strokeColor={twoColors} style={{ width: '100%', marginTop: '20pxs' }} />
           </Content>
