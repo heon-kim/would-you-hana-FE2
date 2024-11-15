@@ -201,7 +201,7 @@ const Seocho: React.FC = () => {
             </div>
           </Col>
         </Row>
-        <Row gutter={[16, 16]} style={{ backgroundColor: '#ffffff' }}>
+        <Row gutter={[16, 16]} style={{ backgroundColor: '#ffffff', paddingLeft: "30px", paddingRight: "30px" }}>
           <Col span={24} style={{ marginTop: '40px' }}>
             <h2 style={{ fontSize: '24px', marginBottom: '10px' }}>
 

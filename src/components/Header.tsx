@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import logo from '../assets/img/logo.png';
 import userIcon from '../assets/img/icon_user.png';
@@ -14,31 +14,31 @@ import { findUser, findBanker} from '../utils/userStorage';
 
 // SearchInput 컴포넌트에 사용할 로컬 데이터
 const items = [
-  { value: '강서구', text: '강서구' },
-  { value: '양천구', text: '양천구' },
-  { value: '구로구', text: '구로구' },
-  { value: '금천구', text: '금천구' },
-  { value: '영등포구', text: '영등포구' },
-  { value: '동작구', text: '동작구' },
-  { value: '관악구', text: '관악구' },
+  // { value: '강서구', text: '강서구' },
+  // { value: '양천구', text: '양천구' },
+  // { value: '구로구', text: '구로구' },
+  // { value: '금천구', text: '금천구' },
+  // { value: '영등포구', text: '영등포구' },
+  // { value: '동작구', text: '동작구' },
+  // { value: '관악구', text: '관악구' },
   { value: '서초구', text: '서초구' },
-  { value: '강남구', text: '강남구' },
-  { value: '송파구', text: '송파구' },
-  { value: '강동구', text: '강동구' },
-  { value: '마포구', text: '마포구' },
-  { value: '서대문구', text: '서대문구' },
-  { value: '은평구', text: '은평구' },
-  { value: '종로구', text: '종로구' },
-  { value: '성북구', text: '성북구' },
-  { value: '동대문구', text: '동대문구' },
-  { value: '중구', text: '중구' },
+  // { value: '강남구', text: '강남구' },
+  // { value: '송파구', text: '송파구' },
+  // { value: '강동구', text: '강동구' },
+  // { value: '마포구', text: '마포구' },
+  // { value: '서대문구', text: '서대문구' },
+  // { value: '은평구', text: '은평구' },
+  // { value: '종로구', text: '종로구' },
+  // { value: '성북구', text: '성북구' },
+  // { value: '동대문구', text: '동대문구' },
+  // { value: '중구', text: '중구' },
   { value: '광진구', text: '광진구' },
-  { value: '중랑구', text: '중랑구' },
-  { value: '용산구', text: '용산구' },
-  { value: '강북구', text: '강북구' },
-  { value: '도봉구', text: '도봉구' },
-  { value: '노원구', text: '노원구' },
-  { value: '성동구', text: '성동구' },
+  // { value: '중랑구', text: '중랑구' },
+  // { value: '용산구', text: '용산구' },
+  // { value: '강북구', text: '강북구' },
+  // { value: '도봉구', text: '도봉구' },
+  // { value: '노원구', text: '노원구' },
+  // { value: '성동구', text: '성동구' },
 
   // 필요한 다른 데이터 추가
 ];
@@ -63,8 +63,26 @@ const SearchInput: React.FC<{
 }> = (props) => {
   const [data, setData] = useState<SelectProps['options']>([]);
 
+  const navigate = useNavigate();
+
   const handleSearch = (newValue: string) => {
     fetch(newValue, setData);
+  };
+
+  const navigateToLanding = (district : string) => {
+    console.log(district);
+    if(district === '광진구') {
+      navigate('/gwangjin');
+    }
+    else if(district === '서초구') {
+      navigate('/seocho');
+    }
+  }
+
+  // 지역이 선택되었을 때, 그 값을 상태로 저장
+  const handleChange = (selectedDistrict: string) => {
+    props.onChange(selectedDistrict); // 부모 컴포넌트에 선택된 값을 전달
+    navigateToLanding(selectedDistrict); // 선택된 지역으로 페이지 이동
   };
 
   return (
@@ -77,7 +95,7 @@ const SearchInput: React.FC<{
         defaultActiveFirstOption={false}
         filterOption={false}
         onSearch={handleSearch}
-        onChange={props.onChange}
+        onChange={handleChange}
         notFoundContent={null}
         options={(data || []).map((d) => ({
           value: d.value,

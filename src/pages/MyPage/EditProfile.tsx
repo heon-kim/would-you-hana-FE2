@@ -16,7 +16,7 @@ const EditProfile: React.FC = () => {
   });
 
   useEffect(() => {
-    const loggedUser = localStorage.getItem('loggedUser'); // 현재 로그인된 사용자 가져오기
+    const loggedUser = localStorage.getItem('userEmail'); // 현재 로그인된 사용자 가져오기
     if (loggedUser) {
       const userData = findUser(loggedUser);
       if (userData) {
@@ -81,7 +81,7 @@ const EditProfile: React.FC = () => {
             <Option value="선택 안 함">선택 안 함</Option>
           </Select>
         </Form.Item>
-        <Form.Item label="시/도" style={{ marginBottom: '20px' }}> {/* 필드 간 간격 설정 */}
+        <Form.Item label="시/구" style={{ marginBottom: '20px' }}> {/* 필드 간 간격 설정 */}
           <Input value={user.location} name="location" onChange={handleInputChange} style={{ height: '40px' }} /> {/* 높이 조정 */}
         </Form.Item>
         <Form.Item label="전화번호" required style={{ marginBottom: '20px' }}> {/* 필드 간 간격 설정 */}

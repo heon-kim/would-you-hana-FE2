@@ -268,8 +268,10 @@ const Gwangjin: React.FC = () => {
                     </Col>
                 </Row>
             </div>
+
         </div>
     );
+
 };
 
 export default Gwangjin;
