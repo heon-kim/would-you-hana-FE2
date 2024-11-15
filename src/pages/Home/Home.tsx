@@ -91,6 +91,7 @@ const Home: React.FC = () => {
           style={{ backgroundColor: '#DDFCD2', height: '600px' }}
         >
           {/* Carousel Column */}
+
           <Col span={12} style={{
             marginTop: '100px',
             opacity: showFirstRow ? 1 : 0,
@@ -98,11 +99,14 @@ const Home: React.FC = () => {
             transition: 'all 1s ease-in-out'
           }}>
             <img
+
               src={notebookUser}
               alt="notebookUser"
               width={470}
-              style={{ marginLeft: '100px', marginTop: '15px' }}
+
             ></img>
+
+
           </Col>
 
           {/* Search Input Column */}
@@ -131,7 +135,10 @@ const Home: React.FC = () => {
             </h1>
 
             {/* SearchInput 컴포넌트 사용 */}
-            <SearchInput onSearch={onSearch} />
+            <div style={{ marginRight: '100px' }}>
+              <SearchInput onSearch={onSearch} />
+            </div>
+
 
           </Col>
         </Row>

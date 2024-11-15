@@ -17,11 +17,11 @@ const SearchInput: React.FC<SearchInputProps> = ({ onSearch }) => {
   };
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', marginTop: '40px' }}>
+    <div style={{ display: 'flex', alignItems: 'center', marginTop: '40px'}}>
       {/* 드롭다운을 SearchInput 내에 포함 */}
       <select
         style={{
-          width: '12%',
+          width: '17%',
           height: '55px',
           borderRadius: '6px 0 0 6px',
           padding: '8px',
@@ -40,7 +40,7 @@ const SearchInput: React.FC<SearchInputProps> = ({ onSearch }) => {
       {/* 검색 입력 필드 */}
       <input
         style={{
-          width: '53%',
+          width: '83%',
           marginRight: '10px',
           height: '55px',
           borderRadius: '0 6px 6px 0',
