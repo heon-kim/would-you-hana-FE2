@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import iconLocation from '../../assets/img/icon_location.svg';
-import iconLocationWhite from '../../assets/img/icon_location_white.svg';
+import seoulDistricts from '../../assets/location/seoul_districts.json'; // Adjust path as needed
 
 const SetDistrict = () => {
   const [mapInstance, setMapInstance] = useState(null);
-  const [districts, setDistricts] = useState([]);
   const [inputDistrict, setInputDistrict] = useState('');
-  const [searchedLocation, setSearchedLocation] = useState(null);
-  const [userLocation, setUserLocation] = useState(null);
-  const [isLocationActive, setIsLocationActive] = useState(true);
+  const [selectedDistricts, setSelectedDistricts] = useState([]);
+  const [polygon, setPolygon] = useState(null);
+  const [searchedDistrict, setSearchedDistrict] = useState(null);
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -20,52 +18,10 @@ const SetDistrict = () => {
         const mapContainer = document.getElementById('map');
         const mapOption = {
           center: new window.kakao.maps.LatLng(37.5665, 126.9780),
-          level: 5,
+          level: 7,
         };
         const map = new window.kakao.maps.Map(mapContainer, mapOption);
         setMapInstance(map);
-
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const lat = position.coords.latitude;
-              const lng = position.coords.longitude;
-              const userLatLng = new window.kakao.maps.LatLng(lat, lng);
-              setUserLocation(userLatLng);
-              map.setCenter(userLatLng);
-
-              const userMarker = document.createElement('div');
-              userMarker.style.width = '15px';
-              userMarker.style.height = '15px';
-              userMarker.style.backgroundColor = '#FF0000';
-              userMarker.style.borderRadius = '50%';
-              userMarker.style.border = '2px solid white';
-              userMarker.style.boxShadow = '0px 0px 6px rgba(255, 0, 0, 0.5)';
-
-              new window.kakao.maps.CustomOverlay({
-                map: map,
-                position: userLatLng,
-                content: userMarker,
-                yAnchor: 0.5,
-                xAnchor: 0.5,
-              });
-
-              // Check if map is centered on user’s location
-              window.kakao.maps.event.addListener(map, 'center_changed', () => {
-                const center = map.getCenter();
-                const isCentered =
-                  Math.abs(center.getLat() - userLatLng.getLat()) < 0.0001 &&
-                  Math.abs(center.getLng() - userLatLng.getLng()) < 0.0001;
-                setIsLocationActive(isCentered);
-              });
-            },
-            (error) => {
-              console.error("현재 위치를 가져오는 데 실패했습니다.", error);
-            }
-          );
-        } else {
-          console.warn("Geolocation이 지원되지 않는 브라우저입니다.");
-        }
       });
     };
 
@@ -75,40 +31,78 @@ const SetDistrict = () => {
   }, []);
 
   const searchDistrict = () => {
-    if (!inputDistrict.trim() || !window.kakao.maps) return;
+    const district = seoulDistricts.features.find(
+      (district) => district.properties.SIG_KOR_NM === inputDistrict.trim()
+    );
 
-    const geocoder = new window.kakao.maps.services.Geocoder();
-    geocoder.addressSearch(inputDistrict, (result, status) => {
-      if (status === window.kakao.maps.services.Status.OK) {
-        const coords = new window.kakao.maps.LatLng(result[0].y, result[0].x);
-        mapInstance.setCenter(coords);
-        setSearchedLocation({ name: inputDistrict, coords: { lat: result[0].y, lng: result[0].x } });
-      } else {
-        alert('지역을 찾을 수 없습니다. 올바른 지역명을 입력해 주세요.');
-      }
-    });
+    if (district) {
+      setSearchedDistrict(district);
+
+      const coordinates = district.geometry.coordinates[0].map(
+        (coord) => new window.kakao.maps.LatLng(coord[1], coord[0])
+      );
+
+      const center = calculateCenter(coordinates);
+      mapInstance.setCenter(center);
+
+      drawDistrictPolygon(coordinates);
+    } else {
+      alert('지역을 찾을 수 없습니다. 올바른 지역명을 입력해 주세요.');
+    }
   };
 
   const addDistrict = () => {
-    if (districts.length >= 3) {
-      alert("최대 3개의 지역구만 추가할 수 있습니다.");
+    if (selectedDistricts.length >= 3) {
+      alert('최대 3개의 지역구만 추가할 수 있습니다.');
       return;
     }
 
-    if (searchedLocation) {
-      setDistricts((prevDistricts) => [...prevDistricts, searchedLocation]);
-      setSearchedLocation(null);
-      setInputDistrict('');
+    if (searchedDistrict) {
+      const isAlreadySelected = selectedDistricts.some(
+        (d) => d.properties.SIG_KOR_NM === searchedDistrict.properties.SIG_KOR_NM
+      );
+
+      if (!isAlreadySelected) {
+        setSelectedDistricts([...selectedDistricts, searchedDistrict]);
+        setInputDistrict('');
+        setSearchedDistrict(null);
+      } else {
+        alert('이미 추가된 지역입니다.');
+      }
     } else {
-      alert("먼저 검색을 통해 위치를 확인해 주세요.");
+      alert('먼저 검색 후 추가하세요.');
     }
   };
 
-  const toggleUserLocation = () => {
-    if (mapInstance && userLocation) {
-      mapInstance.panTo(userLocation);
-      setIsLocationActive(true);
+  const calculateCenter = (coordinates) => {
+    const totalLat = coordinates.reduce((sum, coord) => sum + coord.getLat(), 0);
+    const totalLng = coordinates.reduce((sum, coord) => sum + coord.getLng(), 0);
+    const centerLat = totalLat / coordinates.length;
+    const centerLng = totalLng / coordinates.length;
+    return new window.kakao.maps.LatLng(centerLat, centerLng);
+  };
+
+  const drawDistrictPolygon = (coordinates) => {
+    if (polygon) {
+      polygon.setMap(null);
     }
+
+    const newPolygon = new window.kakao.maps.Polygon({
+      map: mapInstance,
+      path: coordinates,
+      strokeWeight: 2,
+      strokeColor: '#FF0000',
+      strokeOpacity: 0.8,
+      fillColor: '#FF0000',
+      fillOpacity: 0.4,
+    });
+    setPolygon(newPolygon);
+  };
+
+  const removeDistrict = (districtName) => {
+    setSelectedDistricts(
+      selectedDistricts.filter((d) => d.properties.SIG_KOR_NM !== districtName)
+    );
   };
 
   return (
@@ -124,34 +118,7 @@ const SetDistrict = () => {
           position: 'relative'
         }}
         id="map"
-      >
-        <button
-          onClick={toggleUserLocation}
-          style={{
-            position: 'absolute',
-            bottom: '10px',
-            right: '10px',
-            width: '50px',
-            height: '50px',
-            borderRadius: '50%',
-            backgroundColor: isLocationActive ? '#008485' : '#FFFFFF',
-            color: isLocationActive ? '#FFFFFF' : '#008485',
-            border: 'none',
-            cursor: 'pointer',
-            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 10,
-          }}
-        >
-          <img
-            src={isLocationActive ? iconLocationWhite : iconLocation}
-            alt="Location Icon"
-            style={{ width: '24px', height: '24px' }}
-          />
-        </button>
-      </div>
+      />
 
       <div style={{ marginLeft: '20px', display: 'flex', flexDirection: 'column', width: '20%' }}>
         <div style={{ display: 'flex', marginBottom: '10px' }}>
@@ -176,7 +143,7 @@ const SetDistrict = () => {
               backgroundColor: '#008485',
               color: '#FFFFFF',
               cursor: 'pointer',
-              marginRight: '5px',
+              marginRight: '5px'
             }}
           >
             검색
@@ -186,9 +153,8 @@ const SetDistrict = () => {
             style={{
               padding: '10px',
               borderRadius: '5px',
-              backgroundColor: '#008485',
-              color: 'white',
-              border: 'none',
+              backgroundColor: '#808080',
+              color: '#FFFFFF',
               cursor: 'pointer',
             }}
           >
@@ -196,10 +162,40 @@ const SetDistrict = () => {
           </button>
         </div>
 
-        <div>
-          {districts.map((district, index) => (
-            <div key={index} style={{ padding: '5px', borderBottom: '1px solid #eee' }}>
-              {district.name}
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '10px',
+          marginTop: '15px'
+        }}>
+          {selectedDistricts.map((district, index) => (
+            <div
+              key={index}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                padding: '5px 10px',
+                borderRadius: '15px',
+                backgroundColor: '#e0f7fa',
+                color: '#00796b',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+              }}
+            >
+              <span>{district.properties.SIG_KOR_NM}</span>
+              <button
+                onClick={() => removeDistrict(district.properties.SIG_KOR_NM)}
+                style={{
+                  marginLeft: '8px',
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  color: '#00796b',
+                  cursor: 'pointer',
+                  fontWeight: 'bold',
+                  fontSize: '16px',
+                }}
+              >
+                ×
+              </button>
             </div>
           ))}
         </div>
