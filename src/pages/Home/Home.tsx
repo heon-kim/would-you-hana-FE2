@@ -47,12 +47,15 @@ const Home: React.FC = () => {
         >
           {/* Carousel Column */}
           <Col span={12} style={{ marginTop: '100px' }}>
-            <img
+          <div style={{ marginLeft: '100px', marginTop: '15px' }}>
+          <img
               src={notebookUser}
               alt="notebookUser"
               width={470}
-              style={{ marginLeft: '100px', marginTop: '15px' }}
+              
             ></img>
+          </div>
+            
           </Col>
 
           {/* Search Input Column */}
