@@ -102,6 +102,7 @@ const Home: React.FC = () => {
 
               src={notebookUser}
               alt="notebookUser"
+              style={{ marginLeft: '10%', marginTop: '15px' }}
               width={470}
 
             ></img>
