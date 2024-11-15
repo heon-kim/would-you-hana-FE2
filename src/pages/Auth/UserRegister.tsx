@@ -89,8 +89,8 @@ const NicknameInput: React.FC<{
   setIsNicknameChecked: React.Dispatch<React.SetStateAction<boolean>>;
   nicknameDuplicate: boolean;
   setNicknameDuplicate: React.Dispatch<React.SetStateAction<boolean>>;
-  nicknameError : boolean;
-  setNicknameError : React.Dispatch<React.SetStateAction<boolean>>;
+  nicknameError: boolean;
+  setNicknameError: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({
   nickname,
   setNickname,
@@ -99,7 +99,7 @@ const NicknameInput: React.FC<{
   nicknameDuplicate,
   setNicknameDuplicate,
   nicknameError,
-  setNicknameError
+  setNicknameError,
 }) => (
   <>
     <InputField
@@ -115,16 +115,19 @@ const NicknameInput: React.FC<{
         setNicknameDuplicate(hasNickname(nickname));
         setIsNicknameChecked(true);
         const nicknamePattern = /^[a-zA-Z가-힣]{2,10}$/;
-        setNicknameError(!nicknamePattern.test(nickname));       
+        setNicknameError(!nicknamePattern.test(nickname));
       }}
     />
-    {nicknameError && <p className="text-red-500">닉네임은 한글 또는 영문으로 2자 이상 10자 이하여야 합니다.</p>}
+    {nicknameError && (
+      <p className="text-red-500">
+        닉네임은 한글 또는 영문으로 2자 이상 10자 이하여야 합니다.
+      </p>
+    )}
     {isNicknameChecked && nicknameDuplicate && !nicknameError ? (
       <p className="text-red-500">이미 사용중인 닉네임입니다.</p>
     ) : isNicknameChecked && nickname && !nicknameError ? (
       <p className="text-blue-500">사용 가능한 닉네임입니다.</p>
     ) : null}
-    
   </>
 );
 
@@ -155,67 +158,61 @@ const InputForm: React.FC<{
       : '전화번호는 10자리 또는 11자리 숫자여야 합니다.';
   };
 
-  const validateBirthDate = (value: string) => {
-    if(value.length < 10) {
+  const validateBirthDate = (value: string): string => {
+    if (value.length < 10) {
       return '생년월일은 YYYYMMDD 형식이어야 합니다.';
-    }
-    else {
+    } else {
       const [year, month, day] = value.split('.');
-      const date = new Date(year, month - 1, day);  // month는 0부터 시작하므로 1을 빼야 함
-      if (!(date.getFullYear() === parseInt(year) &&
-        date.getMonth() === parseInt(month) - 1 && date.getDate() === parseInt(day))) {
-          return '유효한 날짜가 아닙니다.';
+      const date = new Date(Number(year), Number(month) - 1, Number(day));
+      if (
+        date.getFullYear() !== Number(year) ||
+        date.getMonth() !== Number(month) - 1 ||
+        date.getDate() !== Number(day)
+      ) {
+        return '유효한 날짜가 아닙니다.';
       }
     }
+    return '';
   };
 
-  const formatPhoneNumber = (value) => {
-    // 숫자만 남기고 모두 제거
-    const cleaned = value.replace(/\D/g, "");
-
-    // 010-xxxx-xxxx 형식으로 변환
+  const formatPhoneNumber = (value: string): string => {
+    const cleaned = value.replace(/\D/g, '');
     if (cleaned.length <= 3) {
       return cleaned;
     } else if (cleaned.length <= 7) {
       return `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`;
     } else {
-      return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 7)}-${cleaned.slice(7, 11)}`;
+      return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 7)}-${cleaned.slice(7)}`;
     }
   };
-  const phoneNumberHandleChange = (event) => {
+
+  const phoneNumberHandleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
     setPhoneValue(event.target.value);
   };
 
-  const formatBirthDate = (value) => {
-    // 숫자만 남기고 모두 제거
-    const cleaned = value.replace(/\D/g, "");
-
-    // yyyy-mm-dd 형식으로 변환
+  const formatBirthDate = (value: string): string => {
+    const cleaned = value.replace(/\D/g, '');
     if (cleaned.length <= 4) {
-      return cleaned; // 4자리 연도까지
+      return cleaned;
     } else if (cleaned.length <= 6) {
-      return `${cleaned.slice(0, 4)}.${cleaned.slice(4)}`; // yyyy-mm
+      return `${cleaned.slice(0, 4)}.${cleaned.slice(4)}`;
     } else {
-      return `${cleaned.slice(0, 4)}.${cleaned.slice(4, 6)}.${cleaned.slice(6, 8)}`; // yyyy-mm-dd
+      return `${cleaned.slice(0, 4)}.${cleaned.slice(4, 6)}.${cleaned.slice(6)}`;
     }
   };
-  const birthDateHandleChange = (event) => {
+
+  const birthDateHandleChange = (event:React.ChangeEvent<HTMLInputElement>) => {
     const formattedDate = formatBirthDate(event.target.value);
     setBirthDateValue(formattedDate);  // 입력값을 상태에 반영
   };
 
-  const validatePassword = (value: string) => {
+  const validatePassword = (value: string): string => {
     const passwordPattern = /^(?=.*[a-z])(?=.*\d)(?=.*[!@#^&*]).{8,}$/;
     return passwordPattern.test(value)
-     ? ''
-     : <>
-     <div className="text-red-500">
-      <p>비밀번호는 최소 8자 이상이고, 영소문자, 숫자,</p>
-      <p>특수문자(!, @, #, ^, &, *)를 적어도 하나 포함하여야 합니다.</p>
-     </div>
-     </>
+      ? ''
+      : '비밀번호는 최소 8자 이상이고, 영소문자, 숫자, 특수문자(!, @, #, ^, &, *)를 적어도 하나 포함하여야 합니다.';
+  };
 
-  }
   const handleAuthNum = () => {
     // Implement your auth number logic here
   };
@@ -283,13 +280,12 @@ const InputForm: React.FC<{
 
   const handleLocationChange = (field: 'loc1' | 'loc2', value: string) => {
     if (field === 'loc2') {
-      setUser({ ...user, location: [value]  }); // loc2(구)만 저장
+      setUser({ ...user, location: value.split(',').map((loc) => loc.trim()) });
     }
   };
 
   return (
     <form onSubmit={handleRegister} className="flex flex-col gap-3">
-      
       <InputField
         htmlFor="name"
         type="text"
@@ -298,7 +294,7 @@ const InputForm: React.FC<{
         onChange={(e) => setUser({ ...user, name: e.target.value })}
         required
       />
-    
+
       <NicknameInput
         nickname={user.nickname}
         setNickname={(nickname) => setUser({ ...user, nickname })}
@@ -309,7 +305,7 @@ const InputForm: React.FC<{
         nicknameError={nicknameError}
         setNicknameError={setNicknameError}
       />
-      
+
       <EmailInput
         emailPrefix={emailPrefix}
         setEmailPrefix={setEmailPrefix}
@@ -344,7 +340,8 @@ const InputForm: React.FC<{
         }
         required
       />
-      {passwordError && <p>{passwordError}</p>}
+      {passwordError && <p className="text-red-500">{passwordError}</p>}
+
       <InputField
         htmlFor="passwordConfirm"
         type="password"
@@ -358,25 +355,24 @@ const InputForm: React.FC<{
       )}
       <div className="flex gap-2">
         <input
-            className="border rounded-md p-2 w-full 
+          className="border rounded-md p-2 w-full 
               focus:outline-none focus:ring-0 focus:shadow-none hover:ring-0 
               text-black placeholder:text-gray-400 transition duration-800"
-            type="text"
-            placeholder="서울특별시"
-            value="서울특별시"
-            readOnly
+          type="text"
+          placeholder="서울특별시"
+          value="서울특별시"
+          readOnly
         />
         <InputField
           htmlFor="loc2"
           type="text"
           placeholder="주소(구) ex: 서초구, 광진구"
-          value={user.location}
-          onChange={(e) => handleLocationChange('loc2', e.target.value)
-          }
+          value={user.location.join(', ')}
+          onChange={(e) => handleLocationChange('loc2', e.target.value)}
           required
         />
       </div>
-      
+
       <div className="flex gap-4">
         <div
           className={`w-full text-center border rounded-md p-2 cursor-pointer ${
@@ -512,7 +508,7 @@ const UserRegister: React.FC = () => {
     gender: 'M',
     phone: '',
     birthDate: '',
-    location: '',
+    location: [],
     interests: '',
   });
 

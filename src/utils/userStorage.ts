@@ -8,7 +8,7 @@ interface User {
   gender: string;
   phone: string;
   birthDate: string;
-  location: string;
+  location: string[];
   interests?: string;
 }
 
