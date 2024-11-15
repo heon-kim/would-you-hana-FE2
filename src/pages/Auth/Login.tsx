@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import InputField from '../../components/InputField';
-import UserTypeRadio from '../../components/UserTypeRadio';
 import { findBanker, findUser } from '../../utils/userStorage';
-import { message } from 'antd';
+import { message, Radio } from 'antd';
+import type { RadioChangeEvent } from 'antd';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../../hoc/actions';
 import { getUserLocation, setAuthHeader, setUserEmail, setUserLocation, setUserRole, 
@@ -102,11 +102,10 @@ const Login: React.FC = () => {
     <div className="h-full flex flex-col justify-center items-center gap-10">
       <div className="w-96 p-8 flex flex-col gap-6  bg-white shadow-lg rounded-lg">
         <h2 className="text-lg text-bold text-center">WOULD YOU HANA</h2>
-        <UserTypeRadio
-          userType={userType}
-          setUserType={setUserType}
-          labels={{ customer: '일반 회원', banker: '행원' }}
-        />
+        <Radio.Group onChange={(e: RadioChangeEvent) => setUserType(e.target.value)} value={userType}>
+          <Radio value={'C'}>일반회원</Radio>
+          <Radio value={'B'}>행원</Radio>
+        </Radio.Group>
         <form onSubmit={handleLogin} className="flex flex-col gap-3">
           <InputField
             htmlFor="email"
