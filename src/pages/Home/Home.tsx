@@ -78,7 +78,10 @@ const Home: React.FC = () => {
             </h1>
           
             {/* SearchInput 컴포넌트 사용 */}
+            <div style={{marginRight:'100px'}}>
             <SearchInput onSearch={onSearch} />
+            </div>
+            
 
           </Col>
         </Row>
