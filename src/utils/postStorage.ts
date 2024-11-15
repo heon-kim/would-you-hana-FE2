@@ -44,4 +44,14 @@ const updatePost = (post: Post) => {
   }
 };
 
+// export function updatePost(post: Post) {
+//   const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+//   const index = posts.findIndex((u) => u.id === post.id);
+
+//   if (index > -1) {
+//     posts[index] = post; // 기존 post를 업데이트
+//     localStorage.setItem('posts', JSON.stringify(posts)); // 로컬 스토리지에 업데이트된 posts 저장
+//   }
+// }
+
 export { getPosts, savePost, findPost, updatePost, postCount };
