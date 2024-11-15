@@ -22,8 +22,9 @@ export const getUserEmail = (): string | null => {
 
 //로컬 스토리지에서 'user_location'이라는 키로 저장된 사용자 위치를 가져오는 함수
 export const getUserLocation= (): string[] =>{
-    const location = window.localStorage.getItem('user_location');
-    return location ? JSON.parse(location) : null;
+    const location = window.localStorage.getItem('userLocation');
+    //return location ? JSON.parse(location) : null;
+    return location ? location:null;
 };
 //로컬 스토리지에 JWT 토큰을 'auth_token' 키로 저장하는 함수
 export const setAuthHeader = (token: string): void => {

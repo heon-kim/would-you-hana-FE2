@@ -327,6 +327,7 @@ const CommunityDetail: React.FC = () => {
       message.error('질문 ID가 없습니다.');
       navigate('/404');
     } else {
+      //const foundPost = JSON.parse(localStorage.getItem('community_posts'));
       const foundPost = CommunityData.find((data) => data.id === parseInt(postId));
       if (!foundPost) {
         message.error('질문을 찾을 수 없습니다.');
