@@ -23,7 +23,7 @@ export const loginSuccess = (token: string, userEmail: string, userRole : string
     localStorage.setItem('authToken', token);
     localStorage.setItem('userEmail', userEmail);
     localStorage.setItem('userRole', userRole);
-    localStorage.setItem('userLocation', location);
+    localStorage.setItem('userLocation', JSON.stringify(location));
     return {
         type: LOGIN_SUCCESS,
         payload: { token, userEmail, userRole, location }

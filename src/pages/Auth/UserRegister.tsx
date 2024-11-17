@@ -9,8 +9,8 @@ import {
   PhoneOutlined,
   HomeOutlined,
   CalendarOutlined,
+  DownOutlined,
 } from '@ant-design/icons';
-import { DownOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { Categories } from '../../constants/posts';
 
@@ -27,7 +27,7 @@ interface User {
 }
 
 // 회원가입 폼 입력할 때의 데이터 타입
-interface userForm {
+interface formProps {
   name: string;
   nickname: string;
   email: string;
@@ -132,9 +132,9 @@ const InputForm: React.FC<{
     setSendAuthNum(true);
   };
 
-  const handleRegister = (formValues: userForm) => {
-    // formValues 중 authNum과 passwordConfirm은 저장 안함
-    const { authNum, passwordConfirm, location, ...rest } = formValues;
+  const handleRegister = (values: formProps) => {
+    // values 중 authNum과 passwordConfirm은 저장 안함
+    const { authNum, passwordConfirm, location, ...rest } = values;
     // void를 이용해 명시적으로 무시
     void authNum;
     void passwordConfirm;
@@ -160,7 +160,7 @@ const InputForm: React.FC<{
   return (
     <Form
       form={form}
-      name="register"
+      name="userRegister"
       onFinish={handleRegister}
       initialValues={{
         name: '',
@@ -198,7 +198,7 @@ const InputForm: React.FC<{
         <div>
           <div className="flex gap-2">
             <Input prefix={<UserOutlined />} placeholder="닉네임" />
-            <Button color="primary" variant="outlined" onClick={checkNickname}>
+            <Button color="default" variant="filled" onClick={checkNickname}>
               중복 확인
             </Button>
           </div>
@@ -223,25 +223,23 @@ const InputForm: React.FC<{
       >
         <div className="flex gap-2">
           <Input prefix={<MailOutlined />} placeholder="이메일" />
-          <Button color="primary" variant="outlined" onClick={handleAuthNum}>
+          <Button color="default" variant="filled" onClick={handleAuthNum}>
             인증번호 발송
           </Button>
         </div>
       </Form.Item>
 
-      {
-        <Form.Item
-          // label="인증번호"
-          name="authNum"
-          rules={[{ required: true, message: '인증번호를 입력해주세요.' }]}
-        >
-          <Input
-            prefix={<MailOutlined />}
-            disabled={!sendAuthNum}
-            placeholder="인증번호"
-          />
-        </Form.Item>
-      }
+      <Form.Item
+        // label="인증번호"
+        name="authNum"
+        rules={[{ required: true, message: '인증번호를 입력해주세요.' }]}
+      >
+        <Input
+          prefix={<MailOutlined />}
+          disabled={!sendAuthNum}
+          placeholder="인증번호"
+        />
+      </Form.Item>
 
       <Form.Item
         // label="비밀번호"
@@ -272,7 +270,7 @@ const InputForm: React.FC<{
         name="location"
         rules={[{ required: true, message: '주소를 입력해주세요.' }]}
       >
-        <Space.Compact size="large">
+        <Space.Compact block size="large">
           <Button icon={<HomeOutlined />}></Button>
           <Input placeholder="서울시" disabled />
           <Input placeholder="주소(구) ex: 광진구" />

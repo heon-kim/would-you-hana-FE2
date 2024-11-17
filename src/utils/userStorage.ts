@@ -1,5 +1,3 @@
-import { json } from "react-router-dom";
-
 interface User {
   email: string;
   password: string;
@@ -16,8 +14,6 @@ interface Banker {
   email: string;
   password: string;
   name: string;
-  gender: 'F' | 'M';
-  phone: string;
   branchName: string;
   interests: string;
 }
