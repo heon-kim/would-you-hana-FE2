@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { User } from "../../constants/users";
 import { saveUser, findUser, hasNickname } from '../../utils/userStorage';
 import { RuleObject } from 'antd/es/form';
 import { Form, Input, Button, message, Select, Radio, Space } from 'antd';
@@ -13,18 +14,6 @@ import {
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { Categories } from '../../constants/posts';
-
-interface User {
-  email: string;
-  password: string;
-  nickname: string;
-  name: string;
-  gender: 'F' | 'M';
-  phone: string;
-  birthDate: string;
-  location: string[];
-  interests: string;
-}
 
 // 회원가입 폼 입력할 때의 데이터 타입
 interface formProps {
@@ -134,14 +123,14 @@ const InputForm: React.FC<{
 
   const handleRegister = (values: formProps) => {
     // values 중 authNum과 passwordConfirm은 저장 안함
-    const { authNum, passwordConfirm, location, ...rest } = values;
+    const { authNum, passwordConfirm, ...rest } = values;
     // void를 이용해 명시적으로 무시
     void authNum;
     void passwordConfirm;
 
     setUser({
       ...rest,
-      location: [location],
+      favoriteLocations:[values.location],
       interests: '',
     });
     setCompleteInputForm(true);
@@ -423,7 +412,8 @@ const UserRegister: React.FC = () => {
     gender: 'M',
     phone: '',
     birthDate: '',
-    location: [],
+    location:'',
+    favoriteLocations: [],
     interests: '',
   });
 

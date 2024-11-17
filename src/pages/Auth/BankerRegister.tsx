@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Banker } from "../../constants/users";
 import { saveBanker, findBanker } from '../../utils/userStorage';
 import { Form, Input, Button, message, Select } from 'antd';
 import { RuleObject } from 'antd/es/form';
@@ -11,14 +12,6 @@ import {
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { Categories } from '../../constants/posts';
-
-interface Banker {
-  email: string;
-  password: string;
-  name: string;
-  branchName: string;
-  interests: string;
-}
 
 interface formProps {
   email: string;
