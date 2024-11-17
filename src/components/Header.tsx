@@ -6,20 +6,22 @@ import locationIcon from '../assets/img/icon_location.svg';
 import { useSelector, useDispatch } from 'react-redux';
 import store, { RootState } from '../hoc/store';
 import { logout } from '../hoc/actions';
-import { message, Select } from 'antd';
+import { message, Select, Button, Drawer } from 'antd';
+import { MenuOutlined } from "@ant-design/icons";
 import type { SelectProps } from 'antd';
-import { getUserLocation } from '../hoc/request';
 import { findUser, findBanker} from '../utils/userStorage';
 
-// SearchInput 컴포넌트
+// 지역 선택 검색창 컴포넌트
 const SearchInput: React.FC<{
   placeholder: string;
   style: React.CSSProperties;
   value: string;
   onChange: (newValue: string) => void;
 }> = (props) => {
+  const navigate = useNavigate();
   const [data, setData] = useState<SelectProps['options']>([]);
   const [favoriteLocations, setFavoriteLocations] = useState<string[]>([]);
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isAuthenticated);
 
   useEffect(() => {
     const loggedUser = localStorage.getItem('userEmail');
@@ -29,19 +31,15 @@ const SearchInput: React.FC<{
     } else {
       setFavoriteLocations(['광진구']);
     }
-  }, []);
-
-  const navigate = useNavigate();
+  }, [isLoggedIn]);
 
   const handleSearch = async (value: string) => {
     const filteredData = favoriteLocations
-      .map((loc) => {
-        return { text: loc, value: loc };
-      })
+      .map((loc) => ({ text: loc, value: loc }))
       .filter((item) => item.text.toLowerCase().includes(value.toLowerCase()));
     await setData(filteredData);
   };
-      
+
 
   const navigateToLanding = (district : string) => {
     console.log(district);
@@ -63,7 +61,7 @@ const SearchInput: React.FC<{
     <div className='flex gap-3 items-center'>
       <Select
         showSearch
-        value={props.value}
+        value={props.value || null}
         placeholder={props.placeholder}
         style={props.style}
         defaultActiveFirstOption={false}
@@ -84,74 +82,26 @@ const SearchInput: React.FC<{
   );
 };
 
-interface LoggedInComponentProps {
-  onLogout: () => void;
-  loggedInUserType : string | null;
-}
-
-function LoggedInComponent({ onLogout, loggedInUserType }: LoggedInComponentProps) {
-    const loggedUser = localStorage.getItem('userEmail');
-    let user, banker;
-    if (loggedUser) {
-      user = loggedInUserType == 'C' ? findUser(loggedUser) : undefined;
-      banker = loggedInUserType == 'B' ? findBanker(loggedUser) : undefined;
-    }
-    return (
-      <div>
-        <ul className='flex gap-8 items-center '>
-          <li>
-            <span onClick={onLogout} style={{ cursor: 'pointer' }}>
-              로그아웃
-            </span>
-          </li>
-          <li>
-            <Link to="/my/profile" className="flex items-center gap-2">
-              <img src={userIcon} alt="user icon" width={35} />
-              {user && (<span>{user.nickname}</span>)}
-              {banker && (<span>{banker.name}</span>)}
-            </Link>
-          </li>
-        </ul>
-      </div>
-    );
-}
-
-function LoggedOutComponent() {
-  return (
-    <nav className='flex items-center'>
-      <ul className='flex gap-8 items-center '>
-        <li>
-          <Link to='/register'>회원가입</Link>
-        </li>
-        <li>
-          <Link to='/login'>로그인</Link>
-        </li>
-      </ul>
-    </nav>
-  );
-}
-
-// Header 컴포넌트
 function Header() {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
-  const [loggedInType, setLoggedInType] = useState<string|null>(null);
   const [searchValue, setSearchValue] = useState<string>('');
+  const [drawerVisible, setDrawerVisible] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch<typeof store.dispatch>();
-  const userLocation = getUserLocation(); //사용자의 초기 위치값
 
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated
-  );
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const userRole = useSelector((state: RootState) => state.auth.userRole);
+  const userLocation = useSelector((state: RootState) => state.auth.userLocation);
 
-  const loggedInUserType = useSelector(
-    (state:RootState) => state.auth.userRole
-  );
+  const loggedUser = localStorage.getItem('userEmail');
+  let user, banker;
+  if (loggedUser) {
+    user = userRole == 'C' ? findUser(loggedUser) : undefined;
+    banker = userRole == 'B' ? findBanker(loggedUser) : undefined;
+  }
 
-  useEffect(() => {
-      setIsLoggedIn(isAuthenticated);
-      setLoggedInType(loggedInUserType);
-  }, [isAuthenticated, loggedInUserType]);
+  useEffect(()=>{
+    setDrawerVisible(false);
+  }, [navigate, isLoggedIn])
 
   const handleLogout = () => {
     dispatch(logout());
@@ -160,19 +110,28 @@ function Header() {
   };
 
   const handleSearchValueChange = (newValue: string) => {
-    setSearchValue(newValue); // searchValue 업데이트
-    localStorage.setItem('userLocation', newValue); 
+    setSearchValue(newValue);
+    localStorage.setItem('userLocation', newValue);
   };
 
   return (
-    <div className='w-screen px-6 py-3 flex items-center bg-white border-b'>
-      <Link to='/'>
-        <img src={logo} alt='logo' width={130} />
-      </Link>
+    <header className="w-screen px-6 py-3 bg-white border-b">
+      <div className="flex items-center justify-between">
+        <Link to="/">
+          <img src={logo} alt="logo" className="w-32" />
+        </Link>
 
-      <div className='w-full flex justify-between'>
-        <nav className='flex items-center'>
-          <ul className='flex gap-8 items-center'>
+        {/* 햄버거 메뉴 버튼 */}
+        <Button
+          type="text"
+          className="lg:hidden"
+          icon={ <MenuOutlined /> }
+          onClick={() => setDrawerVisible(true)}
+        />
+
+        {/* 큰 화면 네비게이션 */}
+        <nav className="hidden lg:flex items-center gap-8">
+          <ul className="flex gap-8">
             <li>
               <Link to='/qna'>Q&A</Link>
             </li>
@@ -188,20 +147,72 @@ function Header() {
           </ul>
         </nav>
 
-        {loggedInType !== 'B' && (
-          <div className='flex ml-auto mr-10 gap-3 items-center'>
-          {/* 검색한 위치가 없는 경우, userLocation값이 입력됨 */}
-          <SearchInput placeholder='지역을 입력하세요' style={{ width: 200 }} value={searchValue || userLocation || ''} onChange={handleSearchValueChange} />
+        {/* 큰 화면 검색 및 로그인/로그아웃 */}
+        <div className="hidden lg:flex ml-auto items-center gap-6">
+          {userRole !== 'B' && (
+            <SearchInput
+              placeholder="지역을 입력하세요"
+              style={{ width: 200 }}
+              value={userLocation || searchValue || ''}
+              onChange={handleSearchValueChange}
+            />
+          )}
+          {isLoggedIn ? (
+            <div className="flex items-center gap-6">
+              <span className="cursor-pointer" onClick={handleLogout}>
+                로그아웃
+              </span>
+              <Link to="/my/profile" className="flex items-center gap-2">
+                <img src={userIcon} alt="user icon" width={35} />
+                {user && (<span>{user.nickname}</span>)}
+                {banker && (<span>{banker.name}</span>)}
+              </Link>
+            </div>
+          ) : (
+            <div className="flex items-center gap-6">
+              <Link to="/register">회원가입</Link>
+              <Link to="/login">로그인</Link>
+            </div>
+          )}
         </div>
-        )}
-
-        {isLoggedIn ? (
-          <LoggedInComponent onLogout={handleLogout} loggedInUserType={loggedInType} />
-        ) : (
-          <LoggedOutComponent />
-        )}
       </div>
-    </div>
+
+      {/* Drawer for 햄버거 메뉴 */}
+      <Drawer
+        title="메뉴"
+        placement="right"
+        onClose={() => setDrawerVisible(false)}
+        open={drawerVisible}
+      >
+        <nav className="flex flex-col gap-4">
+          <Link to="/qna" onClick={() => setDrawerVisible(false)}>
+            Q&A
+          </Link>
+          <Link to="/hana" onClick={() => setDrawerVisible(false)}>
+            우주하나
+          </Link>
+          <Link to="/findbank" onClick={() => setDrawerVisible(false)}>
+            영업점 찾기
+          </Link>
+          <Link to="/community" onClick={() => setDrawerVisible(false)}>
+            커뮤니티
+          </Link>
+          {isLoggedIn ? (
+            <>
+              <p className="cursor-pointer" onClick={handleLogout}>
+                로그아웃
+              </p>
+              <Link to="/my/profile">마이페이지</Link>
+            </>
+          ) : (
+            <>
+              <Link to="/register">회원가입</Link>
+              <Link to="/login">로그인</Link>
+            </>
+          )}
+        </nav>
+      </Drawer>
+    </header>
   );
 }
 
