@@ -7,6 +7,17 @@ const getPosts = (): Post[] => {
   return posts ? JSON.parse(posts) : [];
 };
 
+const getPostsByNickname = (nickname : string) : Post[] => {
+  const posts = localStorage.getItem(LOCAL_STORAGE_KEY);
+  if (!posts) {
+    return [];
+  }
+  const parsedPosts: Post[] = JSON.parse(posts);
+  
+  // nickname이 특정 값인 post만 필터링
+  return parsedPosts.filter(post => post.nickname === nickname);
+}
+
 const postCount = () => {
   const posts = getPosts();
   return posts?.length || 0;
@@ -54,4 +65,4 @@ const updatePost = (post: Post) => {
 //   }
 // }
 
-export { getPosts, savePost, findPost, updatePost, postCount };
+export { getPosts, getPostsByNickname, savePost, findPost, updatePost, postCount };
