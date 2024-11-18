@@ -48,7 +48,7 @@ const InputForm: React.FC<{
       form.getFieldValue('password') &&
       form.getFieldValue('password') !== value
     ) {
-      return Promise.reject('비밀번호가 일치하지 않습니다 .');
+      return Promise.reject('비밀번호가 일치하지 않습니다.');
     }
     return Promise.resolve();
   };
@@ -140,7 +140,7 @@ const InputForm: React.FC<{
         rules={[
           { required: true, message: '비밀번호를 입력해주세요.' },
           { validator: validatePassword },
-        ]}  
+        ]}
         hasFeedback
       >
         <Input.Password prefix={<LockOutlined />} placeholder="비밀번호" />
