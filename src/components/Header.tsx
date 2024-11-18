@@ -136,13 +136,13 @@ function Header() {
               <Link to='/qna'>Q&A</Link>
             </li>
             <li>
-              <Link to='/hana'>우주하나</Link>
+              <Link to='/community'>커뮤니티</Link>
+            </li>
+            <li>
+              <Link to='/realty'>부동산</Link>
             </li>
             <li>
               <Link to='/findbank'>영업점 찾기</Link>
-            </li>
-            <li>
-              <Link to='/community'>커뮤니티</Link>
             </li>
           </ul>
         </nav>
