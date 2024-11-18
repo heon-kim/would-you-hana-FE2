@@ -55,7 +55,7 @@ const MyPage: React.FC = () => {
           </Content>
         </Layout>
         <Layout style={{ width:'10%'}}> {/*오른쪽 padding용*/}
-          <Content style={{ backgroundColor: '#FFFFFF', borderTop: '1px solid #D9D9D9' }}>
+          <Content style={{ backgroundColor: '#FFFFFF'}}>
           </Content>
         </Layout>
       </Layout>
