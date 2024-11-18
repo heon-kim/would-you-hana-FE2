@@ -136,13 +136,13 @@ function Header() {
               <Link to='/qna'>Q&A</Link>
             </li>
             <li>
-              <Link to='/hana'>우주하나</Link>
+              <Link to='/community'>커뮤니티</Link>
+            </li>
+            <li>
+              <Link to='/realty'>부동산</Link>
             </li>
             <li>
               <Link to='/findbank'>영업점 찾기</Link>
-            </li>
-            <li>
-              <Link to='/community'>커뮤니티</Link>
             </li>
           </ul>
         </nav>
@@ -188,15 +188,16 @@ function Header() {
           <Link to="/qna" onClick={() => setDrawerVisible(false)}>
             Q&A
           </Link>
-          <Link to="/hana" onClick={() => setDrawerVisible(false)}>
-            우주하나
+          <Link to="/community" onClick={() => setDrawerVisible(false)}>
+            커뮤니티
+          </Link>
+          <Link to="/realty" onClick={() => setDrawerVisible(false)}>
+            부동산
           </Link>
           <Link to="/findbank" onClick={() => setDrawerVisible(false)}>
             영업점 찾기
           </Link>
-          <Link to="/community" onClick={() => setDrawerVisible(false)}>
-            커뮤니티
-          </Link>
+          
           {isLoggedIn ? (
             <>
               <p className="cursor-pointer" onClick={handleLogout}>
