@@ -14,6 +14,7 @@ import {
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { Categories } from '../../constants/posts';
+import '../../styles/formInput.css';
 
 // 회원가입 폼 입력할 때의 데이터 타입
 interface formProps {
