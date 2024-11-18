@@ -289,7 +289,6 @@ const Home: React.FC = () => {
             <div style={{ fontWeight: 'lighter', fontSize: '20px', marginTop: '30px', textAlign: 'left', marginLeft: '10%' }}>
               가까운 영업점을 빠르게 확인하고,<br />
               쉽고 간편하게 행원과의 상담을 예약할 수 있어요!<br />
-              금융 관련 지식을 얻어가세요!
             </div>
 
             <div style={{ marginTop: '70px', fontWeight: 'lighter', textAlign: 'left', marginLeft: '10%', cursor: 'pointer' }}>
