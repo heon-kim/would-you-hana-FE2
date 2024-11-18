@@ -9,7 +9,7 @@ import { logout } from '../hoc/actions';
 import { message, Select, Button, Drawer } from 'antd';
 import { MenuOutlined } from "@ant-design/icons";
 import type { SelectProps } from 'antd';
-import { findUser, findBanker} from '../utils/userStorage';
+import { findUser, findBanker } from '../utils/userStorage';
 
 // 지역 선택 검색창 컴포넌트
 const SearchInput: React.FC<{
@@ -41,12 +41,12 @@ const SearchInput: React.FC<{
   };
 
 
-  const navigateToLanding = (district : string) => {
+  const navigateToLanding = (district: string) => {
     console.log(district);
-    if(district === '광진구') {
+    if (district === '광진구') {
       navigate('/gwangjin');
     }
-    else if(district === '서초구') {
+    else if (district === '서초구') {
       navigate('/seocho');
     }
   }
@@ -75,7 +75,7 @@ const SearchInput: React.FC<{
         }))}
       />
       {/* 현위치 받아오기 */}
-      <button onClick={()=>props.onChange('현위치')}> 
+      <button onClick={() => props.onChange('현위치')}>
         <img src={locationIcon} width={'20px'} />
       </button>
     </div>
@@ -99,7 +99,7 @@ function Header() {
     banker = userRole == 'B' ? findBanker(loggedUser) : undefined;
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     setDrawerVisible(false);
   }, [navigate, isLoggedIn])
 
@@ -110,8 +110,8 @@ function Header() {
   };
 
   const handleSearchValueChange = (newValue: string) => {
-    setSearchValue(newValue);
-    localStorage.setItem('userLocation', newValue);
+    //setSearchValue(newValue);
+    //localStorage.setItem('userLocation', newValue);
   };
 
   return (
@@ -125,7 +125,7 @@ function Header() {
         <Button
           type="text"
           className="lg:hidden"
-          icon={ <MenuOutlined /> }
+          icon={<MenuOutlined />}
           onClick={() => setDrawerVisible(true)}
         />
 
