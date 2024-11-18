@@ -1,0 +1,9 @@
+
+/* 메시지와 입력 필드 사이에 여백 추가 */
+.ant-form-item-explain {
+    margin-top: 4px;
+    margin-bottom : 4px;  /* 오류 메시지와 Input 사이에 간격을 줍니다 */
+    font-size: 14px;
+    color: red;
+}
+  

@@ -21,7 +21,7 @@ const SearchInput: React.FC<SearchInputProps> = ({ onSearch }) => {
       {/* 드롭다운을 SearchInput 내에 포함 */}
       <select
         style={{
-          width: '17%',
+          width: '20%',
           height: '55px',
           borderRadius: '6px 0 0 6px',
           padding: '8px',

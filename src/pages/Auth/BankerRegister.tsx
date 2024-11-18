@@ -12,6 +12,8 @@ import {
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { Categories } from '../../constants/posts';
+import '../../styles/formInput.css';
+
 
 interface formProps {
   email: string;
