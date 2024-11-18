@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Select, message } from 'antd';
 import { findUser, updateUser, findBanker, updateBanker } from '../../utils/userStorage';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../hoc/store';
 
 const { Option } = Select;
 
@@ -21,15 +23,20 @@ const EditProfile: React.FC = () => {
     branchName: '',
   })
 
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
+  const userRole = useSelector((state: RootState) => state.auth.userRole);
+  const userEmail = useSelector((state: RootState) => state.auth.userEmail);
+
   useEffect(() => {
-    const loggedUser = localStorage.getItem('userEmail'); // 현재 로그인된 사용자 가져오기
-    if (loggedUser) {
-      const userData = findUser(loggedUser);
-      const bankerData = findBanker(loggedUser);
-      if (userData) {
+    if (isAuthenticated && userEmail) {
+      if(userRole === 'C') {
+        const userData = findUser(userEmail);
         setUser(userData);
       }
-      if (bankerData) {
+      else if(userRole === 'B') {
+        const bankerData = findBanker(userEmail);
         setBanker(bankerData);
       }
     }
@@ -41,10 +48,10 @@ const EditProfile: React.FC = () => {
       return;
     }
     else {
-      if(user.email) {
+      if(isAuthenticated && userRole === 'C') {
         setUser({ ...user, [name]: value });
       }
-      else if(banker.email) {
+      else if(isAuthenticated && userRole === 'B') {
         setBanker({...banker, [name]: value});
       }
     }    
@@ -55,11 +62,11 @@ const EditProfile: React.FC = () => {
   };
 
   const handleSave = () => {
-    if (user.email && user.nickname) {
+    if (isAuthenticated && userRole === 'C') {
       updateUser(user);
       message.success('개인정보가 성공적으로 수정되었습니다!');
     } 
-    else if (banker.email && banker.name) {
+    else if (isAuthenticated && userRole === 'B') {
       updateBanker(banker);
       message.success('개인정보가 성공적으로 수정되었습니다!');
     }
@@ -70,7 +77,7 @@ const EditProfile: React.FC = () => {
 
   return (
     <div style={{ width: '100%', paddingLeft: '5%', paddingRight: '15%', paddingTop: '5%', paddingBottom: '5%' }}>
-      <div style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '5%' }}>개인정보수정</div>
+      <div style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '5%' }}>개인정보 수정</div>
       <Form
         layout="horizontal"
         labelCol={{ span: 8 }} // 라벨의 너비를 8로 설정하여 고정된 너비 유지
@@ -90,7 +97,7 @@ const EditProfile: React.FC = () => {
         <Form.Item label="비밀번호 확인" required style={{ marginBottom: '20px' }}> {/* 필드 간 간격 설정 */}
           <Input.Password name="passwordConfirm" onChange={handleInputChange} placeholder="비밀번호 확인" style={{ height: '40px' }} /> {/* 높이 조정 */}
         </Form.Item>
-        {user.email && (
+        {(isAuthenticated && userRole==='C') && (
           <>
             <Form.Item label="닉네임" required 
               style={{ marginBottom: '20px' }}> {/* 필드 간 간격 설정 */}
@@ -117,7 +124,7 @@ const EditProfile: React.FC = () => {
             </Form.Item>
           </>
         )}
-        {banker.email && (
+        {(isAuthenticated && userRole==='B') && (
           <Form.Item label="지점명" required style={{ marginBottom: '20px' }}> {/* 필드 간 간격 설정 */}
             <Input value={banker.branchName} name="location" onChange={handleInputChange} style={{ height: '40px' }} /> {/* 높이 조정 */}
           </Form.Item>

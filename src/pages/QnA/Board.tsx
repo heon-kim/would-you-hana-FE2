@@ -67,6 +67,7 @@ const Board: React.FC = () => {
         paddingLeft: '15%',
         paddingRight: '15%',
         marginTop: '20px',
+        paddingBottom: '20px'
       }}
     >
       <h1
