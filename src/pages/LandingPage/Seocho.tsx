@@ -128,17 +128,16 @@ const Seocho: React.FC = () => {
             </div>
 
 
-            <div style={{ marginLeft: '100px' }}>
+            <div style={{ marginLeft: '150px', marginTop: '35px' }}>
               <img
                 src={hanaFamilyTogether}
-                alt="hanaFamilyTogether"
-                width={700}
+                alt='hanaFamilyTogether'
+                width={550}
               />
             </div>
           </Col>
 
-          <Col span={12} style={{ alignContent: 'left', marginLeft: '0px', marginTop: '100px' }}>
-
+          <Col span={12} style={{alignContent:'center',  width:'100%', alignItems:'end'}}>
             <style>
               {`
                                 .custom-carousel .carousel-item {
@@ -151,8 +150,6 @@ const Seocho: React.FC = () => {
                                     height: 100px;
                                     line-height: 100px;
                                     color: #008485;
-                        
-
                                 }
 
                                 .custom-carousel .carousel-item.focused {
@@ -168,36 +165,56 @@ const Seocho: React.FC = () => {
                                 }
                                 `}
             </style>
-            <strong>
-              <span style={{ fontSize: '35px' }}> 지금 <span style={{ fontSize: '50px' }}>서초구</span> 주민들은</span>
-              <div >
+            <strong
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                marginTop: '0px',
+                marginRight:'150px',
+                textAlign: 'right',
+                alignItems: 'end',
+              }}
+            >
+              <span style={{ fontSize: '35px' }}>
+                {' '}
+                지금 <span style={{ fontSize: '45px' }}>서초구</span> 주민들은
+              </span>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
                 <Carousel
                   afterChange={handleCarouselChange}
                   vertical
                   dots={false}
-                  className="custom-carousel"
+                  className='custom-carousel'
                   autoplay={true}
-                  autoplaySpeed={3000}
-
+                  autoplaySpeed={2800}
+                  style={{ width: '300px' }}
                 >
                   {keyword.map((keyword, index) => (
                     <span
                       key={index}
-                      className={`carousel-item ${index === carouselIndex ? 'focused' : ''}`}
+                      className={`carousel-item ${
+                        index === carouselIndex ? 'focused' : ''
+                      }`}
                     >
                       {keyword}
                     </span>
                   ))}
                 </Carousel>
 
+                <p style={{ fontSize: '35px', alignContent: 'center' }}>
+                  에 관심이 있어요.
+                </p>
               </div>
-              <div style={{ fontSize: '35px', alignContent: 'center' }}>에 관심이 있어요.</div>
-
-
             </strong>
-            <br />
-            <div style={{ marginLeft: '100px' }}>
-              <SearchInput onSearch={onSearch} />
+            <div style={{marginRight:'150px',}}>
+            <SearchInput onSearch={onSearch} />
             </div>
           </Col>
         </Row>
