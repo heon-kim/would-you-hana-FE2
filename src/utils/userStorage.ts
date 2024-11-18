@@ -1,26 +1,4 @@
-import { json } from "react-router-dom";
-
-interface User {
-  email: string;
-  password: string;
-  nickname: string;
-  name: string;
-  gender: string;
-  phone: string;
-  birthDate: string;
-  location: string;
-  interests?: string;
-}
-
-interface Banker {
-  email: string;
-  password: string;
-  name: string;
-  gender: 'F' | 'M';
-  phone: string;
-  branchName: string;
-  interests: string;
-}
+import {User, Banker} from "../constants/users"
 
 const LOCAL_STORAGE_KEY = 'users';
 const LOCAL_STORAGE_KEY2 = 'bankers';

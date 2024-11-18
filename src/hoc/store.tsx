@@ -7,7 +7,7 @@ interface AuthState {
     authToken: string | null;
     userEmail: string | null;
     userRole: string | null;
-    userLocation: string[] | null;
+    userLocation: string | null;
 }
 
 // 초기 상태를 `localStorage`에서 불러오기

@@ -1,435 +1,334 @@
 import React, { useState } from 'react';
-import InputField from '../../components/InputField';
+import { User } from "../../constants/users";
 import { saveUser, findUser, hasNickname } from '../../utils/userStorage';
-import { message, Button, Select } from 'antd';
-import { DownOutlined } from '@ant-design/icons';
+import { RuleObject } from 'antd/es/form';
+import { Form, Input, Button, message, Select, Radio, Space } from 'antd';
+import {
+  UserOutlined,
+  MailOutlined,
+  LockOutlined,
+  PhoneOutlined,
+  HomeOutlined,
+  CalendarOutlined,
+  DownOutlined,
+} from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { Categories } from '../../constants/posts';
 
-interface User {
-  email: string;
-  password: string;
-  nickname: string;
+// 회원가입 폼 입력할 때의 데이터 타입
+interface formProps {
   name: string;
-  gender: 'F' | 'M';
+  nickname: string;
+  email: string;
+  authNum: number;
+  password: string;
+  passwordConfirm: string;
+  location: string;
+  gender: 'M' | 'F';
   phone: string;
   birthDate: string;
-  location: string[];
-  interests: string;
 }
 
-const EmailInput: React.FC<{
-  emailPrefix: string;
-  setEmailPrefix: React.Dispatch<React.SetStateAction<string>>;
-  isCustomEmail: boolean;
-  setIsCustomEmail: React.Dispatch<React.SetStateAction<boolean>>;
-  emailHost: string;
-  setEmailHost: React.Dispatch<React.SetStateAction<string>>;
-  customEmailHost: string;
-  setCustomEmailHost: React.Dispatch<React.SetStateAction<string>>;
-}> = ({
-  emailPrefix,
-  setEmailPrefix,
-  isCustomEmail,
-  setIsCustomEmail,
-  emailHost,
-  setEmailHost,
-  customEmailHost,
-  setCustomEmailHost,
-}) => (
-  <div className="flex gap-2">
-    <InputField
-      htmlFor="emailPrefix"
-      type="text"
-      placeholder="이메일"
-      value={emailPrefix}
-      onChange={(e) => {
-        const value = e.target.value;
-        if (!value.includes('@')) setEmailPrefix(value);
-      }}
-      required
-    />
-    <span className="self-center">@</span>
-    {isCustomEmail && (
-      <InputField
-        htmlFor="customEmailHost"
-        type="text"
-        placeholder="이메일 호스트 입력"
-        value={customEmailHost}
-        onChange={(e) => setCustomEmailHost(e.target.value)}
-        required
-      />
-    )}
-    <select
-      value={isCustomEmail ? '직접 입력' : emailHost}
-      onChange={(e) => {
-        const value = e.target.value;
-        if (value === '직접 입력') {
-          setIsCustomEmail(true);
-          setCustomEmailHost('');
-        } else {
-          setIsCustomEmail(false);
-          setEmailHost(value);
-        }
-      }}
-      className="border w-full rounded-md p-2"
-    >
-      <option value="gmail.com">gmail.com</option>
-      <option value="naver.com">naver.com</option>
-      <option value="daum.net">daum.net</option>
-      <option value="직접 입력">직접 입력</option>
-    </select>
-  </div>
-);
-
-const NicknameInput: React.FC<{
-  nickname: string;
-  setNickname: React.Dispatch<React.SetStateAction<string>>;
-  isNicknameChecked: boolean;
-  setIsNicknameChecked: React.Dispatch<React.SetStateAction<boolean>>;
-  nicknameDuplicate: boolean;
-  setNicknameDuplicate: React.Dispatch<React.SetStateAction<boolean>>;
-  nicknameError : boolean;
-  setNicknameError : React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({
-  nickname,
-  setNickname,
-  isNicknameChecked,
-  setIsNicknameChecked,
-  nicknameDuplicate,
-  setNicknameDuplicate,
-  nicknameError,
-  setNicknameError
-}) => (
-  <>
-    <InputField
-      htmlFor="nickname"
-      type="text"
-      placeholder="닉네임"
-      value={nickname}
-      onChange={(e) => setNickname(e.target.value)}
-      required
-      showButton
-      buttonLabel="중복 확인"
-      onClickButton={() => {
-        setNicknameDuplicate(hasNickname(nickname));
-        setIsNicknameChecked(true);
-        const nicknamePattern = /^[a-zA-Z가-힣]{2,10}$/;
-        setNicknameError(!nicknamePattern.test(nickname));       
-      }}
-    />
-    {nicknameError && <p className="text-red-500">닉네임은 한글 또는 영문으로 2자 이상 10자 이하여야 합니다.</p>}
-    {isNicknameChecked && nicknameDuplicate && !nicknameError ? (
-      <p className="text-red-500">이미 사용중인 닉네임입니다.</p>
-    ) : isNicknameChecked && nickname && !nicknameError ? (
-      <p className="text-blue-500">사용 가능한 닉네임입니다.</p>
-    ) : null}
-    
-  </>
-);
-
 const InputForm: React.FC<{
-  user: User;
   setUser: React.Dispatch<React.SetStateAction<User>>;
   setCompleteInputForm: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ user, setUser, setCompleteInputForm }) => {
-  const [emailPrefix, setEmailPrefix] = useState<string>('');
-  const [emailHost, setEmailHost] = useState<string>('gmail.com');
-  const [customEmailHost, setCustomEmailHost] = useState<string>('');
-  const [authNum, setAuthNum] = useState<string>(''); // Change type to string for input
-  const [passwordConfirm, setPasswordConfirm] = useState<string>('');
-  const [isCustomEmail, setIsCustomEmail] = useState<boolean>(false);
+}> = ({ setUser, setCompleteInputForm }) => {
   const [isNicknameChecked, setIsNicknameChecked] = useState<boolean>(false);
   const [nicknameDuplicate, setNicknameDuplicate] = useState<boolean>(false);
   const [nicknameError, setNicknameError] = useState<boolean>(false);
-  const [phoneError, setPhoneError] = useState<string>('');
-  const [birthError, setBirthError] = useState<string>('');
-  const [passwordError, setPasswordError] = useState<string>('');
-  const [phoneValue, setPhoneValue] = useState("");
-  const [birthDateValue, setBirthDateValue] = useState("");
+  const [sendAuthNum, setSendAuthNum] = useState<boolean>(false);
 
-  const validatePhone = (value: string) => {
+  const validatePhone = (_: RuleObject, value: string): Promise<void> => {
     const phonePattern = /^(01[0-9]{1,3})-([0-9]{3,4})-([0-9]{4})$/;
-    return phonePattern.test(value)
-      ? ''
-      : '전화번호는 10자리 또는 11자리 숫자여야 합니다.';
+    if (phonePattern.test(value)) {
+      return Promise.resolve();
+    }
+    return Promise.reject('전화번호는 10자리 또는 11자리 숫자여야 합니다.');
   };
 
-  const validateBirthDate = (value: string) => {
-    if(value.length < 10) {
-      return '생년월일은 YYYYMMDD 형식이어야 합니다.';
-    }
-    else {
+  const validateBirthDate = (_: RuleObject, value: string): Promise<void> => {
+    if (value.length < 10) {
+      return Promise.reject('생년월일은 YYYYMMDD 형식이어야 합니다.');
+    } else {
       const [year, month, day] = value.split('.');
-      const date = new Date(year, month - 1, day);  // month는 0부터 시작하므로 1을 빼야 함
-      if (!(date.getFullYear() === parseInt(year) &&
-        date.getMonth() === parseInt(month) - 1 && date.getDate() === parseInt(day))) {
-          return '유효한 날짜가 아닙니다.';
+      const date = new Date(Number(year), Number(month) - 1, Number(day));
+      if (
+        date.getFullYear() !== Number(year) ||
+        date.getMonth() !== Number(month) - 1 ||
+        date.getDate() !== Number(day)
+      ) {
+        return Promise.reject('유효한 날짜가 아닙니다.');
       }
     }
+    return Promise.resolve();
   };
 
-  const formatPhoneNumber = (value) => {
-    // 숫자만 남기고 모두 제거
-    const cleaned = value.replace(/\D/g, "");
-
-    // 010-xxxx-xxxx 형식으로 변환
+  const formatPhoneNumber = (value: string): string => {
+    const cleaned = value.replace(/\D/g, '');
     if (cleaned.length <= 3) {
       return cleaned;
     } else if (cleaned.length <= 7) {
       return `${cleaned.slice(0, 3)}-${cleaned.slice(3)}`;
     } else {
-      return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 7)}-${cleaned.slice(7, 11)}`;
+      return `${cleaned.slice(0, 3)}-${cleaned.slice(3, 7)}-${cleaned.slice(
+        7
+      )}`;
     }
   };
-  const phoneNumberHandleChange = (event) => {
-    setPhoneValue(event.target.value);
-  };
 
-  const formatBirthDate = (value) => {
-    // 숫자만 남기고 모두 제거
-    const cleaned = value.replace(/\D/g, "");
-
-    // yyyy-mm-dd 형식으로 변환
+  const formatBirthDate = (value: string): string => {
+    const cleaned = value.replace(/\D/g, '');
     if (cleaned.length <= 4) {
-      return cleaned; // 4자리 연도까지
+      return cleaned;
     } else if (cleaned.length <= 6) {
-      return `${cleaned.slice(0, 4)}.${cleaned.slice(4)}`; // yyyy-mm
+      return `${cleaned.slice(0, 4)}.${cleaned.slice(4)}`;
     } else {
-      return `${cleaned.slice(0, 4)}.${cleaned.slice(4, 6)}.${cleaned.slice(6, 8)}`; // yyyy-mm-dd
+      return `${cleaned.slice(0, 4)}.${cleaned.slice(4, 6)}.${cleaned.slice(
+        6
+      )}`;
     }
   };
-  const birthDateHandleChange = (event) => {
-    const formattedDate = formatBirthDate(event.target.value);
-    setBirthDateValue(formattedDate);  // 입력값을 상태에 반영
-  };
 
-  const validatePassword = (value: string) => {
+  const validatePassword = (_: RuleObject, value: string): Promise<void> => {
     const passwordPattern = /^(?=.*[a-z])(?=.*\d)(?=.*[!@#^&*]).{8,}$/;
-    return passwordPattern.test(value)
-     ? ''
-     : <>
-     <div className="text-red-500">
-      <p>비밀번호는 최소 8자 이상이고, 영소문자, 숫자,</p>
-      <p>특수문자(!, @, #, ^, &, *)를 적어도 하나 포함하여야 합니다.</p>
-     </div>
-     </>
-
-  }
-  const handleAuthNum = () => {
-    // Implement your auth number logic here
+    if (passwordPattern.test(value)) {
+      return Promise.resolve();
+    }
+    return Promise.reject(
+      `비밀번호는 최소 8자 이상이고, 영소문자, 숫자, 특수문자(!, @, #, ^, &, *)를 적어도 하나 포함하여야 합니다.`
+    );
   };
 
-  const handleRegister = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const finalEmailHost = isCustomEmail ? customEmailHost : emailHost;
-    const email = `${emailPrefix}@${finalEmailHost}`;
-
-    setPhoneError('');
-    setBirthError('');
-
-    if (nicknameDuplicate) {
-      message.warning('닉네임을 변경하세요.');
-      return;
+  const validatePasswordConfirm = (
+    _: RuleObject,
+    value: string
+  ): Promise<void> => {
+    if (
+      form.getFieldValue('password') &&
+      form.getFieldValue('password') !== value
+    ) {
+      return Promise.reject('비밀번호가 일치하지 않습니다.');
     }
+    return Promise.resolve();
+  };
 
-    if (findUser(email)) {
+  const handleAuthNum = () => {
+    if (findUser(form.getFieldValue('email'))) {
       message.warning('이미 존재하는 이메일입니다.');
       return;
     }
+    // Implement your auth number logic here
+    setSendAuthNum(true);
+  };
 
-    if(!isNicknameChecked) {
-      message.warning('닉네임 중복 체크가 필요합니다.');
-      return;
-    }
-
-    if (!user.password || user.password !== passwordConfirm) {
-      message.warning('비밀번호를 확인하세요.');
-      return;
-    }
-
-    const phoneValidationError = validatePhone(user.phone);
-    const birthValidationError = validateBirthDate(user.birthDate);
-    const passwordValidationError = validatePassword(user.password);
-
-    if (phoneValidationError) {
-      setPhoneError(phoneValidationError);
-      message.warning('전화번호를 수정해주세요.');
-      return;
-    }
-
-    if (birthValidationError) {
-      setBirthError(birthValidationError);
-      message.warning('생년월일을 수정해주세요.');
-      return;
-    }
-
-    if (passwordValidationError) {
-      setPasswordError(passwordValidationError);
-      message.warning('비밀번호를 수정해주세요.');
-      return;
-    }
+  const handleRegister = (values: formProps) => {
+    // values 중 authNum과 passwordConfirm은 저장 안함
+    const { authNum, passwordConfirm, ...rest } = values;
+    // void를 이용해 명시적으로 무시
+    void authNum;
+    void passwordConfirm;
 
     setUser({
-      ...user,
-      email,
-      nickname: user.nickname,
-      password: user.password,
+      ...rest,
+      favoriteLocations:[values.location],
+      interests: '',
     });
-
     setCompleteInputForm(true);
   };
 
-  const handleLocationChange = (field: 'loc1' | 'loc2', value: string) => {
-    if (field === 'loc2') {
-      setUser({ ...user, location: [value]  }); // loc2(구)만 저장
-    }
+  const checkNickname = () => {
+    const nickname: string = form.getFieldValue('nickname');
+    setNicknameDuplicate(hasNickname(nickname));
+    setIsNicknameChecked(true);
+    const nicknamePattern = /^[a-zA-Z가-힣]{2,10}$/;
+    setNicknameError(!nicknamePattern.test(nickname));
   };
 
+  const [form] = Form.useForm();
+
   return (
-    <form onSubmit={handleRegister} className="flex flex-col gap-3">
-      
-      <InputField
-        htmlFor="name"
-        type="text"
-        placeholder="이름"
-        value={user.name}
-        onChange={(e) => setUser({ ...user, name: e.target.value })}
-        required
-      />
-    
-      <NicknameInput
-        nickname={user.nickname}
-        setNickname={(nickname) => setUser({ ...user, nickname })}
-        isNicknameChecked={isNicknameChecked}
-        setIsNicknameChecked={setIsNicknameChecked}
-        nicknameDuplicate={nicknameDuplicate}
-        setNicknameDuplicate={setNicknameDuplicate}
-        nicknameError={nicknameError}
-        setNicknameError={setNicknameError}
-      />
-      
-      <EmailInput
-        emailPrefix={emailPrefix}
-        setEmailPrefix={setEmailPrefix}
-        isCustomEmail={isCustomEmail}
-        setIsCustomEmail={setIsCustomEmail}
-        emailHost={emailHost}
-        setEmailHost={setEmailHost}
-        customEmailHost={customEmailHost}
-        setCustomEmailHost={setCustomEmailHost}
-      />
-      <InputField
-        htmlFor="authNum"
-        type="text"
-        placeholder="인증번호"
-        value={authNum}
-        onChange={(e) => setAuthNum(e.target.value)}
-        required
-        showButton
-        buttonLabel="인증번호 발송"
-        onClickButton={handleAuthNum}
-      />
-      <InputField
-        htmlFor="password"
-        type="password"
-        placeholder="비밀번호"
-        value={user.password}
-        onChange={(e) => {
-          const value = e.target.value;
-          setUser({ ...user, password: e.target.value });
-          setPasswordError(validatePassword(value));
-          }
-        }
-        required
-      />
-      {passwordError && <p>{passwordError}</p>}
-      <InputField
-        htmlFor="passwordConfirm"
-        type="password"
-        placeholder="비밀번호 확인"
-        value={passwordConfirm}
-        onChange={(e) => setPasswordConfirm(e.target.value)}
-        required
-      />
-      {passwordConfirm && user.password !== passwordConfirm && (
-        <p className="text-red-500">비밀번호가 일치하지 않습니다.</p>
-      )}
-      <div className="flex gap-2">
-        <input
-            className="border rounded-md p-2 w-full 
-              focus:outline-none focus:ring-0 focus:shadow-none hover:ring-0 
-              text-black placeholder:text-gray-400 transition duration-800"
-            type="text"
-            placeholder="서울특별시"
-            value="서울특별시"
-            readOnly
-        />
-        <InputField
-          htmlFor="loc2"
-          type="text"
-          placeholder="주소(구) ex: 서초구, 광진구"
-          value={user.location}
-          onChange={(e) => handleLocationChange('loc2', e.target.value)
-          }
-          required
-        />
-      </div>
-      
-      <div className="flex gap-4">
-        <div
-          className={`w-full text-center border rounded-md p-2 cursor-pointer ${
-            user.gender === 'M' ? 'bg-gray-400 text-white' : 'bg-white'
-          }`}
-          onClick={() => setUser({ ...user, gender: 'M' })}
-        >
-          남자
-        </div>
-        <div
-          className={`w-full text-center border rounded-md p-2 cursor-pointer ${
-            user.gender === 'F' ? 'bg-gray-400 text-white' : 'bg-white'
-          }`}
-          onClick={() => setUser({ ...user, gender: 'F' })}
-        >
-          여자
-        </div>
-      </div>
-      <InputField
-        htmlFor="phone"
-        type="text"
-        placeholder="전화번호 (숫자만 입력)"
-        value={formatPhoneNumber(phoneValue)}
-        onChange={(e) => {
-          const value = e.target.value;
-          setUser({ ...user, phone: value });
-          setPhoneError(validatePhone(value));
-          phoneNumberHandleChange(e);
-        }}
-        required
-      />
-      {phoneError && <p className="text-red-500">{phoneError}</p>}
-      <InputField
-        htmlFor="birthDate"
-        type="text"
-        placeholder="생년월일 (YYYYMMDD)"
-        value={formatBirthDate(birthDateValue)}
-        onChange={(e) => {
-          const value = e.target.value;
-          setUser({ ...user, birthDate: value });
-          setBirthError(validateBirthDate(value));
-          birthDateHandleChange(e);
-        }}
-        required
-      />
-      {birthError && <p className="text-red-500">{birthError}</p>}
-      <button
-        type="submit"
-        className="block p-2 bg-mainColor text-white rounded-md transition-colors duration-200 hover:bg-hoverColor"
+    <Form
+      form={form}
+      name="userRegister"
+      onFinish={handleRegister}
+      initialValues={{
+        name: '',
+        nickname: '',
+        email: '',
+        authNum: null,
+        password: '',
+        passwordConfirm: '',
+        location: '',
+        gender: 'M',
+        phone: '',
+        birthDate: '',
+      }}
+      colon={false}
+      size="large"
+      scrollToFirstError
+    >
+      <Form.Item
+        // label="이름"
+        name="name"
+        rules={[{ required: true, message: '이름을 입력해주세요.' }]}
       >
-        다음
-      </button>
-    </form>
+        <Input prefix={<UserOutlined />} placeholder="이름"></Input>
+      </Form.Item>
+
+      <Form.Item
+        // label="닉네임"
+        name="nickname"
+        rules={[
+          { required: true, message: '닉네임을 입력해주세요.' },
+          { min: 2, message: '닉네임은 최소 2자 이상이어야 합니다.' },
+          { max: 10, message: '닉네임은 최대 10자까지 입력 가능합니다.' },
+        ]}
+      >
+        <div>
+          <div className="flex gap-2">
+            <Input prefix={<UserOutlined />} placeholder="닉네임" />
+            <Button color="default" variant="filled" onClick={checkNickname}>
+              중복 확인
+            </Button>
+          </div>
+          {isNicknameChecked && nicknameDuplicate && !nicknameError ? (
+            <p className="text-red-500">이미 사용중인 닉네임입니다.</p>
+          ) : isNicknameChecked && !nicknameError ? (
+            <p className="text-blue-500">사용 가능한 닉네임입니다.</p>
+          ) : null}
+        </div>
+      </Form.Item>
+
+      <Form.Item
+        // label="이메일"
+        name="email"
+        rules={[
+          { required: true, message: '이메일을 입력해주세요.' },
+          {
+            type: 'email',
+            message: '올바른 이메일 형식이 아닙니다.',
+          },
+        ]}
+      >
+        <div className="flex gap-2">
+          <Input prefix={<MailOutlined />} placeholder="이메일" />
+          <Button color="default" variant="filled" onClick={handleAuthNum}>
+            인증번호 발송
+          </Button>
+        </div>
+      </Form.Item>
+
+      <Form.Item
+        // label="인증번호"
+        name="authNum"
+        rules={[{ required: true, message: '인증번호를 입력해주세요.' }]}
+      >
+        <Input
+          prefix={<MailOutlined />}
+          disabled={!sendAuthNum}
+          placeholder="인증번호"
+        />
+      </Form.Item>
+
+      <Form.Item
+        // label="비밀번호"
+        name="password"
+        rules={[
+          { required: true, message: '비밀번호를 입력해주세요.' },
+          { validator: validatePassword },
+        ]}
+        hasFeedback
+      >
+        <Input.Password prefix={<LockOutlined />} placeholder="비밀번호" />
+      </Form.Item>
+
+      <Form.Item
+        // label="비밀번호 확인"
+        name="passwordConfirm"
+        rules={[
+          { required: true, message: '비밀번호를 확인해주세요.' },
+          { validator: validatePasswordConfirm },
+        ]}
+        hasFeedback
+      >
+        <Input.Password prefix={<LockOutlined />} placeholder="비밀번호 확인" />
+      </Form.Item>
+
+      <Form.Item
+        // label="주소(구)"
+        name="location"
+        rules={[{ required: true, message: '주소를 입력해주세요.' }]}
+      >
+        <Space.Compact block size="large">
+          <Button icon={<HomeOutlined />}></Button>
+          <Input placeholder="서울시" disabled />
+          <Input placeholder="주소(구) ex: 광진구" />
+        </Space.Compact>
+      </Form.Item>
+
+      <Form.Item
+        // label="성별"
+        name="gender"
+        rules={[{ required: true, message: '성별을 선택해주세요.' }]}
+      >
+        <Radio.Group block>
+          <Radio.Button value="M">남성</Radio.Button>
+          <Radio.Button value="F">여성</Radio.Button>
+        </Radio.Group>
+      </Form.Item>
+
+      <Form.Item
+        // label="전화번호"
+        name="phone"
+        rules={[
+          {
+            required: true,
+            message: '전화번호를 입력해주세요.',
+          },
+          {
+            validator: validatePhone,
+          },
+        ]}
+      >
+        <Input
+          prefix={<PhoneOutlined />}
+          placeholder="전화번호"
+          onChange={(e) => {
+            const formattedPhone = formatPhoneNumber(e.target.value);
+            form.setFieldValue('phone', formattedPhone);
+          }}
+        />
+      </Form.Item>
+
+      <Form.Item
+        // label="생년월일"
+        name="birthDate"
+        rules={[
+          {
+            required: true,
+            message: '생년월일을 입력해주세요.',
+          },
+          {
+            validator: validateBirthDate,
+          },
+        ]}
+      >
+        <Input
+          prefix={<CalendarOutlined />}
+          placeholder="생년월일 (YYYYMMDD)"
+          onChange={(e) => {
+            const formattedDate = formatBirthDate(e.target.value);
+            form.setFieldValue('birthDate', formattedDate);
+          }}
+        />
+      </Form.Item>
+
+      <Form.Item label={null}>
+        <Button block type="primary" htmlType="submit">
+          다음
+        </Button>
+      </Form.Item>
+    </Form>
   );
 };
 
@@ -442,6 +341,7 @@ const SelectInterest: React.FC<{
   const navigate = useNavigate();
 
   const handleChange = (value: string[]) => {
+    console.log(user);
     if (value.length <= MAX_COUNT) {
       setSelectedItems(value);
       setUser((prevUser) => ({
@@ -512,19 +412,19 @@ const UserRegister: React.FC = () => {
     gender: 'M',
     phone: '',
     birthDate: '',
-    location: '',
+    location:'',
+    favoriteLocations: [],
     interests: '',
   });
 
   return (
-    <div className="h-full flex justify-center items-center">
-      <div className="w-auto shadow-md p-8 flex flex-col gap-6 rounded-md">
+    <div className="h-fit flex justify-center">
+      <div className="w-2/5 h-fit m-10 shadow-lg shadow-gray-300 p-8 flex flex-col gap-6 rounded-md">
         <h2 className="text-lg font-bold text-center">WOULD YOU HANA</h2>
         {completeInputForm ? (
           <SelectInterest user={user} setUser={setUser} />
         ) : (
           <InputForm
-            user={user}
             setUser={setUser}
             setCompleteInputForm={setCompleteInputForm}
           />
@@ -535,4 +435,3 @@ const UserRegister: React.FC = () => {
 };
 
 export default UserRegister;
-
