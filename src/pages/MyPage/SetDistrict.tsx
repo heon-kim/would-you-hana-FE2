@@ -3,7 +3,10 @@ import seoulDistricts from '../../assets/location/seoul_districts.json'; // Adju
 import { findUser, updateUser } from '../../utils/userStorage';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../../hoc/actions';
+import iconSearch from '../../assets/img/icon_search.png';
+import iconPlus from '../../assets/img/icon_plus.svg';
 import store from '../../hoc/store';
+import { message } from 'antd';
 
 const SetDistrict = () => {
   const [mapInstance, setMapInstance] = useState(null);
@@ -120,13 +123,13 @@ const SetDistrict = () => {
 
       drawDistrictPolygon(coordinates);
     } else {
-      alert('지역을 찾을 수 없습니다. 올바른 지역명을 입력해 주세요.');
+      message.warning('지역을 찾을 수 없습니다. 올바른 지역명을 입력해 주세요.');
     }
   };
 
   const addDistrict = () => {
     if (selectedDistricts.length >= 3) {
-      alert('최대 3개의 지역구만 추가할 수 있습니다.');
+      message.warning('최대 3개의 지역구만 추가할 수 있습니다.');
       return;
     }
 
@@ -139,11 +142,12 @@ const SetDistrict = () => {
         setSelectedDistricts([...selectedDistricts, searchedDistrict]);
         setInputDistrict('');
         setSearchedDistrict(null);
+        message.success('관심 지역이 성공적으로 추가되었습니다.')
       } else {
-        alert('이미 추가된 지역입니다.');
+        message.warning('이미 추가된 지역입니다.');
       }
     } else {
-      alert('먼저 검색 후 추가하세요.');
+      message.warning('먼저 검색 후 추가하세요.');
     }
   };
 
@@ -164,9 +168,9 @@ const SetDistrict = () => {
       map: mapInstance,
       path: coordinates,
       strokeWeight: 2,
-      strokeColor: '#FF0000',
+      strokeColor: '#498DF7',
       strokeOpacity: 0.8,
-      fillColor: '#FF0000',
+      fillColor: '#498DF7',
       fillOpacity: 0.4,
     });
     setPolygon(newPolygon);
@@ -176,7 +180,7 @@ const SetDistrict = () => {
 
   const removeDistrict = (districtName) => {
     if (selectedDistricts.length === 1) {
-      alert('최소 하나의 관심지역은 설정되어 있어야 합니다.');
+      message.warning('최소 하나의 관심지역은 설정되어 있어야 합니다.');
       return;
     }
 
@@ -186,98 +190,115 @@ const SetDistrict = () => {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', marginTop: '5%' }}>
+    <div style={{ padding: '5%' }}>
       <div
-        style={{
-          width: '50%',
-          height: '500px',
-          marginBottom: '5%',
-          borderRadius: '10px',
-          overflow: 'hidden',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          position: 'relative'
-        }}
-        id="map"
-      />
+        style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}
+      >
+        관심 지역 설정
 
-      <div style={{ marginLeft: '20px', display: 'flex', flexDirection: 'column', width: '20%' }}>
-        <div style={{ display: 'flex', marginBottom: '10px' }}>
-          <input
-            type="text"
-            placeholder="지역구 검색"
-            value={inputDistrict}
-            onChange={(e) => setInputDistrict(e.target.value)}
-            style={{
-              flex: 1,
-              padding: '10px',
-              borderRadius: '5px',
-              border: '1px solid #ddd',
-              marginRight: '5px',
-            }}
-          />
-          <button
-            onClick={searchDistrict}
-            style={{
-              padding: '10px',
-              borderRadius: '5px',
-              backgroundColor: '#008485',
-              color: '#FFFFFF',
-              cursor: 'pointer',
-              marginRight: '5px'
-            }}
-          >
-            검색
-          </button>
-          <button
-            onClick={addDistrict}
-            style={{
-              padding: '10px',
-              borderRadius: '5px',
-              backgroundColor: '#808080',
-              color: '#FFFFFF',
-              cursor: 'pointer',
-            }}
-          >
-            추가
-          </button>
-        </div>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', marginTop: '5%' }}>
 
-        <div style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: '10px',
-          marginTop: '15px'
-        }}>
-          {selectedDistricts.map((district, index) => (
-            <div
-              key={index}
+
+
+        <div
+          style={{
+            width: '50%',
+            height: '500px',
+            marginBottom: '5%',
+            borderRadius: '10px',
+            overflow: 'hidden',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+            position: 'relative',
+            border: '1px solid #F3F5F7'
+          }}
+          id="map"
+        />
+
+        <div style={{ marginLeft: '20px', display: 'flex', flexDirection: 'column', width: '35%' }}>
+          <div style={{ display: 'flex', marginBottom: '10px' }}>
+            <input
+              type="text"
+              placeholder="관심 지역 검색 (ex: 광진구, 성동구)"
+              value={inputDistrict}
+              onChange={(e) => setInputDistrict(e.target.value)}
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                padding: '5px 10px',
-                borderRadius: '15px',
-                backgroundColor: '#e0f7fa',
-                color: '#00796b',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                flex: 1,
+                padding: '10px',
+                borderRadius: '5px',
+                border: '1px solid #ddd',
+                marginRight: '5px',
+              }}
+            />
+            <button
+              onClick={searchDistrict}
+              style={{
+                padding: '10px',
+                borderRadius: '5px',
+                backgroundColor: '#008485',
+                color: '#FFFFFF',
+                cursor: 'pointer',
+                marginRight: '5px'
               }}
             >
-              <span>{district.properties.SIG_KOR_NM}</span>
-              <button
-                onClick={() => removeDistrict(district.properties.SIG_KOR_NM)}
+              <img src={iconSearch} style={{ width: '20px' }} />
+            </button>
+            <button
+              onClick={addDistrict}
+              style={{
+
+                padding: '7px',
+                borderRadius: '5px',
+                backgroundColor: '#808080',
+                color: '#FFFFFF',
+                cursor: 'pointer',
+              }}
+            >
+              <img src={iconPlus} />
+            </button>
+          </div>
+
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '10px',
+            marginTop: '15px'
+          }}>
+            {selectedDistricts.map((district, index) => (
+              <div
+                key={index}
                 style={{
-                  marginLeft: '8px',
-                  backgroundColor: 'transparent',
-                  border: 'none',
-                  color: '#00796b',
-                  cursor: 'pointer',
-                  fontWeight: 'bold',
-                  fontSize: '16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '15px ',
+                  borderRadius: '15px',
+                  backgroundColor: '#54A0A1',
+                  color: '#ffffff',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
                 }}
               >
-                ×
-              </button>
+                <span style={{ marginLeft: '10%', fontSize: '17px' }}>{district.properties.SIG_KOR_NM}</span>
+                <button
+                  onClick={() => removeDistrict(district.properties.SIG_KOR_NM)}
+                  style={{
+                    marginLeft: 'auto',
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    color: '#ffffff',
+                    cursor: 'pointer',
+                    fontWeight: 'bold',
+                    fontSize: '20px',
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+
+            ))}
+            <div style={{ fontSize: '17px', textAlign: 'center', marginTop: '20px' }}>
+              📢 관심 지역은 최대 3개까지 등록 가능합니다.
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </div>
