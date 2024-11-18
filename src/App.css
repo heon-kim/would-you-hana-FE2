@@ -1,14 +1,17 @@
 * {
-  font-family: 'Hana',sans-serif;
+  font-family: 'Nanum',sans-serif;
+  font-weight: bold;
 }
 
-/* App.css 또는 특정 CSS 파일 */
 .ant-input::placeholder {
-  font-family: 'Hana2Bold', sans-serif;
+  font-family: 'NanumSquareB', sans-serif;
 }
-
 
 .ant-tooltip .ant-tooltip-inner {
   color: black;
   font-weight: lighter;
+}
+
+.bold-header {
+  font-weight: bold;
 }

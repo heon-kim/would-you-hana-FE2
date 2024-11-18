@@ -16,3 +16,28 @@
   font-weight: 300;
   font-style: normal;
 }
+
+@font-face {
+  font-family: 'Nanum';
+  src: url('../assets/font/NanumSquareB.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Nanum';
+  src: url('../assets/font/NanumSquareR.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Nanum';
+  src: url('../assets/font/NanumSquareL.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Nanum';
+  src: url('../assets/font/NanumSquareEB.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 800;
+}

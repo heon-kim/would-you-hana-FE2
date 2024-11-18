@@ -115,7 +115,7 @@ function Header() {
   };
 
   return (
-    <header className="w-screen px-6 py-3 bg-white border-b">
+    <header className="w-screen px-6 py-3 bg-white border-b bold-header">
       <div className="flex items-center justify-between">
         <Link to="/">
           <img src={logo} alt="logo" className="w-32" />

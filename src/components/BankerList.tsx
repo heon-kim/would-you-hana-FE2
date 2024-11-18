@@ -78,7 +78,7 @@ const BankerList: React.FC = () => {
                   <p style={{ fontWeight: 400 }}>
                     {banker.name}&nbsp;{banker.position}
                   </p>
-                  <p style={{ fontWeight: 200, color: '#7E8082', fontSize:'15px' }}>
+                  <p style={{ fontWeight: 400, color: '#7E8082', fontSize:'15px' }}>
                     {banker.description.length > 57
                       ? `${banker.description.slice(0, 57)}...`
                       : banker.description}
