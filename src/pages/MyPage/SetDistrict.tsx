@@ -3,6 +3,8 @@ import seoulDistricts from '../../assets/location/seoul_districts.json'; // Adju
 import { findUser, updateUser } from '../../utils/userStorage';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../../hoc/actions';
+import iconSearch from '../../assets/img/icon_search.png';
+import iconPlus from '../../assets/img/icon_plus.svg';
 import store from '../../hoc/store';
 import { message } from 'antd';
 
@@ -239,20 +241,20 @@ const SetDistrict = () => {
                 marginRight: '5px'
               }}
             >
-              검색
+              <img src={iconSearch} style={{ width: '20px' }} />
             </button>
             <button
               onClick={addDistrict}
               style={{
 
-                padding: '10px',
+                padding: '7px',
                 borderRadius: '5px',
                 backgroundColor: '#808080',
                 color: '#FFFFFF',
                 cursor: 'pointer',
               }}
             >
-              추가
+              <img src={iconPlus} />
             </button>
           </div>
 
@@ -293,7 +295,7 @@ const SetDistrict = () => {
               </div>
 
             ))}
-            <div style={{ fontSize: '20px', textAlign: 'center', marginTop: '20px' }}>
+            <div style={{ fontSize: '17px', textAlign: 'center', marginTop: '20px' }}>
               📢 관심 지역은 최대 3개까지 등록 가능합니다.
             </div>
           </div>
