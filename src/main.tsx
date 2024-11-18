@@ -25,7 +25,7 @@ if (storedAuthToken) {
   // 저장된 토큰과 역할로 로그인 액션 디스패치
   const role = userRole || ''; // null인 경우 빈 문자열을 할당
   const email = userEmail || ''; // 동일하게 userEmail도 처리
-  const location = userLocation || null;
+  const location = userLocation || '';
   store.dispatch(loginSuccess(storedAuthToken, email, role, location));
 }
 
