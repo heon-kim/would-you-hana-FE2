@@ -11,7 +11,7 @@ import IconISA from '../assets/img/category/icon_isa.png';
 import IconMobileBanking from '../assets/img/category/icon_mobile_banking.svg';
 import IconLoan from '../assets/img/category/icon_loan.png';
 import IconForeignExchange from '../assets/img/category/icon_foreign_exchange.png';
-import IconInsurance from '../assets/img/category/icon_insurance.svg';
+import IconInsurance from '../assets/img/category/icon_insurance.png';
 import IconCard from '../assets/img/category/icon_card.png';
 import IconETC from '../assets/img/category/icon_etc.png';
 
