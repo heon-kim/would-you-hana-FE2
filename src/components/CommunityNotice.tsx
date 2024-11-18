@@ -5,11 +5,12 @@ import IconWouldYouHana from '../assets/img/would_you_hana.png';
 const CommunityNotice: React.FC = () => {
   return (
     <div className='flex'>
-      
-        <div style={{ width: '100%' }}>
-        <a href='https://soco.seoul.go.kr/youth/bbs/BMSR00015/list.do?menuNo=400008'
-      target="_blank"
-      rel="noopener noreferrer">
+      <div style={{ width: '100%' }}>
+        <a
+          href='https://soco.seoul.go.kr/youth/bbs/BMSR00015/list.do?menuNo=400008'
+          target='_blank'
+          rel='noopener noreferrer'
+        >
           <div
             style={{
               backgroundColor: '#E0FFD1',
@@ -66,9 +67,8 @@ const CommunityNotice: React.FC = () => {
               <img src={IconWouldYouHana} style={{ width: '120px' }} />
             </div>
           </div>
-          </a>
-        </div>
-      
+        </a>
+      </div>
     </div>
   );
 };

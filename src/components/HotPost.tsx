@@ -46,7 +46,7 @@ const HotPosts: React.FC = () => {
 
 const styles: { [key: string]: React.CSSProperties } = {
     hotPostList: {
-        backgroundColor: '#f4fef6',
+        backgroundColor: '#E8F7E6',
         padding: '20px',
         borderRadius: '8px',
         width: '100%',
@@ -78,7 +78,7 @@ const styles: { [key: string]: React.CSSProperties } = {
         flexDirection: 'column',  // 수직 정렬
         alignItems: 'center',
         justifyContent: 'center', // 중앙 정렬
-        border: '1px solid #D3D3D3',
+        border: '1px solid #F3F5F7',
     },
     hotPost: {
         display: 'flex',
