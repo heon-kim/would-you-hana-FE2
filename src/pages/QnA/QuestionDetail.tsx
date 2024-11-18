@@ -178,8 +178,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, message } from 'antd';
-import { StarOutlined, FormOutlined } from '@ant-design/icons';
-import { findPost, updatePost } from '../../utils/postStorage';  // updatePost 함수 추가
+import { StarOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons';
+import { findPost, updatePost, deletePost } from '../../utils/postStorage';  // updatePost 함수 추가
 import '../../App.css';
 import PostRegisterButton from '../../components/PostRegisterButton';
 import Comments from '../../components/post/Comments';
@@ -190,6 +190,7 @@ import { AnswerInterface } from '../../constants/posts';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../hoc/store';
 import Chatbot from '../../components/Chatbot';
+import { Root } from 'react-dom/client';
 
 const QuestionDetail: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
@@ -210,7 +211,6 @@ const QuestionDetail: React.FC = () => {
     const storedAnswers = localStorage.getItem('answers');
     const parsedAnswers = storedAnswers ? JSON.parse(storedAnswers) : {};
     setAnswers(parsedAnswers);
-    console.log(isAuthenticated);
 
     if (!postId) {
       message.error('질문 ID가 없습니다.');
@@ -273,6 +273,12 @@ const QuestionDetail: React.FC = () => {
     setIsChatbotVisible((prev) => !prev);
   };
 
+  const handlePostDelete = () => {
+    console.log(postId);
+    deletePost(Number(postId));
+    navigate('/qna');
+  }
+
   return (
     <div
       style={{
@@ -311,7 +317,7 @@ const QuestionDetail: React.FC = () => {
                 <span>좋아요 {post.counts.likes || 0}</span>
                 <span>스크랩 {post.counts.scraps || 0}</span>
               </div>
-              <div className='flex justify-end gap-4'>
+              <div className='flex justify-end gap-2'>
                 {!isAnswered && userRole === 'B' && (
                   <Button
                     type="primary"
@@ -320,6 +326,10 @@ const QuestionDetail: React.FC = () => {
                   >
                     답변하기
                   </Button>
+                )}
+                {(post.email === userEmail) && (
+                  <Button icon={<DeleteOutlined />}
+                  onClick={handlePostDelete}>삭제</Button>
                 )}
                 <Button icon={<StarOutlined />}>스크랩</Button>
               </div>

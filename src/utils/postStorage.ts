@@ -7,7 +7,7 @@ const getPosts = (): Post[] => {
   return posts ? JSON.parse(posts) : [];
 };
 
-const getPostsByNickname = (nickname : string) : Post[] => {
+const getPostsByEmail = (email : string) : Post[] => {
   const posts = localStorage.getItem(LOCAL_STORAGE_KEY);
   if (!posts) {
     return [];
@@ -15,7 +15,7 @@ const getPostsByNickname = (nickname : string) : Post[] => {
   const parsedPosts: Post[] = JSON.parse(posts);
   
   // nickname이 특정 값인 post만 필터링
-  return parsedPosts.filter(post => post.nickname === nickname);
+  return parsedPosts.filter(post => post.email === email);
 }
 
 const postCount = () => {
@@ -55,6 +55,19 @@ const updatePost = (post: Post) => {
   }
 };
 
+// 포스트 삭제
+const deletePost = (postId: number) => {
+  const posts = getPosts();
+  const updatedPosts = posts.filter((post) => post.id !== postId);
+
+  // 포스트가 삭제되었으면 새로 저장
+  if (posts.length !== updatedPosts.length) {
+    savePosts(updatedPosts);
+  } else {
+    console.error('Post not found');
+  }
+};
+
 // export function updatePost(post: Post) {
 //   const posts = JSON.parse(localStorage.getItem('posts') || '[]');
 //   const index = posts.findIndex((u) => u.id === post.id);
@@ -65,4 +78,4 @@ const updatePost = (post: Post) => {
 //   }
 // }
 
-export { getPosts, getPostsByNickname, savePost, findPost, updatePost, postCount };
+export { getPosts, getPostsByEmail, savePost, findPost, updatePost, postCount, deletePost };

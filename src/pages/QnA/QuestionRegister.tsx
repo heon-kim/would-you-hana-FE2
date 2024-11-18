@@ -94,6 +94,7 @@ const PostRegister: React.FC = () => {
       title,
       content,
       author: nickname || '',
+      email : userEmail,
       createdAt: new Date().toISOString(),
       answered: false,
       counts: {
