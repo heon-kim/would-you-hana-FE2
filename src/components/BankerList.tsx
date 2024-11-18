@@ -51,7 +51,7 @@ const BankerList: React.FC = () => {
     <div
       style={{
         borderWidth:'1.5px',
-        borderColor: '#F3F5F7',
+        borderColor:'#CFCFCF40',
         height: 'auto',
         alignContent: 'center',
         padding: '20px',

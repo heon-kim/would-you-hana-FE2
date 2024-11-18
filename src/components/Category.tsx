@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Categories } from '../constants/posts';
 import IconViewAll from '../assets/img/category/icon_view_all.png';
 import IconDeposit from '../assets/img/category/icon_deposit_saving.png';
@@ -37,14 +37,21 @@ const categoryIcons = [
   IconForeignExchange,
   IconInsurance,
   IconCard,
-  IconETC
-]
+  IconETC,
+];
 
 const categoriesWithIcon = ['전체', ...Categories].map((category, index) => {
   return { name: category, icon: categoryIcons[index % categoryIcons.length] };
 });
 
 const Category: React.FC<CategoryProps> = ({ onSelectCategory }) => {
+  const [selectedCategory, setSelectedCategory] = useState<string>('전체'); // 선택된 카테고리 상태 관리
+
+  const handleCategorySelect = (category: string) => {
+    setSelectedCategory(category);
+    onSelectCategory(category);
+  };
+
   return (
     <div>
       <ul
@@ -69,19 +76,35 @@ const Category: React.FC<CategoryProps> = ({ onSelectCategory }) => {
               }}
             >
               <button
-                className="w-14 flex flex-col items-center"
+                className='w-14 flex flex-col items-center'
                 onClick={() => {
-                  onSelectCategory(category.name);
+                  handleCategorySelect(category.name);
                 }} // 카테고리 선택 시 호출
               >
-                <div className="w-full h-14 bg-gray-100 rounded-xl flex items-center justify-center hover:bg-[#DDFCD2] transition-colors duration-300">
+                <div
+                  className={`w-full h-14 rounded-xl flex items-center justify-center transition-colors duration-300 ${
+                    selectedCategory === category.name
+                      ? 'bg-[#DFF7DC]' // 선택된 카테고리 배경색
+                      : 'bg-gray-100 hover:bg-[#F0F0F0]' // 기본 배경색
+                  }`}
+                >
                   <img
                     src={category.icon}
                     alt={category.name}
-                    className="w-8 h-8"
+                    className='w-8 h-8'
                   />
                 </div>
-                <p className="whitespace-nowrap">{category.name}</p>
+                <p
+                  className='whitespace-nowrap'
+                  style={{
+                    color:
+                      selectedCategory === category.name
+                        ? '#26B064'
+                        : 'black', 
+                  }}
+                >
+                  {category.name}
+                </p>
               </button>
             </div>
           </li>

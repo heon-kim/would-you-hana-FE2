@@ -1,8 +1,11 @@
 import React from 'react';
 import IconAnnouncement from '../assets/img/icon_notice.png';
 import IconWouldYouHana from '../assets/img/would_you_hana.png';
+import { getUserLocation } from '../hoc/request';
 
 const CommunityNotice: React.FC = () => {
+  const location = getUserLocation();
+
   return (
     <div className='flex'>
       <div style={{ width: '100%' }}>
@@ -37,7 +40,7 @@ const CommunityNotice: React.FC = () => {
                 우리 동네 최근 소식!
               </p>
               <h1 style={{ fontSize: '24px', fontWeight: 'bold' }}>
-                <span className='text-mainColor'>광진구</span> 행복주택 분양공고
+                <span className='text-mainColor'>{location}</span> 행복주택 분양공고
                 OPEN
               </h1>
               <p style={{ color: '#4F4F4F', fontWeight: 'bold' }}>

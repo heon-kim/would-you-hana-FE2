@@ -31,6 +31,8 @@ const PostRegisterButton: React.FC = () => {
     <div
       style={{
         backgroundColor: '#F3F5F7',
+        borderColor:'#CFCFCF40',
+        borderWidth:'1.5px',
         height: 'auto',
         alignContent: 'center',
         borderRadius: '5px',
