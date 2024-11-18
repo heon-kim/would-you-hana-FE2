@@ -44,7 +44,7 @@ const MyPage: React.FC = () => {
     <Layout style={{ backgroundColor: '#FFFFFF', marginTop: '70px' }}> 
       <Layout style={{ display: 'flex', backgroundColor: '#FFFFFF', minHeight: '30vh'}}>
         <Sider width="15%" style={{ backgroundColor: '#FFFFFF'}}></Sider>
-        <Layout style={{ width: '85%'}}>
+        <Layout style={{ width: '75%'}}>
           <Content style={{ paddingBottom: '24px', paddingRight: '50px', paddingLeft: '50px', textAlign: 'center', backgroundColor: '#FFFFFF' }}>
             <div style={{ display: 'flex',  alignItems: 'center', marginBottom: "10px",  }}> 
               <Avatar size={100} src={userIcon} icon={<UserOutlined />} />
@@ -54,10 +54,14 @@ const MyPage: React.FC = () => {
             <Progress percent={60} status="active" strokeWidth={30} showInfo={false} strokeColor={twoColors} style={{ width: '100%', marginTop: '20pxs' }} />
           </Content>
         </Layout>
+        <Layout style={{ width:'10%'}}> {/*오른쪽 padding용*/}
+          <Content style={{ backgroundColor: '#FFFFFF'}}>
+          </Content>
+        </Layout>
       </Layout>
 
       <Layout style={{ display: 'flex' }}>
-        <Sider width="15%" style={{ fontWeight: 'bold', padding:'48px', backgroundColor: '#FFFFFF', borderRight: '1px solid #D9D9D9', borderTop: '1px solid #D9D9D9'}}>
+        <Sider width="15%" style={{ fontWeight: 'bold', padding: "48px", backgroundColor: '#FFFFFF', borderRight: '1px solid #D9D9D9', borderTop: '1px solid #D9D9D9'}}>
           <Menu mode="inline" selectedKeys={[selectedKey]} style={{ height: '100%', borderRight: 0 }}>
             <Menu.Item key="profile" onClick={() => handleMenuClick('profile')} style={{ color: selectedKey === 'profile' ? '#BFBFBF' : undefined, backgroundColor: 'transparent' }}>프로필</Menu.Item>
             <Menu.Item key="posts" onClick={() => handleMenuClick('posts')} style={{ color: selectedKey === 'posts' ? '#BFBFBF' : undefined, backgroundColor: 'transparent' }}>게시글</Menu.Item>
@@ -68,9 +72,13 @@ const MyPage: React.FC = () => {
           </Menu>
         </Sider>
 
-        <Layout style={{ width: '85%' }}>
+        <Layout style={{ width: '75%' }}>
           <Content style={{ backgroundColor: '#FFFFFF', borderTop: '1px solid #D9D9D9' }}>
             <Outlet />
+          </Content>
+        </Layout>
+        <Layout style={{ width:'10%'}}> {/*오른쪽 padding용*/}
+          <Content style={{ backgroundColor: '#FFFFFF', borderTop: '1px solid #D9D9D9' }}>
           </Content>
         </Layout>
       </Layout>

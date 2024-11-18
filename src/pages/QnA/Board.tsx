@@ -7,6 +7,7 @@ import { Input } from 'antd';
 import PostRegisterButton from '../../components/PostRegisterButton';
 import { getPosts } from '../../utils/postStorage';
 import { Post } from '../../constants/posts';
+import BankerList from '../../components/BankerList';
 
 const Board: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -139,8 +140,9 @@ const Board: React.FC = () => {
           />
         </div>
 
-        <div style={{ width:'30%' }}>
+        <div style={{ width:'30%', display:'flex', flexDirection:'column', gap:'25px' }}>
           <PostRegisterButton />
+          <BankerList />
         </div>
       </div>
     </div>

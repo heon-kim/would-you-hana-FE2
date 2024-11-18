@@ -200,7 +200,7 @@ const Gwangjin: React.FC = () => {
                   dots={false}
                   className='custom-carousel'
                   autoplay={true}
-                  autoplaySpeed={3000}
+                  autoplaySpeed={2800}
                   style={{ width: '300px' }}
                 >
                   {keyword.map((keyword, index) => (

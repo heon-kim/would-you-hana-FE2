@@ -6,6 +6,7 @@ import userIcon from '../../assets/img/icon_user.png';
 import { relativeTime } from '../../utils/stringFormat';
 import { findUser } from '../../utils/userStorage';
 import { Comment, Reply } from '../../constants/posts';
+import { findPost, updatePost } from '../../utils/postStorage';
 
 const { TextArea } = Input;
 
@@ -218,6 +219,23 @@ const Comments: React.FC<{isAuthenticated : boolean}> = ({isAuthenticated}) => {
     const allComments = storedComments ? JSON.parse(storedComments) : {};
     allComments[postId] = updatedComments;
     localStorage.setItem('comments', JSON.stringify(allComments));
+    const post = findPost(Number(postId));
+    updateCommentCount(post, updatedComments);
+  };
+
+  // 댓글 개수 업데이트 함수
+  const updateCommentCount = (post: Post, updatedComments: Comment[]) => {
+    if (post) {
+      const updatedPost = {
+        ...post,
+        counts: {
+          ...post.counts,
+          comments: updatedComments.length, // views 증가
+        },
+      };
+      // 로컬 스토리지에 저장된 post 데이터 업데이트
+      updatePost(updatedPost);
+    }
   };
 
   const saveRepliesToLocalStorage = (updatedReplies: {
@@ -291,6 +309,7 @@ const Comments: React.FC<{isAuthenticated : boolean}> = ({isAuthenticated}) => {
           : comment
       )
     );
+    saveCommentsToLocalStorage(comments);
   };
 
   const toggleReplies = (commentId: number) => {
@@ -309,7 +328,7 @@ const Comments: React.FC<{isAuthenticated : boolean}> = ({isAuthenticated}) => {
     );
   };
 
-  return (
+  return (  
     <div className="comment flex flex-col gap-7">
       <CommentForm
         onSubmit={addComment}
@@ -317,18 +336,21 @@ const Comments: React.FC<{isAuthenticated : boolean}> = ({isAuthenticated}) => {
         onChange={(e) => setNewComment(e.target.value)}
         isAuthenticated={isAuthenticated}
       />
+      <div className="mt-3 flex justify-between">
+        <span>{comments.length}개의 댓글</span>
+        {comments.length > 0 && (
+          <Radio.Group
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="flex justify-end"
+            optionType="button"
+          >
+            <Radio value="latest">최신순</Radio>
+            <Radio value="likes">좋아요순</Radio>
+          </Radio.Group>
+        )}
+      </div>
       
-      {comments.length > 0 && (
-        <Radio.Group
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-          className="mt-3 flex justify-end"
-          optionType="button"
-        >
-          <Radio value="latest">최신순</Radio>
-          <Radio value="likes">좋아요순</Radio>
-        </Radio.Group>
-      )}
       <div className="comment__list flex flex-col gap-1">
         {sortedComments().map((comment: Comment) => (
           <CommentItem

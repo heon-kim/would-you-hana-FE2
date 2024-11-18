@@ -31,11 +31,12 @@ const PostRegisterButton: React.FC = () => {
     <div
       style={{
         backgroundColor: '#F3F5F7',
-        height: '180px',
+        borderColor:'#CFCFCF40',
+        borderWidth:'1.5px',
+        height: 'auto',
         alignContent: 'center',
-        paddingLeft: '20px',
-        paddingRight: '20px',
         borderRadius: '5px',
+        padding: '20px'
       }}
     >
       <div style={{ marginBottom: '25px' }}>
