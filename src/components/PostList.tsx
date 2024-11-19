@@ -37,7 +37,7 @@ const PostList: React.FC<PostListProps> = ({
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
                   {post.title}
                 </h3>
-                <p className="text-gray-500 mb-4" style={{ fontSize: '12px' }}>
+                <p className="text-gray-500 mb-4" style={{ fontSize: '14px' }}>
                   <span className="text-mainColor">
                     조회 {post.counts.views}
                   </span>{' '}
@@ -57,7 +57,7 @@ const PostList: React.FC<PostListProps> = ({
                     width={25}
                     style={{ borderRadius: '50%' }}
                   />
-                  <label className="ml-2 text-xs text-gray-500">
+                  <label className="ml-2 text-gray-500" style={{fontSize:'13px'}}>
                     {post.author}
                   </label>
                 </div>

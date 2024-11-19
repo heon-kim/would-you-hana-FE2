@@ -31,6 +31,7 @@ const CommentForm: React.FC<{
       value={value}
       onChange={onChange}
       placeholder="댓글을 입력하세요"
+      style={{alignItems:'center'}}
     />
     <Button size="large" type="primary" htmlType="submit">
       댓글 달기

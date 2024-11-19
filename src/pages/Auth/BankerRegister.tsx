@@ -13,6 +13,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { Categories } from '../../constants/posts';
 import '../../styles/formInput.css';
+import wyhn from '../../assets/img/would_you_hana.png';
 
 
 interface formProps {
@@ -212,9 +213,11 @@ const SelectInterest: React.FC<{
 
   return (
     <div className="flex flex-col gap-16 items-center m-auto">
-      <h2 className="text-2xl font-bold text-center">WOULD YOU HANA</h2>
       <div className="flex flex-col items-center gap-8 w-80">
-        <p>관심 분야를 선택해 주세요!</p>
+        <div>
+          <p>{banker.name} 님의</p>
+          <p> 관심 분야를 선택해 주세요!</p>
+        </div>
 
         <Select
           mode="multiple"
@@ -256,8 +259,11 @@ const BankerRegister: React.FC = () => {
 
   return (
     <div className="h-fit flex justify-center">
-      <div className="w-2/5 h-fit m-10 shadow-lg shadow-gray-300 p-8 flex flex-col gap-6 rounded-md">
-        <h2 className="text-lg font-bold text-center">WOULD YOU HANA</h2>
+      <div className="w-1/3 h-fit m-10 shadow-lg shadow-gray-300 p-8 flex flex-col gap-6 rounded-md">
+        <div className='flex justify-center'>
+          <img src={wyhn} className='w-35'></img>
+        </div>
+        {/* <h2 className="text-lg font-bold text-center">WOULD YOU HANA</h2> */}
         {completeInputForm ? (
           <SelectInterest banker={banker} setBanker={setBanker} />
         ) : (

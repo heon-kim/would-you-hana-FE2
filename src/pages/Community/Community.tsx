@@ -96,9 +96,9 @@ const Community: React.FC = () => {
   };
   const truncateContent = (content: string) => {
     if(columnCount == 1){
-      return content.length > 80 ? content.substring(0, 85) + '...' : content;
+      return content.length > 80 ? content.substring(0,85) + '...' : content;
     }
-    return content.length > 20 ? content.substring(0, 26) + '...' : content;
+    return content.length > 26 ? content.substring(0, 30) + '...' : content;
   };
 
   return (
@@ -180,7 +180,7 @@ const Community: React.FC = () => {
                     <h1 style={{ fontSize: '18px', fontWeight: 'bold' }}>
                       {truncateTitle(item.title)}
                     </h1>
-                    <h3 style={{ fontSize: '13px' }}>
+                    <h3 style={{ fontSize: '15px' }}>
                       {truncateContent(item.content)}
                     </h3>
                   </div>
@@ -198,7 +198,7 @@ const Community: React.FC = () => {
                 <div className='flex gap-3'>
                   <p
                     className='text-gray-500 mb-4'
-                    style={{ fontSize: '12px' }}
+                    style={{ fontSize: '13px' }}
                   >
                     <span className='text-mainColor'>
                       조회 {item.counts.views}
