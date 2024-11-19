@@ -36,14 +36,14 @@ const CommunityNotice: React.FC = () => {
                 marginLeft: '10px',
               }}
             >
-              <p style={{ color: '#4F4F4F', fontWeight: 'bold' }}>
+              <p style={{ color: '#4F4F4F', fontWeight: '800' }}>
                 우리 동네 최근 소식!
               </p>
-              <h1 style={{ fontSize: '24px', fontWeight: 'bold' }}>
-                <span className='text-mainColor'>{location}</span> 행복주택 분양공고
+              <h1 style={{ fontSize: '24px', fontWeight: '800' }}>
+                <span className='text-mainColor font-extrabold'>{location}</span> 행복주택 분양공고
                 OPEN
               </h1>
-              <p style={{ color: '#4F4F4F', fontWeight: 'bold' }}>
+              <p style={{ color: '#4F4F4F', fontWeight: '800' }}>
                 보러가기 &gt;
               </p>
             </div>

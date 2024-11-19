@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import logo from '../assets/img/logo.png';
 import userIcon from '../assets/img/icon_user.png';
 import locationIcon from '../assets/img/icon_location.svg';
@@ -10,6 +10,7 @@ import { message, Select, Button, Drawer } from 'antd';
 import { MenuOutlined } from "@ant-design/icons";
 import type { SelectProps } from 'antd';
 import { findUser, findBanker } from '../utils/userStorage';
+import { locations } from '../constants/locations';
 
 // 지역 선택 검색창 컴포넌트
 const SearchInput: React.FC<{
@@ -27,9 +28,12 @@ const SearchInput: React.FC<{
     const loggedUser = localStorage.getItem('userEmail');
     if (loggedUser) {
       const user = findUser(loggedUser);
-      setFavoriteLocations(user?.favoriteLocations || ['광진구']);
+      const locations = user?.favoriteLocations || ['광진구'];
+      setFavoriteLocations(locations);
+      setData(locations.map((loc) => ({ text: loc, value: loc }))); // 초기 데이터 설정
     } else {
-      setFavoriteLocations(['광진구']);
+      setFavoriteLocations(locations); // 모든 지역을 기본 값으로 설정
+      setData(locations.map((loc) => ({ text: loc, value: loc }))); // 초기 데이터 설정
     }
   }, [isLoggedIn]);
 
@@ -48,6 +52,8 @@ const SearchInput: React.FC<{
     }
     else if (district === '서초구') {
       navigate('/seocho');
+    }else{
+      navigate('/');
     }
   }
 
@@ -100,18 +106,23 @@ function Header() {
   }
 
   useEffect(() => {
+    const storedLocation = localStorage.getItem('userLocation');
+    if (storedLocation) {
+      setSearchValue(storedLocation); // localStorage에서 userLocation 값 가져와 초기값 설정
+    }
     setDrawerVisible(false);
-  }, [navigate, isLoggedIn])
+  }, [navigate, isLoggedIn]);
 
   const handleLogout = () => {
     dispatch(logout());
     message.success('로그아웃 성공!');
+    setSearchValue('');
     navigate('/');
   };
 
   const handleSearchValueChange = (newValue: string) => {
-    //setSearchValue(newValue);
-    //localStorage.setItem('userLocation', newValue);
+    setSearchValue(newValue);
+    localStorage.setItem('userLocation', newValue);
   };
 
   return (
@@ -153,7 +164,7 @@ function Header() {
             <SearchInput
               placeholder="지역을 입력하세요"
               style={{ width: 200 }}
-              value={userLocation || searchValue || ''}
+              value={ searchValue || ''}
               onChange={handleSearchValueChange}
             />
           )}
