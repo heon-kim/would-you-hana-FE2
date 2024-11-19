@@ -154,7 +154,7 @@ const Seocho: React.FC = () => {
 
                                 .custom-carousel .carousel-item.focused {
                                     font-size: 50px;
-                                    font-weight: bold;
+                                    font-weight: 800;
                                     opacity: 1;
                                     transform: scale(1);
                                 }
@@ -176,9 +176,9 @@ const Seocho: React.FC = () => {
                 alignItems: 'end',
               }}
             >
-              <span style={{ fontSize: '35px' }}>
+              <span style={{ fontSize: '35px', fontWeight:800 }}>
                 {' '}
-                지금 <span style={{ fontSize: '45px' }}>서초구</span> 주민들은
+                지금 <span style={{ fontSize: '45px', fontWeight:800 }}>서초구</span> 주민들은
               </span>
               <div
                 style={{
@@ -208,7 +208,7 @@ const Seocho: React.FC = () => {
                   ))}
                 </Carousel>
 
-                <p style={{ fontSize: '35px', alignContent: 'center' }}>
+                <p style={{ fontSize: '35px', alignContent: 'center', fontWeight:800 }}>
                   에 관심이 있어요.
                 </p>
               </div>

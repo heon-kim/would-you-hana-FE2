@@ -101,9 +101,7 @@ const Gwangjin: React.FC = () => {
     '전세대출',
     '학자금대출',
     '체크카드',
-    '부동산규제',
-    '아주 긴 텍스트',
-    '여섯글자문구',
+    '학생증 발급'
   ];
 
   const handleCarouselChange = (current: number) => {
@@ -184,9 +182,9 @@ const Gwangjin: React.FC = () => {
                 fontWeight:'800'
               }}
             >
-              <span style={{ fontSize: '35px',fontWeight:'800' }}>
+              <span style={{ fontSize: '35px',fontWeight:800 }}>
                 {' '}
-                지금 <span style={{ fontSize: '45px',  }}>광진구</span> 주민들은
+                지금 <span style={{ fontSize: '45px', fontWeight:800}}>광진구</span> 주민들은
               </span>
               <div
                 style={{
