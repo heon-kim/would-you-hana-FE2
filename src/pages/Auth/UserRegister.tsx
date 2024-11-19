@@ -142,7 +142,7 @@ const InputForm: React.FC<{
     const nickname: string = form.getFieldValue('nickname');
     setNicknameDuplicate(hasNickname(nickname));
     setIsNicknameChecked(true);
-    const nicknamePattern = /^[a-zA-Z가-힣]{2,10}$/;
+    const nicknamePattern = /^[a-zA-Z가-힣0-9]{2,10}$/;
     setNicknameError(!nicknamePattern.test(nickname));
   };
 
