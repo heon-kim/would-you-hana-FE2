@@ -101,9 +101,7 @@ const Gwangjin: React.FC = () => {
     '전세대출',
     '학자금대출',
     '체크카드',
-    '부동산규제',
-    '아주 긴 텍스트',
-    '여섯글자문구',
+    '학생증 발급'
   ];
 
   const handleCarouselChange = (current: number) => {
