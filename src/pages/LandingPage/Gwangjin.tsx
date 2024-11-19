@@ -182,9 +182,9 @@ const Gwangjin: React.FC = () => {
                 fontWeight:'800'
               }}
             >
-              <span style={{ fontSize: '35px',fontWeight:'800' }}>
+              <span style={{ fontSize: '35px',fontWeight:800 }}>
                 {' '}
-                지금 <span style={{ fontSize: '45px',  }}>광진구</span> 주민들은
+                지금 <span style={{ fontSize: '45px', fontWeight:800}}>광진구</span> 주민들은
               </span>
               <div
                 style={{
