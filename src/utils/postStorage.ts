@@ -68,7 +68,6 @@ const deletePost = (postId: number) => {
   }
 };
 
-
 // export function updatePost(post: Post) {
 //   const posts = JSON.parse(localStorage.getItem('posts') || '[]');
 //   const index = posts.findIndex((u) => u.id === post.id);
