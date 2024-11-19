@@ -13,7 +13,7 @@ const LandingForRegister: React.FC = () => {
           <div>
             <h1
               style={{
-                color: 'black',
+                color: 'black', 
                 fontSize: '30px',
                 lineHeight: '1.3',
                 textAlign: 'left',
