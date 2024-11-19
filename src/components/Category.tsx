@@ -72,7 +72,7 @@ const Category: React.FC<CategoryProps> = ({ onSelectCategory }) => {
                 alignItems: 'center',
                 flexDirection: 'column',
                 fontWeight: '400',
-                fontSize: '15px',
+                fontSize: '14px',
               }}
             >
               <button

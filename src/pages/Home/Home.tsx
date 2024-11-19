@@ -123,12 +123,13 @@ const Home: React.FC = () => {
                 fontSize: '40px',
                 lineHeight: '1.2',
                 textAlign: 'left',
+                fontWeight:'800'
               }}
             >
               <strong>
                 궁금한 금융 질문을
                 <br />
-                <span style={{ color: 'green' }}> 내 주변의 하나 가족</span>
+                <span style={{ color: 'green', fontWeight:'800'}}> 내 주변의 하나 가족</span>
                 으로부터
                 <br /> 답변 받아가세요!
               </strong>

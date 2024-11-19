@@ -161,7 +161,7 @@ const Gwangjin: React.FC = () => {
 
                                 .custom-carousel .carousel-item.focused {
                                     font-size: 50px;
-                                    font-weight: bold;
+                                    font-weight: 800;
                                     opacity: 1;
                                     transform: scale(1);
                                 }
@@ -181,11 +181,12 @@ const Gwangjin: React.FC = () => {
                 marginRight:'150px',
                 textAlign: 'right',
                 alignItems: 'end',
+                fontWeight:'800'
               }}
             >
-              <span style={{ fontSize: '35px' }}>
+              <span style={{ fontSize: '35px',fontWeight:'800' }}>
                 {' '}
-                지금 <span style={{ fontSize: '45px' }}>광진구</span> 주민들은
+                지금 <span style={{ fontSize: '45px',  }}>광진구</span> 주민들은
               </span>
               <div
                 style={{
@@ -215,7 +216,7 @@ const Gwangjin: React.FC = () => {
                   ))}
                 </Carousel>
 
-                <p style={{ fontSize: '35px', alignContent: 'center' }}>
+                <p style={{ fontSize: '35px', alignContent: 'center', fontWeight:'800' }}>
                   에 관심이 있어요.
                 </p>
               </div>

@@ -114,7 +114,7 @@ const Board: React.FC = () => {
           <div className='flex justify-end items-center'>
             <div
               className='flex space-x-3 items-end'
-              style={{ fontSize: '13px', fontWeight: '300' }}
+              style={{ fontSize: '14px' }}
             >
               {['최근 답변순', '최신순', '인기순'].map((order) => (
                 <button
