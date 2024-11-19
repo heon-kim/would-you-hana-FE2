@@ -154,7 +154,7 @@ const Seocho: React.FC = () => {
 
                                 .custom-carousel .carousel-item.focused {
                                     font-size: 50px;
-                                    font-weight: bold;
+                                    font-weight: 800;
                                     opacity: 1;
                                     transform: scale(1);
                                 }
