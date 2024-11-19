@@ -167,8 +167,8 @@ const handleRegister = () => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               maxLength={maxTitleLength}
-              className='w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:border-gray-500'
-              style={{ fontWeight: '300' }}
+              className='w-full border border-[#D9D9D9] rounded-md p-3 focus:outline-none focus:border-gray-500'
+              style={{ fontWeight: '400' }}
             />
             <span className='absolute bottom-2 right-3 text-gray-500 text-sm'>{`${title.length}/${maxTitleLength}`}</span>
           </div>
@@ -182,8 +182,8 @@ const handleRegister = () => {
               value={content}
               onChange={(e) => setContent(e.target.value)}
               maxLength={maxContentLength}
-              className='w-full border border-gray-300 rounded-md p-3 h-52 resize-none focus:outline-none focus:border-gray-500'
-              style={{ fontWeight: '300' }}
+              className='w-full border border-[#D9D9D9] rounded-md p-3 h-52 resize-none focus:outline-none focus:border-gray-500'
+              style={{ fontWeight: '400' }}
             />
             <span className='absolute bottom-2 right-3 text-gray-500 text-sm'>{`${content.length}/${maxContentLength}`}</span>
           </div>

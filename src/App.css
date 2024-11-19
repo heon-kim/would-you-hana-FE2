@@ -15,3 +15,7 @@
 .bold-header {
   font-weight: bold;
 }
+
+.ant-input {
+  font-weight: 500; /* 모든 input에 500 적용 */
+}
