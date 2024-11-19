@@ -5,7 +5,6 @@ import notebookUser from '../../assets/img/notebook_byulsongi.png';
 import homeFindBank from '../../assets/img/home_findBank.png';
 import homeQNA from '../../assets/img/home_qna.png';
 import homeCommunity from '../../assets/img/home_community.png';
-
 import { useSelector } from 'react-redux';
 import { RootState } from '../../hoc/store';
 
@@ -181,7 +180,7 @@ const Home: React.FC = () => {
               금융 관련 지식을 얻어가세요!
             </div>
 
-            <div style={{ marginTop: '70px', fontWeight: 'lighter', textAlign: 'left', marginLeft: '10%', cursor: 'pointer' }}>
+            <div style={{ marginTop: '70px', fontWeight: 'lighter', textAlign: 'left', marginLeft: '10%', cursor: 'pointer' }} onClick={() => navigate('/qna')}>
               ▶ 지역 Q&A 서비스 바로가기
             </div>
           </Col>
@@ -253,7 +252,7 @@ const Home: React.FC = () => {
               함께 소통할 수 있어요!
             </div>
 
-            <div style={{ marginTop: '70px', fontWeight: 'lighter', textAlign: 'right', marginRight: '10%', cursor: 'pointer' }}>
+            <div style={{ marginTop: '70px', fontWeight: 'lighter', textAlign: 'right', marginRight: '10%', cursor: 'pointer' }} onClick={() => navigate('/community')}>
               ▶ 지역 커뮤니티 서비스 바로가기
             </div>
           </Col>
@@ -292,7 +291,7 @@ const Home: React.FC = () => {
               쉽고 간편하게 행원과의 상담을 예약할 수 있어요!<br />
             </div>
 
-            <div style={{ marginTop: '70px', fontWeight: 'lighter', textAlign: 'left', marginLeft: '10%', cursor: 'pointer' }}>
+            <div style={{ marginTop: '70px', fontWeight: 'lighter', textAlign: 'left', marginLeft: '10%', cursor: 'pointer' }} onClick={() => navigate('/findbank')}>
               ▶ 영업점 찾기 서비스 바로가기
             </div>
           </Col>

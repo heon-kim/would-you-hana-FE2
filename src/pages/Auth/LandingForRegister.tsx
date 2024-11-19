@@ -36,7 +36,7 @@ const LandingForRegister: React.FC = () => {
           <div>
             <img
               src={icon_logo}
-              style={{ width: '100px', height: '100px', marginTop: '30px' }}
+              style={{ width: '100px', marginTop: '30px' }}
             ></img>
           </div>
         </div>
@@ -44,7 +44,7 @@ const LandingForRegister: React.FC = () => {
         <h2 className="px-3">회원 유형을 선택해주세요.</h2>
         <div className="flex flex-row justify-center gap-10 p-3 ">
           <div
-            className="rounded-xl shadow-lg p-3 bg-mainColor hover:cursor-pointer hover:shadow-gray-400"
+            className="rounded-xl shadow-lg p-3 bg-mainColor hover:cursor-pointer hover:shadow-gray-500 transform transition-transform duration-300 hover:scale-105 hover:bg-008485"
             style={{ width: '200px', height: '200px' }}
             onClick={() => navigate('/register/user')}
           >
@@ -55,7 +55,7 @@ const LandingForRegister: React.FC = () => {
             ></img>
           </div>
           <div
-            className="rounded-xl shadow-lg p-3 hover:cursor-pointer hover:shadow-gray-300"
+            className="rounded-xl shadow-lg p-3 hover:cursor-pointer hover:shadow-gray-500 transform transition-transform duration-300 hover:scale-105 hover:bg-ffffff"
             style={{ width: '200px', height: '200px' }}
             onClick={() => navigate('/register/banker')}
           >
