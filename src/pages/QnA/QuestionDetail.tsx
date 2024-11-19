@@ -90,7 +90,22 @@ const QuestionDetail: React.FC = () => {
     localStorage.setItem('answers', JSON.stringify(updatedAnswers));
 
     setIsAnswered(true);
+    const post = findPost(Number(postId));
+    makeAnsweredTrue(post);
     setShowAnswerInput(false);
+  };
+
+  // View count 증가 함수
+  const makeAnsweredTrue = (post: Post) => {
+    if (post) {
+      const updatedPost = {
+        ...post,
+        answered: true,
+      };
+
+      // 로컬 스토리지에 저장된 post 데이터 업데이트
+      updatePost(updatedPost);
+    }
   };
   
   const toggleChatbot = () => {

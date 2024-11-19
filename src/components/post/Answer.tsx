@@ -28,7 +28,7 @@ const Answer: React.FC<AnswerProps> = ({ answer }) => {
   const handleProfileBtn = () => {
     navigate('/bankerProfile'); // banker.id 추가해야 함
   };
-
+  
   const handleReserveBtn = () => {
     navigate('/findbank'); // banker.branchName 추가해야 함
   };

@@ -126,7 +126,7 @@ const EditProfile: React.FC = () => {
         )}
         {(isAuthenticated && userRole==='B') && (
           <Form.Item label="지점명" required style={{ marginBottom: '20px' }}> {/* 필드 간 간격 설정 */}
-            <Input value={banker.branchName} name="location" onChange={handleInputChange} style={{ height: '40px' }} /> {/* 높이 조정 */}
+            <Input value={banker.branchName} name="branchName" onChange={handleInputChange} style={{ height: '40px' }} /> {/* 높이 조정 */}
           </Form.Item>
         )}
         
