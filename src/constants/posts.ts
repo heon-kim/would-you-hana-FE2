@@ -16,6 +16,7 @@ export interface Post {
   title: string;
   content: string;
   author: string;
+  email: string;
   createdAt: string;
   answered: boolean;
   counts: Counts;
