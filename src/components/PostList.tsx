@@ -42,7 +42,7 @@ const PostList: React.FC<PostListProps> = ({
                     조회 {post.counts.views}
                   </span>{' '}
                   · 도움돼요 {post.counts.likes} · 댓글 {post.counts.comments}
-                  {post.answered ? ' · 답변완료' : ''}
+                  {post.answered ? <span className='text-hoverColor font-extrabold'> · 답변완료</span> : ''}
                 </p>
                 <div
                   style={{

@@ -95,7 +95,7 @@ const QuestionDetail: React.FC = () => {
     setShowAnswerInput(false);
   };
 
-  // View count 증가 함수
+  // 답변완료 처리
   const makeAnsweredTrue = (post: Post) => {
     if (post) {
       const updatedPost = {
