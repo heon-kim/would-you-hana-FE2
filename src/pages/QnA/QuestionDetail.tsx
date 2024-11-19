@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, message } from 'antd';
@@ -101,7 +100,6 @@ const QuestionDetail: React.FC = () => {
   const handlePostDelete = () => {
     console.log(postId);
     deletePost(Number(postId));
-    deleteAllComments(postId);
     navigate('/qna');
   }
 
