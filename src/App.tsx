@@ -31,6 +31,7 @@ import Chatbot from "./components/Chatbot";
 import CommunityDetail from "./pages/Community/CommunityDetail";
 import SetDistrict from "./pages/MyPage/SetDistrict";
 
+
 function App() {
   return (
     <ConfigProvider
@@ -38,6 +39,11 @@ function App() {
         token: {
           colorPrimary: "#008485",
         },
+        components:{
+          Menu:{
+            itemSelectedBg: "#ffffff",
+          }
+        }
       }}
     >
       <Router>
