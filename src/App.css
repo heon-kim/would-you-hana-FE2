@@ -19,3 +19,33 @@
 .ant-input {
   font-weight: 500; /* 모든 input에 500 적용 */
 }
+
+/* 부드러운 파도 애니메이션 */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+/* 아바타 부드러운 상하 떠오름 */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* 진행률 바 팝업 효과 */
+@keyframes progressPop {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
