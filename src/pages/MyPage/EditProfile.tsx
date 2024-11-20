@@ -76,7 +76,7 @@ const EditProfile: React.FC = () => {
   };
 
   return (
-    <div style={{ width: '100%', paddingLeft: '5%', paddingRight: '15%', paddingTop: '5%', paddingBottom: '5%' }}>
+    <>
       <div style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '5%' }}>개인정보 수정</div>
       <Form
         layout="horizontal"
@@ -134,7 +134,7 @@ const EditProfile: React.FC = () => {
           저장
         </Button>
       </Form>
-    </div>
+    </>
   );
 };
 

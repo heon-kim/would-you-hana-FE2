@@ -24,11 +24,7 @@ const Likes: React.FC = () => {
   };
 
   return (
-    <div
-      style={{
-        padding: '5%',
-      }}
-    >
+    <>
       <div
         style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}
       >
@@ -43,7 +39,7 @@ const Likes: React.FC = () => {
         onPageChange={handlePageChange}
         onPostClick={handlePostClick}
       />
-    </div>
+    </>
   );
 };
 

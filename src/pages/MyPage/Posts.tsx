@@ -28,11 +28,7 @@ const Posts: React.FC = () => {
   };
 
   return (
-    <div
-      style={{
-        padding: '5%',
-      }}
-    >
+    <>
       <div
         style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}
       >
@@ -53,7 +49,7 @@ const Posts: React.FC = () => {
         <img src={icon_logo} className='w-20 h-22'></img>
       </div>}
       
-    </div>
+    </>
   );
 };
 

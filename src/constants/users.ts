@@ -17,4 +17,6 @@ export interface User {
     name: string;
     branchName: string;
     interests: string;
+    photo?: string;
+    desc?: string;
   }
