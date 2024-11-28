@@ -35,19 +35,19 @@ const Activity: React.FC = () => {
             내 정보
           </div>
           <div
-            style={{ paddingTop:'30px', display: 'flex', gap: '10px', justifyContent:'space-between', alignItems:'center', fontSize: '16px'}}
+            style={{ paddingTop:'30px', display: 'flex', gap: '10px', justifyContent:'space-between', alignItems:'center'}}
           >
             <div style={{width:'100%', display:'flex', flexDirection:'column', alignItems:'center', gap:'18px'}}>
-              <HeartOutlined /> 
-              <p>{userRole=='C'?'좋아요':'도움돼요'} <span id="likes-count" className='text-mainColor'>53</span></p>
+              <HeartOutlined style={{fontSize: '20px'}}/> 
+              <p style={{fontSize: '16px'}}>{userRole=='C'?'좋아요':'도움돼요'} <span id="likes-count" className='text-mainColor'>53</span></p>
             </div>
             <div style={{width:'100%', display:'flex', flexDirection:'column', alignItems:'center', gap:'18px'}}>
-              <MessageOutlined /> 
-              <p>답변수 <span id="answers-count" className='text-mainColor'>5</span></p>
+              <MessageOutlined style={{fontSize: '20px'}}/> 
+              <p style={{fontSize: '16px'}}>답변수 <span id="answers-count" className='text-mainColor'>5</span></p>
             </div>
             <div style={{width:'100%', display:'flex', flexDirection:'column', alignItems:'center', gap:'18px'}}>
-              <CommentOutlined /> 
-              <p>댓글수 <span id="comments-count" className='text-mainColor'>34</span></p>
+              <CommentOutlined style={{fontSize: '20px'}}/> 
+              <p style={{fontSize: '16px'}}>댓글수 <span id="comments-count" className='text-mainColor'>34</span></p>
             </div>
           </div>
         </div>
