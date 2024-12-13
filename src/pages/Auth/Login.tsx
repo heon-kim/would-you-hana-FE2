@@ -6,10 +6,19 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../../hoc/actions';
 import store from '../../hoc/store';
+import { AxiosResponse } from 'axios';
+import { request } from '../../hoc/request'
 
 interface loginForm {
   email: string;
   password: string;
+}
+
+interface SignInReturnDto {
+  token: string;
+  email: string;
+  role: string;
+  location: string;
 }
 
 const Login: React.FC = () => {
@@ -25,41 +34,47 @@ const Login: React.FC = () => {
     }
   }, [navigate]);
 
-  const handleUserLogin = (values: loginForm) => {
+  const handleUserLogin = async (values: loginForm) => {
     const { email, password } = values;
-    const storedUser = findUser(email);
-    if (!storedUser || email !== storedUser.email) {
-      message.warning('존재하지 않는 회원입니다.');
-      return;
-    }
 
-    if (password === storedUser.password) {
-      const token: string = 'generatedAuthToken';
-      const role: string = userType;
-      const location: string = storedUser.location;
-      console.log('Dispatching loginSuccess with:', {
-        token,
-        email,
-        role,
-        location,
+    try {
+      // 백엔드로 로그인 요청 보내기
+      const response: AxiosResponse<SignInReturnDto> = await request({
+        method: 'POST',
+        url: 'http://localhost:8080/members/signIn',
+        data: { email, password }
       });
-      dispatch(loginSuccess(token, email, role, location));
+      const { token, email: returnedEmail, role, location } = response.data;
 
-      message.success('로그인 성공!');
-      // 지역에 따라 내비게이션 경로 설정 => 모든 구로 확장해야함
-      if (location.includes('광진')) {
-        navigate('/gwangjin');
-      } else if (location.includes('서초')) {
-        navigate('/seocho');
-      } else if (location.includes('성동')) {
-        navigate('/seongdong');
-      } else if (location.includes('강남')) {
-        navigate('/gangnam');
+      if (token && location) {
+        // Redux 상태 업데이트
+        console.log('Dispatching loginSuccess with:', {
+          token: token,
+          email: returnedEmail,
+          role: role,
+          location: location,
+        });
+        dispatch(loginSuccess(token, email, role, location));
+
+        // 메시지 및 네비게이션 처리
+        message.success('로그인 성공!');
+        if (location.includes('광진')) {
+          navigate('/gwangjin');
+        } else if (location.includes('서초')) {
+          navigate('/seocho');
+        } else if (location.includes('성동')) {
+          navigate('/seongdong');
+        } else if (location.includes('강남')) {
+          navigate('/gangnam');
+        } else {
+          navigate('/');
+        }
       } else {
-        navigate('/');
+        message.error('로그인 실패: 올바른 정보를 확인하세요.');
       }
-    } else {
-      message.warning('비밀번호가 잘못되었습니다.');
+    } catch (error) {
+      console.error('Login error:', error);
+      message.error('로그인에 실패했습니다. 이메일과 비밀번호를 확인하세요.');
     }
   };
 
