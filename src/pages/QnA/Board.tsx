@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // useHistory import 추가
 import HotPosts from '../../components/HotPost';
 import Category from '../../components/Category';
@@ -8,6 +8,8 @@ import PostRegisterButton from '../../components/PostRegisterButton';
 import { getPosts } from '../../utils/postStorage';
 import { Post } from '../../constants/posts';
 import BankerList from '../../components/BankerList';
+import { request } from '../../hoc/request'
+import { AxiosResponse } from 'axios';
 
 const Board: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,6 +21,51 @@ const Board: React.FC = () => {
   const navigate = useNavigate();
 
   const posts = getPosts();
+  interface QnaListDTO {
+    questionId: number;
+    customerId: number;
+    categoryId: number;
+    title: string;
+    location: string;
+    createdAt: string; // LocalDateTime은 ISO 8601 문자열로 처리됨
+    commentCount: number;
+    likeCount: number;
+    scrapCount: number;
+    viewCount: number;
+  }
+
+
+  const [data, setData] = useState<QnaListDTO[]>([]); // QnaListDTO 배열 타입 지정
+
+
+  // 데이터 가져오기 함수
+  const getData = async () => {
+
+    try {
+      const response: AxiosResponse<QnaListDTO[]> = await request({
+        method: 'GET',
+        url: 'http://localhost:8080/qnalist',
+      });
+
+      if (response && response.data) {
+        console.log('Response Data: ', response.data);
+        setData(response.data);
+      } else {
+
+        console.error('Error fetching data: response.data is undefined');
+      }
+    } catch (err) {
+      console.error('Error fetching data:', err);
+
+    }
+  }
+
+
+  // 컴포넌트가 마운트될 때 데이터 가져오기
+  useEffect(() => {
+    getData();
+  }, []);
+
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
@@ -80,11 +127,11 @@ const Board: React.FC = () => {
         style={{
           display: 'flex',
           flexDirection: 'row',
-          gap:'20px',
-          width:'100%'
+          gap: '20px',
+          width: '100%'
         }}
       >
-        <div style={{ width: '75%'}}>
+        <div style={{ width: '75%' }}>
           <div style={{ marginBottom: '25px' }}>
             <Category onSelectCategory={handleCategoryChange} />
           </div>
@@ -141,7 +188,7 @@ const Board: React.FC = () => {
           />
         </div>
 
-        <div style={{ width:'30%', display:'flex', flexDirection:'column', gap:'25px' }}>
+        <div style={{ width: '30%', display: 'flex', flexDirection: 'column', gap: '25px' }}>
           <PostRegisterButton />
           <BankerList />
         </div>
