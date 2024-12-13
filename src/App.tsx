@@ -27,7 +27,6 @@ import CommunityRegister from './pages/Community/CommunityRegister';
 import UserRegister from "./pages/Auth/UserRegister";
 import BankerRegister from './pages/Auth/BankerRegister';
 import LandingForRegister from './pages/Auth/LandingForRegister';
-import Chatbot from "./components/Chatbot";
 import CommunityDetail from "./pages/Community/CommunityDetail";
 import SetDistrict from "./pages/MyPage/SetDistrict";
 
@@ -75,7 +74,6 @@ function App() {
             <Route path="/gwangjin" element={<Gwangjin />}></Route>
             <Route path="/seocho" element={<Seocho />}></Route>
             <Route path="/bankerProfile" element={<BankerProfile />}></Route>
-            <Route path="/chatbot" element={<Chatbot />}></Route>
 
             {/* Error */}
             <Route path="/404" element={<NotFound />} />
