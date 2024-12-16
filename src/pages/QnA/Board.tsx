@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HotPosts from '../../components/board/HotPosts/HotPosts';
 import Category from '../../components/board/Category/Category';
@@ -9,6 +9,8 @@ import SearchBar from '../../components/board/SearchBar/SearchBar';
 import SortButtons from '../../components/board/SortButtons/SortButtons';
 import { getPosts } from '../../utils/postStorage';
 import { Post } from '../../types/post';
+import { AxiosResponse } from 'axios';
+import { request } from '../../hoc/request'
 
 const POSTS_PER_PAGE = 5;
 
@@ -116,7 +118,7 @@ const Board: React.FC = () => {
           <div className="mb-6">
             <Category onSelectCategory={handleCategoryChange} />
           </div>
-          
+
           <div className="mb-6">
             <HotPosts />
           </div>
