@@ -1,7 +1,7 @@
 import React from 'react';
-import IconAnnouncement from '../assets/img/icon_notice.png';
-import IconWouldYouHana from '../assets/img/would_you_hana.png';
-import { getUserLocation } from '../hoc/request';
+import IconAnnouncement from '../../../assets/img/icon_notice.png';
+import IconWouldYouHana from '../../../assets/img/would_you_hana.png';
+import { getUserLocation } from '../../../hoc/request';
 
 const CommunityNotice: React.FC = () => {
   const location = getUserLocation();

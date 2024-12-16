@@ -2,10 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   Modal,
   Calendar,
-  Col,
-  Radio,
-  Row,
-  Select,
   Button,
   Typography,
   message
@@ -16,10 +12,8 @@ import type { CalendarProps } from 'antd';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import dayLocaleData from 'dayjs/plugin/localeData';
-import moment from 'moment';
 
 import 'dayjs/locale/zh-cn';
-import { current } from '@reduxjs/toolkit';
 
 dayjs.extend(dayLocaleData);
 
@@ -75,7 +69,7 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
     setSelectedTime(time);
   };
 
-  const onDateSelect = (date) => {
+  const onDateSelect = (date: Dayjs) => {
     // 선택된 날짜를 'YYYY-MM-DD' 형식으로 저장
     setSelectedDate(date.format('YYYY-MM-DD'));
   };

@@ -1,4 +1,4 @@
-import { Post } from '../constants/posts';
+import { Post } from '../types/post';
 
 const LOCAL_STORAGE_KEY = 'community_posts';
 
@@ -19,12 +19,4 @@ export const saveCommunityPost = (post: Post) => {
 export const communityPostCount = (): number => {
   const posts = getCommunityPosts();
   return posts.length;
-};
-
-const communityPostExists = (id: number) => {
-  return getCommunityPosts().some((post) => post.id === id);
-};
-
-const findCommunityPost = (id: number) => {
-  return getCommunityPosts().find((post) => post.id === id);
 };

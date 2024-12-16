@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { getPosts } from '../../utils/postStorage';
-import { Post } from '../../constants/posts';
-import PostList from '../../components/PostList';
+import { Post } from '../../types/post';
+import PostList from '../../components/board/PostList/PostList';
 import { useNavigate } from 'react-router-dom';
 
 const Likes: React.FC = () => {

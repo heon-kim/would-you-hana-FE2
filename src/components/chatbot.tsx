@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Draggable from "react-draggable";
-import "../styles/chatbot.css";
 import img_chatbot from "../assets/img/img_chatbot.png";
 import IconSend from "../assets/img/icon_send.png";
 import IconClose from "../assets/img/icon_close.svg";
@@ -28,8 +27,8 @@ const Chatbot: React.FC<ChatbotProps> = ({ onClose }) => {
     { sender: "bot", text: "무엇을 도와드릴까요?", time: getCurrentTime() },
   ]);
   const [input, setInput] = useState("");
-  const [typingMessage, setTypingMessage] = useState<string>(""); // 타이핑 중인 메시지
-  const [isTyping, setIsTyping] = useState<boolean>(false); // 타이핑 애니메이션 상태
+  const [typingMessage, setTypingMessage] = useState<string>("");
+  const [isTyping, setIsTyping] = useState<boolean>(false);
 
   const handleSend = async () => {
     if (input.trim() === "") return;
@@ -80,58 +79,79 @@ const Chatbot: React.FC<ChatbotProps> = ({ onClose }) => {
 
   return (
     <Draggable>
-      <div className="chatbot-container" style={{ zIndex: 2000 }}>
-        <div className="chatbot-header">
+      <div className="w-[380px] bg-[#f5f5f5] rounded-2xl font-sans shadow-lg relative z-[2000]">
+        <div className="flex justify-between items-center px-4 py-3 bg-gradient-to-r from-[#1A7CFF] via-[#7DE3EC] to-[#E1F4C0] text-white font-bold text-base rounded-t-2xl">
           <h3>우주하나 챗봇</h3>
-          <button className="close-button" onClick={onClose}>
-            <img src={IconClose} />
+          <button onClick={onClose}>
+            <img src={IconClose} alt="Close" />
           </button>
         </div>
-        <div className="chatbot-content">
+
+        <div className="h-[430px] p-2.5 bg-white overflow-y-auto font-light">
           {messages.map((message, index) => (
-            <div key={index} className={`chat-message ${message.sender}`}>
-              <div className="message-header">
+            <div
+              key={index}
+              className={`flex flex-col my-2.5 ${
+                message.sender === "bot" ? "items-start" : "items-end"
+              }`}
+            >
+              <div className="flex items-center">
                 {message.sender === "bot" && (
                   <>
                     <img
                       src={img_chatbot}
                       alt="별벗 이미지"
-                      className="bot-image"
+                      className="w-[37px] mr-1.5 rounded-full"
                     />
-                    <span className="bot-name">별벗</span>
+                    <span className="text-black font-bold text-sm mr-1.5">별벗</span>
                   </>
                 )}
-                <span className="time">{message.time}</span>
+                <span className="text-xs text-gray-400">{message.time}</span>
               </div>
-              <p>{message.text}</p>
+              <p
+                className={`text-sm max-w-[80%] rounded-lg px-2.5 py-2 ml-[35px] ${
+                  message.sender === "bot"
+                    ? "bg-gray-100 text-black"
+                    : "bg-[#1F81FE] bg-opacity-80 text-white"
+                }`}
+              >
+                {message.text}
+              </p>
             </div>
           ))}
           {isTyping && (
-            <div className="chat-message bot">
-              <div className="message-header">
+            <div className="flex flex-col my-2.5 items-start">
+              <div className="flex items-center">
                 <img
                   src={img_chatbot}
                   alt="별벗 이미지"
-                  className="bot-image"
+                  className="w-[37px] mr-1.5 rounded-full"
                 />
-                <span className="bot-name">별벗</span>
-                <span className="time">{getCurrentTime()}</span>
+                <span className="text-black font-bold text-sm mr-1.5">별벗</span>
+                <span className="text-xs text-gray-400">{getCurrentTime()}</span>
               </div>
-              <p>{typingMessage}</p> {/* 현재 타이핑 중인 메시지 */}
+              <p className="text-sm max-w-[80%] rounded-lg px-2.5 py-2 ml-[35px] bg-gray-100">
+                {typingMessage}
+              </p>
             </div>
           )}
         </div>
-        <div className="chatbot-footer">
-          <div className="input-container">
+
+        <div className="bg-white p-2.5 rounded-b-2xl">
+          <div className="relative w-full">
             <input
               type="text"
               placeholder="무엇이든지 별벗에게 물어보세요!"
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              className="w-full px-4 py-2.5 pr-12 rounded-full bg-gray-100 text-sm outline-none text-black font-light"
             />
-            <button className="send-button" onClick={handleSend}>
-              <img src={IconSend} />
+            <button
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 bg-[#1F81FE] bg-opacity-80 text-white p-2 rounded-full w-[30px] h-[30px] flex items-center justify-center"
+              onClick={handleSend}
+            >
+              <img src={IconSend} alt="Send" />
             </button>
           </div>
         </div>

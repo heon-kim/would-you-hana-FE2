@@ -1,3 +1,24 @@
+import hwayangImg from '../assets/img/bank/hwayang.jpg';
+import seongsuImg from '../assets/img/bank/seongsu.png';
+import seouluuuuuupImg from '../assets/img/bank/seoulsuuuuuup.jpg';
+import markerImg from '../assets/img/mark.png';
+import markerAtmImg from '../assets/img/mark_atm.png';
+import iconLocation from '../assets/img/icon_location.svg';
+import iconLocationWhite from '../assets/img/icon_location_white.svg';
+
+export const BRANCH_IMAGES: Record<string, string> = {
+  '하나은행 화양동지점': hwayangImg,
+  '하나은행 성수역지점': seongsuImg,
+  '하나은행 서울숲지점': seouluuuuuupImg,
+};
+
+export const ICONS = {
+  MARKER: markerImg,
+  MARKER_ATM: markerAtmImg,
+  LOCATION: iconLocation,
+  LOCATION_WHITE: iconLocationWhite,
+};
+
 export const locations = [
   '강서구',
   '양천구',

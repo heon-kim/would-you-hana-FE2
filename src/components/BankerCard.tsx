@@ -12,7 +12,7 @@ interface BankerCardProps {
   branch: string;
 }
 
-const BankerCard: React.FC<BankerCardProps> = ({ name, title, description, tags, imageUrl, branch }) => {
+const BankerCard: React.FC<BankerCardProps> = ({ name, title, description, tags, imageUrl }) => {
   return (
     <Card style={{ flexGrow: 1, borderRadius: '20px', border: '1px solid #d3d3d3' }} bodyStyle={{ padding: 0 }}>
       <Row>

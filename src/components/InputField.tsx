@@ -5,7 +5,7 @@ interface InputFieldProps {
   type: string;
   placeholder: string;
   required: boolean;
-  value: string | number | null;
+  value: string | number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   showButton?: boolean;
   buttonLabel?: string;
@@ -31,7 +31,7 @@ const InputField: React.FC<InputFieldProps> = ({
         name={htmlFor}
         id={htmlFor}
         placeholder={placeholder}
-        value={value}
+        value={value ?? ''}
         onChange={onChange}
         required={required}
       />

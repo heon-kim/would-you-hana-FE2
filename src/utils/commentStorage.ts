@@ -1,25 +1,46 @@
+import { Comment } from '../types/comment';
 
-const getComments = () : Comment[] => {
-    const comments = localStorage.getItem('comments');
-    return comments ? JSON.parse(comments) : [];
-}
+const getComments = (postId: number): Comment[] => {
+  const comments = localStorage.getItem('comments');
+  const allComments = comments ? JSON.parse(comments) : {};
+  return allComments[postId] || [];
+};
 
-const saveComments = (comments : Comment[]) => {
-    localStorage.setItem('comments', JSON.stringify(comments));
-  };
-
-// 포스트 삭제시 cascade하게 댓글도 전부 삭제
-const deleteAllComments = (postId: string) => {
-    const comments = getComments();
-    console.log(comments);
-    delete comments[Number(postId)];
-    saveComments(comments);
+const saveComment = (comment: Comment) => {
+  const comments = localStorage.getItem('comments');
+  const allComments = comments ? JSON.parse(comments) : {};
   
-    // // 포스트가 삭제되었으면 새로 저장
-    // if (posts.length !== updatedPosts.length) {
-    //   savePosts(updatedPosts);
-    // } else {
-    //   console.error('Post not found');
-    // }
-}
-export {getComments, saveComments, deleteAllComments};
+  if (!allComments[comment.postId]) {
+    allComments[comment.postId] = [];
+  }
+  
+  allComments[comment.postId].push(comment);
+  localStorage.setItem('comments', JSON.stringify(allComments));
+};
+
+const deleteComment = (commentId: number) => {
+  const comments = localStorage.getItem('comments');
+  if (!comments) return;
+
+  const allComments = JSON.parse(comments);
+  
+  // 모든 게시글의 댓글 목록을 순회하며 해당 commentId를 찾아 삭제
+  Object.keys(allComments).forEach(postId => {
+    allComments[postId] = allComments[postId].filter(
+      (comment: Comment) => comment.id !== commentId
+    );
+  });
+
+  localStorage.setItem('comments', JSON.stringify(allComments));
+};
+
+const deleteAllComments = (postId: number) => {
+  const comments = localStorage.getItem('comments');
+  if (!comments) return;
+
+  const allComments = JSON.parse(comments);
+  delete allComments[postId];
+  localStorage.setItem('comments', JSON.stringify(allComments));
+};
+
+export { getComments, saveComment, deleteComment, deleteAllComments };

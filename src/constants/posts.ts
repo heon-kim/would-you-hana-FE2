@@ -1,27 +1,4 @@
-interface Counts {
-  views: number;
-  likes: number;
-  comments: number;
-  scraps: number;
-}
-
-interface Image {
-  name: string;
-  preview: string;
-}
-
-export interface Post {
-  id: number;
-  category: string;
-  title: string;
-  content: string;
-  author: string;
-  email: string;
-  createdAt: string;
-  answered: boolean;
-  counts: Counts;
-  images?: Image[];
-}
+import { CommunityPost } from '../types/community';
 
 export const Categories: string[] = [
   '예금/적금',
@@ -39,33 +16,6 @@ export const Categories: string[] = [
   '기타',
 ];
 
-export interface Comment {
-  id: number;
-  author: string;
-  authorEmail: string;
-  content: string;
-  createdAt: string;
-  certified: boolean;
-  likes: number;
-  liked: boolean;
-}
-
-export interface Reply {
-  id: number;
-  author: string;
-  authorEmail: string;
-  content: string;
-  createdAt: string;
-}
-
-export interface AnswerInterface {
-  id: number;
-  authorEmail: string;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export const CommunityCategories: string[] = [
   '저축',
   '소비',
@@ -77,4 +27,8 @@ export const CommunityCategories: string[] = [
   '신용점수 올리기',
   '세금/납부',
   '학자금대출',
+];
+
+export const CommunityData: CommunityPost[] = [
+  // ... 기존 데이터 유지
 ];

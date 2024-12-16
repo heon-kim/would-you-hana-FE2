@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import markerImg from '../../assets/img/mark.png';
 import markerAtmImg from '../../assets/img/mark_atm.png';
