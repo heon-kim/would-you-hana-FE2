@@ -1,7 +1,7 @@
 export interface DistrictData {
   name: string;
   keywords: string[];
-  logo: string;
+  logo: string | null;
   isRegulationArea?: boolean;
   hotPosts: Array<{
     type: string;
@@ -18,7 +18,7 @@ export interface DistrictData {
     content: string;
   }>;
   topBankers: Array<{
-    rank: '🥇' | '🥈' | '🥉';
+    rank: 1|2|3;
     name: string;
     level: string;
     activities: string;
