@@ -91,9 +91,8 @@ const Chatbot: React.FC<ChatbotProps> = ({ onClose }) => {
           {messages.map((message, index) => (
             <div
               key={index}
-              className={`flex flex-col my-2.5 ${
-                message.sender === "bot" ? "items-start" : "items-end"
-              }`}
+              className={`flex flex-col my-2.5 ${message.sender === "bot" ? "items-start" : "items-end"
+                }`}
             >
               <div className="flex items-center">
                 {message.sender === "bot" && (
@@ -109,11 +108,10 @@ const Chatbot: React.FC<ChatbotProps> = ({ onClose }) => {
                 <span className="text-xs text-gray-400">{message.time}</span>
               </div>
               <p
-                className={`text-sm max-w-[80%] rounded-lg px-2.5 py-2 ml-[35px] ${
-                  message.sender === "bot"
-                    ? "bg-gray-100 text-black"
-                    : "bg-[#1F81FE] bg-opacity-80 text-white"
-                }`}
+                className={`text-sm max-w-[80%] rounded-lg px-2.5 py-2 ml-[35px] ${message.sender === "bot"
+                  ? "bg-gray-100 text-black"
+                  : "bg-[#1F81FE] bg-opacity-80 text-white"
+                  }`}
               >
                 {message.text}
               </p>
@@ -156,8 +154,9 @@ const Chatbot: React.FC<ChatbotProps> = ({ onClose }) => {
           </div>
         </div>
       </div>
+      <div></div>
     </Draggable>
   );
 };
-
+//
 export default Chatbot;

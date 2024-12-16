@@ -17,7 +17,7 @@ import { relativeTime } from '../../utils/stringFormat';
 const QuestionDetail: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
   const navigate = useNavigate();
-  
+
   const [post, setPost] = useState<Post | null>(null);
   const [isAnswered, setIsAnswered] = useState(false);
   const [showAnswerInput, setShowAnswerInput] = useState(false);
@@ -130,7 +130,7 @@ const QuestionDetail: React.FC = () => {
                   </Button>
                 )}
                 {post.email === userEmail && (
-                  <Button 
+                  <Button
                     icon={<DeleteOutlined />}
                     onClick={handlePostDelete}
                   >
@@ -147,19 +147,19 @@ const QuestionDetail: React.FC = () => {
               <span>{relativeTime(+new Date(post.createdAt))}</span>
             </div>
           </div>
-          
+
           {isAnswered ? (
             <Answer answer={answers[postId]} />
           ) : (
             showAnswerInput && (
-              <AnswerInput 
+              <AnswerInput
                 onSubmitAnswer={handleAnswerSubmit}
                 onChatbotToggle={toggleChatbot}
               />
             )
           )}
-          
-          <Comments 
+
+          <Comments
             isAuthenticated={isAuthenticated}
           />
         </div>

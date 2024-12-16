@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { findBanker, findUser } from '../../utils/userStorage';
+import { findBanker } from '../../utils/userStorage';
 import { message, Radio, Form, Input, Button } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
@@ -59,13 +59,13 @@ const Login: React.FC = () => {
         // 메시지 및 네비게이션 처리
         message.success('로그인 성공!');
         if (location.includes('광진')) {
-          navigate('/gwangjin');
+          navigate('/district/gwangjin');
         } else if (location.includes('서초')) {
-          navigate('/seocho');
+          navigate('/district/seocho');
         } else if (location.includes('성동')) {
-          navigate('/seongdong');
+          navigate('/district/seongdong');
         } else if (location.includes('강남')) {
-          navigate('/gangnam');
+          navigate('/district/gangnam');
         } else {
           navigate('/');
         }
