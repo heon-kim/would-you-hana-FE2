@@ -1,4 +1,4 @@
-import { Post } from '../constants/posts';
+import { Post } from '../types/post';
 
 const LOCAL_STORAGE_KEY = 'posts';
 

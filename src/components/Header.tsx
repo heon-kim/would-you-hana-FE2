@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import logo from '../assets/img/logo.png';
 import userIcon from '../assets/img/icon_user.png';
 import locationIcon from '../assets/img/icon_location.svg';
@@ -46,12 +46,8 @@ const SearchInput: React.FC<{
 
 
   const navigateToLanding = (district: string) => {
-    console.log(district);
-    if (district === '광진구') {
-      navigate('/gwangjin');
-    }
-    else if (district === '서초구') {
-      navigate('/seocho');
+    if (district) {
+      navigate(`/district/${district}`);
     }else{
       navigate('/');
     }
@@ -96,7 +92,6 @@ function Header() {
 
   const isLoggedIn = useSelector((state: RootState) => state.auth.isAuthenticated);
   const userRole = useSelector((state: RootState) => state.auth.userRole);
-  const userLocation = useSelector((state: RootState) => state.auth.userLocation);
 
   const loggedUser = localStorage.getItem('userEmail');
   let user, banker;
@@ -150,7 +145,7 @@ function Header() {
               <Link to='/community'>커뮤니티</Link>
             </li>
             <li>
-              <Link to='/realty'>부동산</Link>
+              <Link to='/district/광진구'>우주하나</Link>
             </li>
             <li>
               <Link to='/findbank'>영업점 찾기</Link>

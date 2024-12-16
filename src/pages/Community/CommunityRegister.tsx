@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import necessary routing components
-import '../../App.css';
-import { Select, message, Image, Upload } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Select, message, Input, Button } from 'antd';
 import type { UploadFile, UploadProps } from 'antd';
 import { findUser } from '../../utils/userStorage';
-import { postCount, savePost } from '../../utils/postStorage';
+import { communityPostCount, saveCommunityPost } from '../../utils/communityPostStorage';
 import { getUserEmail } from '../../hoc/request';
 import { CommunityCategories } from '../../constants/posts';
-import { communityPostCount, saveCommunityPost } from '../../utils/communityPostStorage';
+import ImageUpload from '../../components/board/QuestionForm/ImageUpload';
 
-const getBase64 = (file: File) =>
-  new Promise<string>((resolve, reject) => {
+const { TextArea } = Input;
+
+const MAX_TITLE_LENGTH = 30;
+const MAX_CONTENT_LENGTH = 5000;
+
+const getBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result as string);
@@ -19,17 +22,16 @@ const getBase64 = (file: File) =>
   });
 
 const CommunityRegister: React.FC = () => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    title: '',
+    content: '',
+    category: '',
+  });
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
-  const [category, setCategory] = useState(''); // 분야 추가
-  const maxTitleLength = 30;
-  const maxContentLength = 5000;
-  const navigate = useNavigate();
 
-  // 로컬스토리지에서 파일 리스트 불러오기
   useEffect(() => {
     const storedFiles = localStorage.getItem('uploadedImages');
     if (storedFiles) {
@@ -37,21 +39,22 @@ const CommunityRegister: React.FC = () => {
     }
   }, []);
 
-  const saveToLocalStorage = (files: UploadFile[]) => {
-    localStorage.setItem('uploadedImages', JSON.stringify(files));
-  };
+  const handleInputChange = useCallback((
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  }, []);
 
-  const handlePreview = async (file: UploadFile) => {
+  const handlePreview = useCallback(async (file: UploadFile) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as File);
     }
     setPreviewImage(file.url || (file.preview as string));
     setPreviewOpen(true);
-  };
+  }, []);
 
-  const handleChange: UploadProps['onChange'] = async ({
-    fileList: newFileList,
-  }) => {
+  const handleChange: UploadProps['onChange'] = useCallback(async ({ fileList: newFileList }: { fileList: UploadFile[] }) => {
     if (newFileList.length > 5) {
       message.error('최대 5개의 이미지만 업로드할 수 있습니다.');
       return;
@@ -60,33 +63,34 @@ const CommunityRegister: React.FC = () => {
     const updatedFileList = await Promise.all(
       newFileList.map(async (file) => {
         if (!file.url && !file.preview && file.originFileObj) {
-          file.preview = await getBase64(file.originFileObj as File);
+          file.preview = await getBase64(file.originFileObj);
         }
         return file;
       })
     );
 
     setFileList(updatedFileList);
-    saveToLocalStorage(updatedFileList); // 로컬스토리지에 저장
-  };
+    localStorage.setItem('uploadedImages', JSON.stringify(updatedFileList));
+  }, []);
 
-  // 기존 CommunityRegister 컴포넌트 내용 중 handleRegister 함수 부분 수정
-const handleRegister = () => {
+  const handleRegister = useCallback(() => {
+    const { category, title, content } = formData;
+    
     if (!category || !title || !content) {
       message.error('모든 필드를 입력해주세요.');
       return;
     }
-  
+
     const userEmail = getUserEmail();
     const user = findUser(userEmail || '');
-    const nickname = user?.nickname;
-  
+    
     const postData = {
       id: communityPostCount(),
       category,
       title,
       content,
-      author: nickname || '',
+      author: user?.nickname || '',
+      email: userEmail || '',
       createdAt: new Date().toISOString(),
       answered: false,
       counts: {
@@ -100,163 +104,94 @@ const handleRegister = () => {
         preview: file.preview || '',
       })),
     };
-  
-    saveCommunityPost(postData); // 로컬 스토리지에 게시글 저장
+
+    saveCommunityPost(postData);
     message.success('게시글이 등록되었습니다!');
     navigate('/community');
-  };
-
-  const uploadButton = (
-    <div>
-      <PlusOutlined />
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </div>
-  );
+  }, [formData, fileList, navigate]);
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'start',
-        width: '100%',
-        paddingLeft: '25%',
-        paddingRight: '25%',
-        alignSelf: 'center',
-      }}
-    >
-      <h1
-        style={{
-          color: 'black',
-          fontSize: '30px',
-          lineHeight: '1.2',
-          textAlign: 'left',
-          marginTop: '30px',
-          marginBottom: '40px',
-          fontWeight: 'bold',
-        }}
-      >
+    <div className="w-full px-[25%] flex flex-col items-start">
+      <h1 className="text-3xl font-bold mt-8 mb-10 leading-tight">
         <p>
-          <br />
-          <span style={{ color: '#008485' }}> 내 주변의 커뮤니티</span>에
-          <br /> 글을 남겨보세요!
+          <span className="text-mainColor">내 주변의 커뮤니티</span>에<br />
+          글을 남겨보세요!
         </p>
-        
       </h1>
+
       <Select
         showSearch
-        style={{ width: '100%', height: '50px' }}
-        placeholder='카테고리 선택'
-        optionFilterProp='label'
-        onChange={(value) => setCategory(value)} // 분야 상태 설정
-        options={CommunityCategories.map((category) => {
-          return { value: category, label: category };
-        })}
+        className="w-full h-[50px]"
+        placeholder="카테고리 선택"
+        optionFilterProp="label"
+        onChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
+        options={CommunityCategories.map(category => ({
+          value: category,
+          label: category
+        }))}
       />
-      <div
-        className='mx-100 mx-auto'
-        style={{ width: '100%', marginTop: '40px' }}
-      >
-        <div className='mb-6'>
-          <label className='block mb-2 font-bold'>제목</label>
-          <div className='relative'>
-            <input
-              type='text'
-              placeholder='제목을 작성해 주세요.'
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              maxLength={maxTitleLength}
-              className='w-full border border-[#D9D9D9] rounded-md p-3 focus:outline-none focus:border-gray-500'
-              style={{ fontWeight: '400' }}
+
+      <div className="w-full mt-10">
+        <div className="mb-6">
+          <label className="block mb-2">제목</label>
+          <div className="relative">
+            <Input
+              name="title"
+              placeholder="제목을 작성해 주세요."
+              value={formData.title}
+              onChange={handleInputChange}
+              maxLength={MAX_TITLE_LENGTH}
+              className="rounded-md h-[50px]"
+              showCount
             />
-            <span className='absolute bottom-2 right-3 text-gray-500 text-sm'>{`${title.length}/${maxTitleLength}`}</span>
           </div>
         </div>
 
-        <div className='mb-4'>
-          <label className='block mb-2 font-bold'>내용</label>
-          <div className='relative'>
-            <textarea
-              placeholder={`· 커뮤니티 가이드라인을 준수해주세요.\n· 개인정보(본명, 전화 번호 등)를 쓰면 안 돼요.\n`}
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              maxLength={maxContentLength}
-              className='w-full border border-[#D9D9D9] rounded-md p-3 h-52 resize-none focus:outline-none focus:border-gray-500'
-              style={{ fontWeight: '400' }}
-            />
-            <span className='absolute bottom-2 right-3 text-gray-500 text-sm'>{`${content.length}/${maxContentLength}`}</span>
-          </div>
+        <div className="mb-4">
+          <label className="block mb-2">내용</label>
+          <TextArea
+            name="content"
+            placeholder={`· 커뮤니티 가이드라인을 준수해주세요.\n· 개인정보(본명, 전화 번호 등)를 쓰면 안 돼요.`}
+            value={formData.content}
+            onChange={handleInputChange}
+            maxLength={MAX_CONTENT_LENGTH}
+            className="rounded-md"
+            autoSize={{ minRows: 8, maxRows: 12 }}
+            showCount={{
+              formatter: ({ count, maxLength }) => `${count}/${maxLength}`
+            }}
+          />
         </div>
 
-        <div className='mb-6'>
-          <div className='relative'>
-            <Upload
-              //서버로 이미지 업로드
-              action='https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload'
-              listType='picture-card'
-              fileList={fileList}
-              onPreview={handlePreview}
-              onChange={handleChange}
-            >
-              {fileList.length >= 5 ? null : uploadButton}
-            </Upload>
-            {previewImage && (
-              <Image
-                wrapperStyle={{ display: 'none' }}
-                preview={{
-                  visible: previewOpen,
-                  onVisibleChange: (visible) => setPreviewOpen(visible),
-                  afterOpenChange: (visible) => !visible && setPreviewImage(''),
-                }}
-                src={previewImage}
-              />
-            )}
-          </div>
+        <div className="mb-6">
+          <ImageUpload
+            fileList={fileList}
+            onPreview={handlePreview}
+            onChange={handleChange}
+            previewImage={previewImage}
+            previewOpen={previewOpen}
+            onPreviewClose={() => setPreviewImage('')}
+          />
         </div>
       </div>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: '100%',
-          height: 'auto',
-          alignItems: 'start',
-          justifyContent: 'start',
-          padding: '25px',
-          marginTop: '20px',
-          backgroundColor: '#F3F5F7',
-          borderRadius: '5px',
-        }}
-      >
-        <p style={{ marginBottom: '10px' }}>이런 경우 글이 삭제될 수 있어요.</p>
-        <div style={{color:'#7E8082', fontSize:'15px', fontWeight:'300', display:'flex', flexDirection:'column', gap:'5px'}}>
-          <p>
-            • 개인정보(이름, 전화번호, 주민등록번호, 읍/면/동 이하 상세 주소
-            등)가 있는 경우
-          </p>
+
+      <div className="w-full bg-[#F3F5F7] p-6 rounded-md mt-5">
+        <p className="mb-2.5">이런 경우 글이 삭제될 수 있어요.</p>
+        <div className="text-[#7E8082] text-sm space-y-1.5">
+          <p>• 개인정보(이름, 전화번호, 주민등록번호, 읍/면/동 이하 상세 주소 등)가 있는 경우</p>
           <p>• 비방, 욕설이 포함된 글을 작성한 경우</p>
-          <p>
-          • 유해하거나 예정된 랜딩 페이지로 연결되지 않는 링크를 공유한 경우
-          </p>
+          <p>• 유해하거나 예정된 랜딩 페이지로 연결되지 않는 링크를 공유한 경우</p>
         </div>
       </div>
-      <button
+
+      <Button
+        type="primary"
         onClick={handleRegister}
-        className='bg-mainColor text-white rounded-md transition-colors duration-200 hover:bg-hoverColor'
-        style={{
-          width: '100%',
-          height: '50px',
-          textAlign: 'center',
-          color: 'white',
-          marginTop: '40px',
-          marginBottom: '40px',
-          fontWeight: '300',
-          borderRadius: '10px',
-        }}
+        className="w-full h-[50px] mt-10 mb-10 font-medium"
+        size="large"
       >
         게시물 등록
-      </button>
+      </Button>
     </div>
   );
 };

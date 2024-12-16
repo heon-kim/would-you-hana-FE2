@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { getPosts, getPostsByEmail } from '../../utils/postStorage';
-import { Post } from '../../constants/posts';
-import PostList from '../../components/PostList';
+import { getPostsByEmail } from '../../utils/postStorage';
+import { Post } from '../../types/post';
+import PostList from '../../components/board/PostList/PostList';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../hoc/store';
@@ -14,8 +14,7 @@ const Posts: React.FC = () => {
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const userEmail = useSelector((state: RootState) => state.auth.userEmail);
-
-  const posts: Post[] = getPostsByEmail(userEmail);
+  const posts: Post[] = userEmail ? getPostsByEmail(userEmail) : [];
   // userId == loggedUserId인 post 필터링
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
 

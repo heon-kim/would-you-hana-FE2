@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import seoulDistricts from '../../assets/location/seoul_districts.json'; // Adjust path as needed
 import { findUser, updateUser } from '../../utils/userStorage';

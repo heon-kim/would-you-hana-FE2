@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button, Input, Radio } from 'antd';
 import { LikeOutlined, DownOutlined } from '@ant-design/icons';
-import userIcon from '../../assets/img/icon_user.png';
-import { relativeTime } from '../../utils/stringFormat';
-import { findUser } from '../../utils/userStorage';
-import { Comment, Reply } from '../../constants/posts';
-import { findPost, updatePost } from '../../utils/postStorage';
+import userIcon from '../../../../assets/img/icon_user.png';
+import { relativeTime } from '../../../../utils/stringFormat';
+import { findUser } from '../../../../utils/userStorage';
+import { Comment, Reply } from '../../../../types/comment';
+import { findPost, updatePost } from '../../../../utils/postStorage';
+import { Post } from '../../../../types/post';
 
 const { TextArea } = Input;
 
@@ -14,7 +15,7 @@ const CommentForm: React.FC<{
   onSubmit: (content: string) => void;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  isAuthenticated : boolean;
+  isAuthenticated: boolean;
 }> = ({ onSubmit, value, onChange, isAuthenticated }) => (
   <form
     className="flex gap-2"
@@ -23,40 +24,39 @@ const CommentForm: React.FC<{
       onSubmit(value);
     }}
   >
-    {isAuthenticated === true ? 
+    {isAuthenticated === true ? (
       <>
-      <TextArea
-      showCount
-      autoSize
-      maxLength={300}
-      allowClear
-      value={value}
-      onChange={onChange}
-      placeholder="댓글을 입력하세요"
-      style={{alignItems:'center'}}
-      />
-      <Button size="large"  htmlType="submit">
-        댓글 달기
-      </Button>
-      </>
-       : 
-       <>
-       <TextArea
-        showCount
-        autoSize
-        maxLength={300}
-        allowClear
-        disabled
-        value={value}
-        onChange={onChange}
-        placeholder="로그인 후 댓글을 달아보세요."
-      />
-        <Button size="large"  htmlType="submit" disabled>
+        <TextArea
+          showCount
+          autoSize
+          maxLength={300}
+          allowClear
+          value={value}
+          onChange={onChange}
+          placeholder="댓글을 입력하세요"
+          style={{ alignItems: 'center' }}
+        />
+        <Button size="large" htmlType="submit">
           댓글 달기
         </Button>
-       </>}
-    
-    
+      </>
+    ) : (
+      <>
+        <TextArea
+          showCount
+          autoSize
+          maxLength={300}
+          allowClear
+          disabled
+          value={value}
+          onChange={onChange}
+          placeholder="로그인 후 댓글을 달아보세요."
+        />
+        <Button size="large" htmlType="submit" disabled>
+          댓글 달기
+        </Button>
+      </>
+    )}
   </form>
 );
 
@@ -93,7 +93,7 @@ const CommentItem: React.FC<{
   replyContent: string;
   onChangeReplyContent: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onLike: () => void;
-  isAuthenticated : boolean;
+  isAuthenticated: boolean;
 }> = ({
   comment,
   replies,
@@ -138,8 +138,9 @@ const CommentItem: React.FC<{
           </Button>
           {isAuthenticated && (
             <Button type="text" onClick={onToggleReply}>
-            {isReplying ? '취소' : '답글쓰기'}
-          </Button>)}
+              {isReplying ? '취소' : '답글쓰기'}
+            </Button>
+          )}
         </div>
         {replies.length > 0 && (
           <div
@@ -183,18 +184,14 @@ const CommentItem: React.FC<{
   </div>
 );
 
-const Comments: React.FC<{isAuthenticated : boolean}> = ({isAuthenticated}) => {
+const Comments: React.FC<{isAuthenticated: boolean}> = ({isAuthenticated}) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [replies, setReplies] = useState<{
     [key: number]: { [key: number]: Reply[] };
   }>({});
   const [newComment, setNewComment] = useState<string>('');
-  const [replyContent, setReplyContent] = useState<{ [key: number]: string }>(
-    {}
-  );
-  const [showReplies, setShowReplies] = useState<{ [key: number]: boolean }>(
-    {}
-  );
+  const [replyContent, setReplyContent] = useState<{ [key: number]: string }>({});
+  const [showReplies, setShowReplies] = useState<{ [key: number]: boolean }>({});
   const [isReplying, setIsReplying] = useState<{ [key: number]: boolean }>({});
   const [sortBy, setSortBy] = useState<'latest' | 'likes'>('latest');
 
@@ -221,20 +218,20 @@ const Comments: React.FC<{isAuthenticated : boolean}> = ({isAuthenticated}) => {
     allComments[postId] = updatedComments;
     localStorage.setItem('comments', JSON.stringify(allComments));
     const post = findPost(Number(postId));
-    updateCommentCount(post, updatedComments);
+    if (post) {
+      updateCommentCount(post, updatedComments);
+    }
   };
 
-  // 댓글 개수 업데이트 함수
   const updateCommentCount = (post: Post, updatedComments: Comment[]) => {
     if (post) {
       const updatedPost = {
         ...post,
         counts: {
           ...post.counts,
-          comments: updatedComments.length, // views 증가
+          comments: updatedComments.length,
         },
       };
-      // 로컬 스토리지에 저장된 post 데이터 업데이트
       updatePost(updatedPost);
     }
   };
@@ -262,6 +259,7 @@ const Comments: React.FC<{isAuthenticated : boolean}> = ({isAuthenticated}) => {
         certified: false,
         likes: 0,
         liked: false,
+        postId: postId,
       };
       const updatedComments = [...comments, newCommentData];
       setComments(updatedComments);
@@ -329,7 +327,7 @@ const Comments: React.FC<{isAuthenticated : boolean}> = ({isAuthenticated}) => {
     );
   };
 
-  return (  
+  return (
     <div className="comment flex flex-col gap-7">
       <CommentForm
         onSubmit={addComment}

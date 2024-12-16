@@ -3,6 +3,7 @@ export interface LoginSuccessPayload {
     userEmail: string;
     userRole : string;
     location: string;
+    nickname?: string;
 }
 
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -19,15 +20,20 @@ interface LogoutAction {
 
 export type AuthActionTypes = LoginSuccessAction | LogoutAction;
 
-export const loginSuccess = (token: string, userEmail: string, userRole : string, location: string): LoginSuccessAction => {
-    localStorage.setItem('authToken', token);
-    localStorage.setItem('userEmail', userEmail);
-    localStorage.setItem('userRole', userRole);
-    localStorage.setItem('userLocation', location);
-    return {
-        type: LOGIN_SUCCESS,
-        payload: { token, userEmail, userRole, location }
-    };
+export const loginSuccess = (
+  token: string, 
+  userEmail: string, 
+  userRole: string, 
+  location: string,
+): LoginSuccessAction => {
+  localStorage.setItem('authToken', token);
+  localStorage.setItem('userEmail', userEmail);
+  localStorage.setItem('userRole', userRole);
+  localStorage.setItem('userLocation', location);
+  return {
+    type: LOGIN_SUCCESS,
+    payload: { token, userEmail, userRole, location }
+  };
 };
 
 export const logout = (): LogoutAction => {

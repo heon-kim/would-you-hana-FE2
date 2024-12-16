@@ -1,4 +1,4 @@
-import chatbotImg from '../../assets/img/img_chatbot.png';
+import chatbotImg from '../../../../assets/img/img_chatbot.png';
 import { Button, Input, Tooltip } from 'antd';
 import { useState } from 'react';
 

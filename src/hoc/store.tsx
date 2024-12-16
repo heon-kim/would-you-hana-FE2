@@ -8,6 +8,7 @@ interface AuthState {
     userEmail: string | null;
     userRole: string | null;
     userLocation: string | null;
+    nickname: string | null;
 }
 
 // 초기 상태를 `localStorage`에서 불러오기
@@ -17,6 +18,7 @@ const initialAuthState: AuthState = {
     userEmail: localStorage.getItem('userEmail') || null,
     userRole: localStorage.getItem('userRole') || null,
     userLocation: localStorage.getItem('userLocation') || null,
+    nickname: localStorage.getItem('nickname') || null,
 };
 
 
@@ -39,6 +41,7 @@ const authReducer = (state = initialAuthState, action: AuthActionTypes): AuthSta
                 userEmail: action.payload.userEmail,
                 userRole: action.payload.userRole,
                 userLocation: action.payload.location,
+                nickname: action.payload.nickname || null,
             };
         case LOGOUT:
             return {
@@ -47,7 +50,8 @@ const authReducer = (state = initialAuthState, action: AuthActionTypes): AuthSta
                 authToken: null,
                 userEmail: null,
                 userRole: null,
-                userLocation: null
+                userLocation: null,
+                nickname: null,
             };
         default:
             return state;

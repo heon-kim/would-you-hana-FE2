@@ -10,7 +10,7 @@ import { RootState } from '../../hoc/store';
 
 import '../../App.css';
 
-import SearchInput from '../../components/SearchInput';
+import SearchInput from '../../components/common/SearchInput';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -87,21 +87,22 @@ const Home: React.FC = () => {
         <Row
           ref={firstRowRef}
           gutter={[16, 16]}
-          style={{ backgroundColor: '#DDFCD2', height: '600px' }}
+          className='h-dvh bg-[#DDFCD2]'
         >
           {/* Carousel Column */}
 
           <Col span={12} style={{
-            marginTop: '100px',
             opacity: showFirstRow ? 1 : 0,
             transform: showFirstRow ? 'translateX(0)' : 'translateX(-50px)',
-            transition: 'all 1s ease-in-out'
+            transition: 'all 1s ease-in-out',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
           }}>
             <img
 
               src={notebookUser}
               alt="notebookUser"
-              style={{ marginLeft: '10%', marginTop: '15px' }}
               width={470}
 
             ></img>
@@ -148,7 +149,7 @@ const Home: React.FC = () => {
         <Row
           ref={secondRowRef}
           gutter={[16, 16]}
-          style={{ backgroundColor: '#84D5B2', height: '500px', marginTop: '30px' }}
+          className='h-dvh bg-[#84D5B2]'
         >
 
           <Col span={12} style={{
@@ -207,7 +208,7 @@ const Home: React.FC = () => {
         <Row
           ref={thirdRowRef}
           gutter={[16, 16]}
-          style={{ backgroundColor: '#B7E4FF', height: '500px', marginTop: '30px' }}
+          className='h-dvh bg-[#B7E4FF]'
         >
           {/* Carousel Column */}
           <Col span={12} style={{
@@ -220,7 +221,7 @@ const Home: React.FC = () => {
               src={homeCommunity}
               alt="homeCommunity"
               width={400}
-              style={{ marginLeft: '10%', marginTop: '15px' }}
+              style={{ marginLeft: '20%', marginTop: '20%' }}
             ></img>
           </Col>
 
@@ -262,7 +263,7 @@ const Home: React.FC = () => {
         <Row
           ref={fourthRowRef}
           gutter={[16, 16]}
-          style={{ backgroundColor: '#FFD39A', height: '500px', marginTop: '30px' }}
+          className='h-dvh bg-[#FFD39A]'
         >
           {/* Text Column - Left Side */}
           <Col span={12} style={{
