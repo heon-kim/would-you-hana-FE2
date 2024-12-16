@@ -7,7 +7,7 @@ import PostRegisterButton from '../../components/board/PostRegisterButton/PostRe
 import BankerList from '../../components/board/BankerList/BankerList';
 import SearchBar from '../../components/board/SearchBar/SearchBar';
 import SortButtons from '../../components/board/SortButtons/SortButtons';
-import { getPosts } from '../../utils/postStorage';
+
 import { Post } from '../../types/post';
 import { AxiosResponse } from 'axios';
 import { request } from '../../hoc/request'
@@ -22,11 +22,12 @@ const Board: React.FC = () => {
   const [searchText, setSearchText] = useState('');
   const [isSearchActive, setIsSearchActive] = useState(false);
 
-  const posts = getPosts();
+
   interface QnaListDTO {
     questionId: number;
     customerId: number;
     categoryId: number;
+    categoryName: string;
     title: string;
     location: string;
     createdAt: string; // LocalDateTime은 ISO 8601 문자열로 처리됨
@@ -34,11 +35,12 @@ const Board: React.FC = () => {
     likeCount: number;
     scrapCount: number;
     viewCount: number;
+    answerBanker: string;
   }
 
 
   const [data, setData] = useState<QnaListDTO[]>([]); // QnaListDTO 배열 타입 지정
-
+  const posts = data;
 
   // 데이터 가져오기 함수
   const getData = async () => {
@@ -69,8 +71,8 @@ const Board: React.FC = () => {
   }, []);
 
 
-  const handleCategoryChange = useCallback((category: string) => {
-    setSelectedCategory(category);
+  const handleCategoryChange = useCallback((categoryName: string) => {
+    setSelectedCategory(categoryName);
     setSearchText('');
     setCurrentPage(1);
     setIsSearchActive(false);
@@ -95,7 +97,7 @@ const Board: React.FC = () => {
 
   const filteredAndSearchedPosts = posts.filter((post: Post) => {
     const categoryMatches =
-      selectedCategory === '전체' || post.category === selectedCategory;
+      selectedCategory === '전체' || post.categoryName === selectedCategory;
     const searchMatches = post.title
       .toLowerCase()
       .includes(searchText.toLowerCase());
