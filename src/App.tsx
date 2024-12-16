@@ -74,7 +74,6 @@ function App() {
               </Route>
               <Route path="/district/:districtId" element={<District />} />
               <Route path="/bankerProfile" element={<BankerProfile />} />
-
               {/* Error */}
               <Route path="/404" element={<NotFound />} />
             </Routes>

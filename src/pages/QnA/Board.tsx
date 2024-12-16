@@ -21,6 +21,51 @@ const Board: React.FC = () => {
   const [isSearchActive, setIsSearchActive] = useState(false);
 
   const posts = getPosts();
+  interface QnaListDTO {
+    questionId: number;
+    customerId: number;
+    categoryId: number;
+    title: string;
+    location: string;
+    createdAt: string; // LocalDateTime은 ISO 8601 문자열로 처리됨
+    commentCount: number;
+    likeCount: number;
+    scrapCount: number;
+    viewCount: number;
+  }
+
+
+  const [data, setData] = useState<QnaListDTO[]>([]); // QnaListDTO 배열 타입 지정
+
+
+  // 데이터 가져오기 함수
+  const getData = async () => {
+
+    try {
+      const response: AxiosResponse<QnaListDTO[]> = await request({
+        method: 'GET',
+        url: 'http://localhost:8080/qnalist',
+      });
+
+      if (response && response.data) {
+        console.log('Response Data: ', response.data);
+        setData(response.data);
+      } else {
+
+        console.error('Error fetching data: response.data is undefined');
+      }
+    } catch (err) {
+      console.error('Error fetching data:', err);
+
+    }
+  }
+
+
+  // 컴포넌트가 마운트될 때 데이터 가져오기
+  useEffect(() => {
+    getData();
+  }, []);
+
 
   const handleCategoryChange = useCallback((category: string) => {
     setSelectedCategory(category);
@@ -96,7 +141,6 @@ const Board: React.FC = () => {
             onPostClick={handlePostClick}
           />
         </div>
-
         <div className="w-1/4 flex flex-col gap-6">
           <PostRegisterButton />
           <BankerList />
