@@ -3,7 +3,7 @@ import { Card } from 'antd';
 import iconUser from '../../../assets/img/icon_user.png';
 
 interface BankerInfo {
-  rank: '🥇' | '🥈' | '🥉';
+  rank: 1|2|3;
   name: string;
   level: string;
   activities: string;
@@ -23,7 +23,7 @@ const TopBanker: React.FC<{ bankers: BankerInfo[] }> = ({ bankers }) => {
           key={index}
           className={`flex items-center ${banker.bgColor} rounded-lg p-5 mb-3 text-left`}
         >
-          <span className="text-4xl mr-4 leading-none">{banker.rank}</span>
+          <span className="text-4xl mr-4 leading-none">{banker.rank===1 ? '🥇' : banker.rank===2 ? '🥈' : banker.rank===3 ? '🥉' : ''}</span>
           {banker.showFullProfile && (
             <img
               src={iconUser}

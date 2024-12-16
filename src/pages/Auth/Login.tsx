@@ -58,14 +58,8 @@ const Login: React.FC = () => {
 
         // 메시지 및 네비게이션 처리
         message.success('로그인 성공!');
-        if (location.includes('광진')) {
-          navigate('/district/gwangjin');
-        } else if (location.includes('서초')) {
-          navigate('/district/seocho');
-        } else if (location.includes('성동')) {
-          navigate('/district/seongdong');
-        } else if (location.includes('강남')) {
-          navigate('/district/gangnam');
+        if(location){
+        navigate(`/district/${location}`);
         } else {
           navigate('/');
         }

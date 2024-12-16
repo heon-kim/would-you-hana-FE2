@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Row, Col } from 'antd';
+import { Row, Col, message } from 'antd';
 import { useParams, Navigate } from 'react-router-dom';
 import hanaFamilyTogether from '../../assets/img/HanaFamilyTogether.png';
 import SearchInput from '../../components/common/SearchInput';
@@ -15,6 +15,7 @@ const District: React.FC = () => {
   const [carouselIndex, setCarouselIndex] = useState(0);
 
   if (!districtId || !DISTRICT_DATA[districtId]) {
+    message.error('존재하지 않는 지역입니다.');
     return <Navigate to="/404" replace />;
   }
 
@@ -31,7 +32,7 @@ const District: React.FC = () => {
           <Col span={12}>
             <div className="ml-[100px] flex justify-start">
               <div className="flex gap-8 w-[300px]">
-                <DistrictBadge logoSrc={districtData.logo} padding="p-4" />
+                <DistrictBadge logoSrc={districtData.logo ?? undefined} name={districtData.name} padding="p-4" />
                 {districtData.isRegulationArea && <RegulationBadge />}
               </div>
             </div>
