@@ -34,10 +34,7 @@ const QuestionDetail: React.FC = () => {
   const incrementViewCount = useCallback((post: Post) => {
     const updatedPost = {
       ...post,
-      counts: {
-        ...post.counts,
-        views: post.counts.views + 1,
-      },
+      viewCount: post.viewCount + 1
     };
     updatePost(updatedPost);
     setPost(updatedPost);

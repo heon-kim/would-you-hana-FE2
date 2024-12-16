@@ -1,9 +1,9 @@
-interface Counts {
-  views: number;
-  likes: number;
-  comments: number;
-  scraps: number;
-}
+// interface Counts {
+//   viewCount: number;
+//   likeCount: number;
+//   commentCount: number;
+//   scrapCount: number;
+// }
 
 interface Image {
   name: string;
@@ -11,16 +11,19 @@ interface Image {
 }
 
 export interface Post {
-  id: number;
-  category: string;
+  answerBanker: string;
+  categoryId: number;
+  categoryName: string;
   title: string;
-  content: string;
-  author: string;
-  email: string;
   createdAt: string;
-  answered: boolean;
-  counts: Counts;
+  location: string;
+  customerId: number;
   images?: Image[];
+  questionId: number;
+  viewCount: number;
+  likeCount: number;
+  commentCount: number;
+  scrapCount: number;
 }
 
 export interface AnswerInterface {
