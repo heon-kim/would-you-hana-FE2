@@ -58,8 +58,9 @@ const Login: React.FC = () => {
 
         // 메시지 및 네비게이션 처리
         message.success('로그인 성공!');
-        if(location){
-        navigate(`/district/${location}`);
+        if (location) {
+          const locationArr = location.split(' ');
+          navigate(`/district/${locationArr[1]}`);
         } else {
           navigate('/');
         }
