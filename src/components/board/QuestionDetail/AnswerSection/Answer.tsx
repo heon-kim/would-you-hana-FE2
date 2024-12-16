@@ -1,43 +1,33 @@
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import userIcon from '../../assets/img/icon_user.png';
-import { HomeOutlined, CalendarOutlined } from '@ant-design/icons';
 import { Button, Tooltip } from 'antd';
-import { AnswerInterface } from '../../constants/posts';
-import { relativeTime } from '../../utils/stringFormat';
+import { HomeOutlined, CalendarOutlined } from '@ant-design/icons';
+import userIcon from '../../../../assets/img/icon_user.png';
+import { relativeTime } from '../../../../utils/stringFormat';
+import { AnswerInterface } from '../../../../types/post';
+import { findBanker } from '../../../../utils/userStorage';
 
 interface AnswerProps {
   answer: AnswerInterface;
 }
 
-// const bankers = [
-//   {
-//     id: 0,
-//     name: '문보경',
-//     email: 'example2@example.com',
-//     branchName: '성동구 성수점',
-//     introduce: '안녕하세요. 문보경 대리입니다.',
-//   },
-// ];
-const bankers = JSON.parse(localStorage.getItem('bankers') || '[]');
-
-
 const Answer: React.FC<AnswerProps> = ({ answer }) => {
   const navigate = useNavigate();
-  const banker = bankers.filter((b) => b.email == answer.authorEmail)[0];
+  const banker = findBanker(answer.authorEmail || '');
 
   const handleProfileBtn = () => {
-    navigate('/bankerProfile'); // banker.id 추가해야 함
+    navigate('/bankerProfile');
   };
 
   const handleReserveBtn = () => {
-    navigate('/findbank'); // banker.branchName 추가해야 함
+    navigate('/findbank');
   };
 
   return (
     <>
       <div className='answer flex flex-col border rounded shadow-md'>
         <h1 className='p-5 font-bold bg-pointColor'>
-          하나은행 {banker?.branchName} 지점 {banker.name || ''} 은행원의 답변
+          하나은행 {banker?.branchName} 지점 {banker?.name || ''} 은행원의 답변
         </h1>
         <div className='p-5 flex flex-col gap-5'>
           <div className='comment__header flex justify-between font-light border-b pb-5'>
@@ -45,7 +35,7 @@ const Answer: React.FC<AnswerProps> = ({ answer }) => {
               <img src={userIcon} alt='user icon' className='w-12 h-12' />
               <div>
                 <div className='flex gap-3'>
-                  <span>{banker.name} 은행원</span>
+                  <span>{banker?.name} 은행원</span>
                   <div className='bg-gray-300 rounded-full px-3 text-sm self-center'>
                     🎖️ 행원
                   </div>

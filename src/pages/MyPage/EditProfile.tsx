@@ -3,6 +3,7 @@ import { Form, Input, Button, Select, message } from 'antd';
 import { findUser, updateUser, findBanker, updateBanker } from '../../utils/userStorage';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../hoc/store';
+import { User, Banker } from '../../types/user';
 
 const { Option } = Select;
 
@@ -33,11 +34,15 @@ const EditProfile: React.FC = () => {
     if (isAuthenticated && userEmail) {
       if(userRole === 'C') {
         const userData = findUser(userEmail);
-        setUser(userData);
+        if(userData) {
+          setUser(userData);
+        }
       }
       else if(userRole === 'B') {
         const bankerData = findBanker(userEmail);
-        setBanker(bankerData);
+        if(bankerData) {
+          setBanker(bankerData);
+        }
       }
     }
   }, []);
@@ -63,11 +68,11 @@ const EditProfile: React.FC = () => {
 
   const handleSave = () => {
     if (isAuthenticated && userRole === 'C') {
-      updateUser(user);
+      updateUser(user as User);
       message.success('개인정보가 성공적으로 수정되었습니다!');
     } 
     else if (isAuthenticated && userRole === 'B') {
-      updateBanker(banker);
+      updateBanker(banker as Banker);
       message.success('개인정보가 성공적으로 수정되었습니다!');
     }
     else {

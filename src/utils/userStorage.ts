@@ -33,8 +33,11 @@ const findBanker = (email: string) => {
   return getBankers().find((banker) => banker.email === email);
 };
 
-const findUser = (email: string) => {
-  return getUsers().find((user) => user.email === email);
+const findUser = (email: string | null) => {
+  if (!email) return null;
+  
+  const users = getUsers();
+  return users.find(user => user.email === email);
 };
 
 const hasNickname = (nickname: string) => {
