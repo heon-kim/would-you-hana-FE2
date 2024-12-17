@@ -1,25 +1,47 @@
-import React from 'react';
-import { Carousel } from 'antd';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios'
+import { Carousel, message } from 'antd';
+import { error } from 'console';
 
 interface TrendingKeywordsProps {
-  keywords: string[];
+  // keywords: string[];
   carouselIndex: number;
   onCarouselChange: (current: number) => void;
   districtName: string;
 }
 
 const TrendingKeywords: React.FC<TrendingKeywordsProps> = ({
-  keywords,
+  // keywords,
   carouselIndex,
   onCarouselChange,
   districtName
 }) => {
+  const [keywords, setKeywords] = useState<string[][]>([]); // 초기 값을 빈 배열로 설정
+
+  useEffect(() => {
+    const fetchKeywords = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/hot_keywords');
+        console.log('Fetched keywords:', response.data.keywords);  // 키워드 확인용 로그
+        setKeywords(response.data.popular_keywords || []); // 응답이 없거나 형식이 맞지 않으면 빈 배열 설정
+      } catch (error) {
+        console.error('Error fetching keywords:', error);
+        message.error('키워드 추출 실패');
+      }
+    };
+    
+    fetchKeywords();  // 컴포넌트가 처음 렌더링될 때 데이터 요청
+  }, []);  // 빈 배열을 전달하여 한 번만 실행되도록 설정
+
+  // 추가적으로 상태도 콘솔에 출력
+  console.log('Keywords state:-------------------', keywords);
+
   return (
-    <div className="flex flex-col justify-center items-end mr-[150px] mt-0">
-      <span className="text-4xl font-extrabold">
+    <div className="flex flex-col justify-center  mr-[150px] mt-0">
+      <span className="text-4xl font-extrabold self-start">
         지금 <span className="text-5xl font-extrabold">{districtName}</span> 주민들은
       </span>
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center mt-1 mb-1">
       <style>
               {`
                 .custom-carousel .carousel-item {
@@ -35,7 +57,7 @@ const TrendingKeywords: React.FC<TrendingKeywordsProps> = ({
                 }
 
                 .custom-carousel .carousel-item.focused {
-                    font-size: 50px;
+                    font-size: 60px;
                     font-weight: 800;
                     opacity: 1;
                     transform: scale(1);
@@ -51,7 +73,7 @@ const TrendingKeywords: React.FC<TrendingKeywordsProps> = ({
           afterChange={onCarouselChange}
           vertical
           dots={false}
-          className="custom-carousel w-[300px]"
+          className="custom-carousel w-[500px]"
           autoplay
           autoplaySpeed={2800}
         >
@@ -62,14 +84,14 @@ const TrendingKeywords: React.FC<TrendingKeywordsProps> = ({
                 index === carouselIndex ? 'focused' : ''
               }`}
             >
-              {keyword}
+              {keyword[0]}
             </span>
           ))}
         </Carousel>
-        <p className="text-4xl font-extrabold">
+      </div>
+      <p className="text-4xl font-extrabold self-end">
           에 관심이 있어요.
         </p>
-      </div>
     </div>
   );
 };
