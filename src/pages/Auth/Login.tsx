@@ -7,6 +7,7 @@ import { loginSuccess } from '../../hoc/actions';
 import store from '../../hoc/store';
 import { AxiosResponse } from 'axios';
 import { request } from '../../hoc/request'
+import { config } from '../../config/config';
 
 interface loginForm {
   email: string;
@@ -16,23 +17,29 @@ interface loginForm {
 interface CustomerSignInReturnDto {
   token: string;
   email: string;
+  id: number;
   role: string;
   location: string;
-  nickName: string;
+  nickname: string;
+  userId: string;
 }
 
 interface BankerSignInReturnDto {
   token: string;
   email: string;
+  id: number;
   role: string;
   location: string;
-  nickName: string;
+  nickname: string;
+  userId: string;
 }
 
 const Login: React.FC = () => {
   const [userType, setUserType] = useState<'C' | 'B'>('C'); // 일반회원(customer: C) | 행원(banker: B)
   const navigate = useNavigate();
   const dispatch = useDispatch<typeof store.dispatch>();
+  const BASE_URL = config.apiUrl;
+
 
   useEffect(() => {
     const loggedUser = localStorage.getItem('loggedUser');
@@ -49,21 +56,23 @@ const Login: React.FC = () => {
       // 백엔드로 로그인 요청 보내기
       const response: AxiosResponse<CustomerSignInReturnDto> = await request({
         method: 'POST',
-        url: 'http://localhost:8080/members/signIn',
+        url: `${BASE_URL}/members/signIn`,
         data: { email, password }
       });
-      const { token, email: returnedEmail, role, location, nickName } = response.data;
+      
+      const { token, email: returnedEmail, id, role, location, nickname } = response.data;
 
       if (token && location) {
         // Redux 상태 업데이트
         console.log('Dispatching loginSuccess with:', {
           token: token,
           email: returnedEmail,
+          id: id,
           role: role,
           location: location,
-          nickName: nickName
+          nickname: nickname,
         });
-        dispatch(loginSuccess(token, email, role, location, nickName));
+        dispatch(loginSuccess(token, Number(id), returnedEmail, role, location, nickname));
 
         // 메시지 및 네비게이션 처리
         message.success('로그인 성공!');
@@ -89,21 +98,22 @@ const Login: React.FC = () => {
       // 백엔드로 로그인 요청 보내기
       const response: AxiosResponse<BankerSignInReturnDto> = await request({
         method: 'POST',
-        url: 'http://localhost:8080/bankers/signIn',
+        url: `${BASE_URL}/bankers/signIn`,
         data: { email, password }
       });
-      const { token, email: returnedEmail, role, location, nickName } = response.data;
+      const { token, email: returnedEmail, id, role, location, nickname } = response.data;
 
       if (token && location) {
         // Redux 상태 업데이트
         console.log('Dispatching loginSuccess with:', {
           token: token,
           email: returnedEmail,
+          userId: id,
           role: role,
           location: location,
-          nickName: nickName
+          nickname: nickname,
         });
-        dispatch(loginSuccess(token, email, role, location, nickName));
+        dispatch(loginSuccess(token, Number(id), returnedEmail, role, location, nickname));
 
         // 메시지 및 네비게이션 처리
         message.success('로그인 성공!');

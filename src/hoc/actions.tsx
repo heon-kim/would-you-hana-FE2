@@ -1,9 +1,10 @@
 export interface LoginSuccessPayload {
-  token: string;
-  userEmail: string;
-  userRole: string;
-  location: string;
-  nickname?: string;
+    token: string;
+    userEmail: string;
+    userId: number;
+    userRole : string;
+    location: string;
+    nickname: string | null;
 }
 
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -21,32 +22,35 @@ interface LogoutAction {
 export type AuthActionTypes = LoginSuccessAction | LogoutAction;
 
 export const loginSuccess = (
-  token: string,
+  token: string, 
+  userId: number,
   userEmail: string,
-  userRole: string,
+  userRole: string, 
   location: string,
-  nickName: string,
+  nickname: string,
 ): LoginSuccessAction => {
   localStorage.setItem('authToken', token);
+  localStorage.setItem('userId', userId.toString());
   localStorage.setItem('userEmail', userEmail);
   localStorage.setItem('userRole', userRole);
   localStorage.setItem('userLocation', location);
-  localStorage.setItem('nickName', nickName);
+  localStorage.setItem('nickname', nickname);
   return {
     type: LOGIN_SUCCESS,
-    payload: { token, userEmail, userRole, location }
+    payload: { token, userEmail, userId, userRole, location, nickname }
   };
 };
 
 export const logout = (): LogoutAction => {
-  localStorage.removeItem('authToken');
-  localStorage.removeItem('userEmail');
-  localStorage.removeItem('userRole');
-  localStorage.removeItem('userLocation');
-  localStorage.removeItem('nickName');
-  return {
-    type: LOGOUT
-  };
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userLocation');
+    localStorage.removeItem('nickname');
+    return {
+        type: LOGOUT
+    };
 };
 
 

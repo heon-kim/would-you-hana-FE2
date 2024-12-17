@@ -2,12 +2,14 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Select, message, Input, Button } from 'antd';
 import type { UploadFile, UploadProps } from 'antd';
-import { findUser } from '../../utils/userStorage';
-import { postCount, savePost } from '../../utils/postStorage';
-import { getUserEmail } from '../../hoc/request';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../hoc/store';
+import { QuestionAddRequestDTO } from '../../types/dto/question.dto';
+import { qnaService } from '../../services/qna.service';
 import { Categories } from '../../constants/posts';
 import ImageUpload from '../../components/board/QuestionForm/ImageUpload';
 import TermsCheckbox from '../../components/board/QuestionForm/TermsCheckbox';
+
 
 const { TextArea } = Input;
 
@@ -24,6 +26,8 @@ const getBase64 = (file: File): Promise<string> =>
 
 const QuestionRegister: React.FC = () => {
   const navigate = useNavigate();
+  const { userId, userLocation } = useSelector((state: RootState) => state.auth);
+
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -82,40 +86,53 @@ const QuestionRegister: React.FC = () => {
       message.error('모든 필드를 입력해주세요.');
       return;
     }
-    
-    if (!isChecked) {
-      message.error('이용약관에 동의해야 질문을 등록할 수 있습니다.');
+
+    if(!isChecked) {
+      message.error('이용약관에 동의해주세요.');
       return;
     }
 
-    const userEmail = getUserEmail();
-    const user = findUser(userEmail || '');
-    
-    const postData = {
-      id: postCount(),
-      category,
-      title,
-      content,
-      author: user?.nickname || '',
-      email: userEmail || '',
-      createdAt: new Date().toISOString(),
-      answered: false,
-      counts: {
-        views: 0,
-        likes: 0,
-        comments: 0,
-        scraps: 0,
-      },
-      images: fileList.map((file) => ({
-        name: file.name,
-        preview: file.preview || '',
-      })),
-    };
+    if(!userId){
+      message.error('로그인이 필요합니다.');
+      return;
+    }
 
-    savePost(postData);
-    message.success('질문이 등록되었습니다!');
-    navigate('/qna');
-  }, [formData, isChecked, fileList, navigate]);
+    try {
+      const formData = new FormData();
+      
+      // 텍스트 데이터 추가
+      // TODO: 하드코딩된 데이터 수정해야함
+      // TODO: 파일 업로드 에러 있음
+      const question: QuestionAddRequestDTO = {
+        title,
+        content,
+        customerId: userId,
+        categoryName: "적금",
+        location: userLocation || '서울시 광진구'
+      }
+
+      // question JSON 데이터 추가 시 content-type 설정
+      const questionBlob = new Blob([JSON.stringify(question)], {
+        type: 'application/json'
+      });
+      console.log(questionBlob);
+      formData.append('question', questionBlob);
+
+      //파일 데이터 추가
+      fileList.forEach((file) => {
+        if (file.originFileObj) {
+          formData.append('file', file.originFileObj);
+        }
+      });
+
+      qnaService.createQuestion(formData);
+      message.success('질문이 등록되었습니다!');
+      navigate('/qna');
+    } catch (error) {
+      console.error('Failed to create question:', error);
+      message.error('질문 등록에 실패했습니다.');
+    }
+  }, [formData, fileList, isChecked, userId, userLocation, navigate]);
 
   return (
     <div className="w-full px-[25%] flex flex-col items-start">
@@ -139,7 +156,7 @@ const QuestionRegister: React.FC = () => {
         }))}
       />
 
-      <div className="w-full mt-10">
+<div className="w-full mt-10">
         <div className="mb-6">
           <label className="block mb-2">제목</label>
           <div className="relative">
@@ -157,7 +174,7 @@ const QuestionRegister: React.FC = () => {
 
         <div className="mb-4">
           <label className="block mb-2">내용</label>
-            <TextArea
+          <TextArea
               name="content"
               placeholder={`· 자세하게 적으면 좋은 답변을 받을 수 있어요.\n· 개인정보(본명, 전화 번호 등)를 쓰면 안 돼요.\n· 질문에서 내 이름은 보이지 않아요.`}
               value={formData.content}
