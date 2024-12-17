@@ -37,11 +37,11 @@ const TrendingKeywords: React.FC<TrendingKeywordsProps> = ({
   console.log('Keywords state:-------------------', keywords);
 
   return (
-    <div className="flex flex-col justify-center items-end mr-[150px] mt-0">
-      <span className="text-4xl font-extrabold">
+    <div className="flex flex-col justify-center  mr-[150px] mt-0">
+      <span className="text-4xl font-extrabold self-start">
         지금 <span className="text-5xl font-extrabold">{districtName}</span> 주민들은
       </span>
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center mt-1 mb-1">
       <style>
               {`
                 .custom-carousel .carousel-item {
@@ -57,7 +57,7 @@ const TrendingKeywords: React.FC<TrendingKeywordsProps> = ({
                 }
 
                 .custom-carousel .carousel-item.focused {
-                    font-size: 50px;
+                    font-size: 60px;
                     font-weight: 800;
                     opacity: 1;
                     transform: scale(1);
@@ -73,7 +73,7 @@ const TrendingKeywords: React.FC<TrendingKeywordsProps> = ({
           afterChange={onCarouselChange}
           vertical
           dots={false}
-          className="custom-carousel w-[300px]"
+          className="custom-carousel w-[500px]"
           autoplay
           autoplaySpeed={2800}
         >
@@ -88,10 +88,10 @@ const TrendingKeywords: React.FC<TrendingKeywordsProps> = ({
             </span>
           ))}
         </Carousel>
-        <p className="text-4xl font-extrabold">
+      </div>
+      <p className="text-4xl font-extrabold self-end">
           에 관심이 있어요.
         </p>
-      </div>
     </div>
   );
 };
