@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'
 import { Carousel, message } from 'antd';
-import { error } from 'console';
 
 interface TrendingKeywordsProps {
   // keywords: string[];
