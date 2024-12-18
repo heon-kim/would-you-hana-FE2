@@ -6,5 +6,5 @@ export interface LikesScrapDTO{
     likeCount : number;
     viewCount : number;
     createdAt : string;
-    bankerName : string;
+    answerBanker : string;
 }
