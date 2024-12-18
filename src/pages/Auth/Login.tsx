@@ -69,7 +69,7 @@ const Login: React.FC = () => {
         message.success('로그인 성공!');
         if (userType == 'C' && location) {
           const locationArr = location.split(' ');
-          navigate(`/district/${locationArr[1]}`);
+          navigate(`/district/${locationArr[0]}`);
         } else {
           navigate('/');
         }
