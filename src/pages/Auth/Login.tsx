@@ -14,24 +14,14 @@ interface loginForm {
   password: string;
 }
 
+// 일반회원, 행원 응답 DTO가 같음
 interface CustomerSignInReturnDto {
   token: string;
-  email: string;
   id: number;
+  email: string;
   role: string;
   location: string;
-  nickname: string;
-  userId: string;
-}
-
-interface BankerSignInReturnDto {
-  token: string;
-  email: string;
-  id: number;
-  role: string;
-  location: string;
-  nickname: string;
-  userId: string;
+  nickName: string;
 }
 
 const Login: React.FC = () => {
@@ -49,18 +39,19 @@ const Login: React.FC = () => {
     }
   }, [navigate]);
 
-  const handleUserLogin = async (values: loginForm) => {
+  const handleUserLogin = async (userType: 'C' | 'B', values: loginForm) => {
     const { email, password } = values;
+    const url = userType == 'C' ? `${BASE_URL}/members/signIn` : `${BASE_URL}/bankers/signIn`;
 
     try {
       // 백엔드로 로그인 요청 보내기
       const response: AxiosResponse<CustomerSignInReturnDto> = await request({
         method: 'POST',
-        url: `${BASE_URL}/members/signIn`,
+        url: url,
         data: { email, password }
       });
       
-      const { token, email: returnedEmail, id, role, location, nickname } = response.data;
+      const { token, email: returnedEmail, id, role, location, nickName:nickname } = response.data;
 
       if (token && location) {
         // Redux 상태 업데이트
@@ -76,7 +67,7 @@ const Login: React.FC = () => {
 
         // 메시지 및 네비게이션 처리
         message.success('로그인 성공!');
-        if (location) {
+        if (userType == 'C' && location) {
           const locationArr = location.split(' ');
           navigate(`/district/${locationArr[1]}`);
         } else {
@@ -91,50 +82,8 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleBankerLogin = async (values: loginForm) => {
-    const { email, password } = values;
-
-    try {
-      // 백엔드로 로그인 요청 보내기
-      const response: AxiosResponse<BankerSignInReturnDto> = await request({
-        method: 'POST',
-        url: `${BASE_URL}/bankers/signIn`,
-        data: { email, password }
-      });
-      const { token, email: returnedEmail, id, role, location, nickname } = response.data;
-
-      if (token && location) {
-        // Redux 상태 업데이트
-        console.log('Dispatching loginSuccess with:', {
-          token: token,
-          email: returnedEmail,
-          userId: id,
-          role: role,
-          location: location,
-          nickname: nickname,
-        });
-        dispatch(loginSuccess(token, Number(id), returnedEmail, role, location, nickname));
-
-        // 메시지 및 네비게이션 처리
-        message.success('로그인 성공!');
-        navigate('/');
-      } else {
-        message.error('로그인 실패: 올바른 정보를 확인하세요.');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      message.error('로그인에 실패했습니다. 이메일과 비밀번호를 확인하세요.');
-    }
-  };
-
-
-
   const handleLogin = (values: loginForm) => {
-    if (userType == 'C') {
-      handleUserLogin(values);
-    } else if (userType == 'B') {
-      handleBankerLogin(values);
-    }
+    handleUserLogin(userType, values);
   };
 
   return (

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import logo from '../assets/img/logo.png';
@@ -12,6 +13,23 @@ import type { SelectProps } from 'antd';
 import { findUser, findBanker } from '../utils/userStorage';
 import { locations } from '../constants/locations';
 import { User } from '../constants/users'
+
+// Kakao Maps API 스크립트를 로드하는 함수
+const loadKakaoMapScript = (): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    if (document.getElementById('kakao-map-script')) {
+      resolve();
+      return;
+    }
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=26b73c9fe72dd7a39fc3df547c6175f2&libraries=services&autoload=false`;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('Kakao Maps API 스크립트를 로드하지 못했습니다.'));
+    script.id = 'kakao-map-script';
+    document.head.appendChild(script);
+  });
+};
 
 // 지역 선택 검색창 컴포넌트
 const SearchInput: React.FC<{
@@ -42,23 +60,62 @@ const SearchInput: React.FC<{
     const filteredData = favoriteLocations
       .map((loc) => ({ text: loc, value: loc }))
       .filter((item) => item.text.toLowerCase().includes(value.toLowerCase()));
-    await setData(filteredData);
+    setData(filteredData);
   };
-
 
   const navigateToLanding = (district: string) => {
     if (district) {
       navigate(`/district/${district}`);
-    }else{
+    } else {
       navigate('/');
     }
-  }
+  };
 
-  // 지역이 선택되었을 때, 그 값을 상태로 저장
   const handleChange = (selectedDistrict: string) => {
     props.onChange(selectedDistrict); // 부모 컴포넌트에 선택된 값을 전달
     navigateToLanding(selectedDistrict); // 선택된 지역으로 페이지 이동
   };
+
+  const handleGetCurrentLocation = async () => {
+    try {
+      await loadKakaoMapScript(); // Kakao Maps API 스크립트 로드
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+
+            // Kakao Maps API를 사용하여 좌표를 주소로 변환
+            window.kakao.maps.load(() => {
+              const geocoder = new window.kakao.maps.services.Geocoder();
+              const coord = new window.kakao.maps.LatLng(latitude, longitude);
+
+              geocoder.coord2Address(coord.getLng(), coord.getLat(), (result, status) => {
+                if (status === window.kakao.maps.services.Status.OK) {
+                  const address = result[0]?.address?.address_name || '주소를 찾을 수 없습니다.';
+                  console.log('현재 위치 정보:', address);
+
+                  const district = address.split(' ')[1]; // 주소의 두 번째 부분이 구/동
+                  props.onChange(district); // 부모 컴포넌트에 구/동 정보 전달
+                  navigateToLanding(district);
+                } else {
+                  console.error('주소 변환 실패:', status);
+                }
+              });
+            });
+          },
+          (error) => {
+            console.error('위치 정보를 가져오는 데 실패했습니다:', error);
+          }
+        );
+      } else {
+        console.error('이 브라우저에서는 Geolocation API를 지원하지 않습니다.');
+      }
+    } catch (error) {
+      console.error('Kakao Maps API 로드 중 오류:', error);
+    }
+  };
+
 
   return (
     <div className='flex gap-3 items-center'>
@@ -78,7 +135,7 @@ const SearchInput: React.FC<{
         }))}
       />
       {/* 현위치 받아오기 */}
-      <button onClick={() => props.onChange('현위치')}>
+      <button onClick={handleGetCurrentLocation}>
         <img src={locationIcon} width={'20px'} />
       </button>
     </div>

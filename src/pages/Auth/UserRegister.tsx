@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { User } from "../../constants/users";
 import { saveUser, findUser, hasNickname } from '../../utils/userStorage';
 import { RuleObject } from 'antd/es/form';
@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { Categories } from '../../constants/posts';
 import '../../styles/formInput.css';
 import wyhn from '../../assets/img/would_you_hana.png';
+import { userService } from '../../services/user.service';
 
 // 회원가입 폼 입력할 때의 데이터 타입
 interface formProps {
@@ -355,11 +356,21 @@ const SelectInterest: React.FC<{
     }
   };
 
-  const handleSaveUser = () => {
-    saveUser(user);
-    message.success('회원가입이 완료되었습니다!');
-    navigate('/');
-  };
+  const handleSaveUser = useCallback(async () => {
+
+    try{
+      userService.registerUser(user);
+      message.success('회원가입이 완료되었습니다!');
+      navigate('/');
+    } catch(error){
+      console.error('Failed to create User:', error);
+      message.error('유저 생성에 실패했습니다.');
+    }
+    //saveUser(user);
+    
+    
+    
+  },[]);
 
   const suffix = (
     <>

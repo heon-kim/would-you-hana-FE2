@@ -41,18 +41,29 @@ export const qnaService = {
   },
 
   // 전체 질문 목록 조회
-  getQnaList: () => {
+  getQnaList: (sort: string, location: string|null) => {
     return request<QnaListDTO[]>({
       method: 'GET',
-      url: `${BASE_URL}/qnalist`
+      url: `${BASE_URL}/qna/qnaList/${sort}`,
+      params: location ? { location } : {} // location이 null이 아니면 location을 포함한 객체를 만들어 준다.
     });
   },
 
   // 카테고리별 질문 목록 조회
-  getQnaListByCategory: (categoryId: number) => {
+  getQnaListByCategory: (category: number, location: string|null) => {
     return request<QnaListDTO[]>({
       method: 'GET',
-      url: `${BASE_URL}/qnalist/${categoryId}`
+      url: `${BASE_URL}/qnalist/${category}`,
+      params: location ? { location } : {} // location이 null이 아니면 location을 포함한 객체를 만들어 준다.
+    });
+  },
+
+  // 인기 질문 목록 조회
+  getPopularQuestions: (location: string|null) => {
+    return request<QnaListDTO[]>({
+      method: 'GET',
+      url: `${BASE_URL}/qna/todayQnaList`,
+      params: location ? { location } : {} 
     });
   },
 
@@ -68,7 +79,7 @@ export const qnaService = {
   getQuestionDetail: (questionId: number) => {
     return request<QuestionResponseDTO>({
       method: 'GET',
-      url: `${BASE_URL}/post/${questionId}`
+      url: `${BASE_URL}/qna/${questionId}`
     });
   },
 
@@ -76,7 +87,7 @@ export const qnaService = {
   postAnswer: (questionId: number, data: AnswerAddRequestDTO) => {
     return request<AnswerResponseDTO>({
       method: 'POST',
-      url: `${BASE_URL}/post/answer/${questionId}`,
+      url: `${BASE_URL}/qna/answer/${questionId}`,
       data
     });
   }
