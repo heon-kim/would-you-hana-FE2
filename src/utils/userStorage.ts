@@ -10,7 +10,6 @@ const getBankers = (): Banker[] => {
 
 const getUsers = (): User[] => {
   const users = localStorage.getItem(LOCAL_STORAGE_KEY);
-  console.log(users, "--------9090909");
   return users ? JSON.parse(users) : [];
 };
 
