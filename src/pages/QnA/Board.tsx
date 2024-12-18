@@ -7,10 +7,11 @@ import PostRegisterButton from '../../components/board/PostRegisterButton/PostRe
 import BankerList from '../../components/board/BankerList/BankerList';
 import SearchBar from '../../components/board/SearchBar/SearchBar';
 import SortButtons from '../../components/board/SortButtons/SortButtons';
-
+import { useSelector } from 'react-redux';
+import { RootState } from '../../hoc/store';
 import { Post } from '../../types/post';
 import { AxiosResponse } from 'axios';
-import { request } from '../../hoc/request'
+import { qnaService } from '../../services/qna.service';
 
 const POSTS_PER_PAGE = 5;
 
@@ -18,9 +19,11 @@ const Board: React.FC = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState<string>('전체');
-  const [sortOrder, setSortOrder] = useState<string>('최근 답변순');
+  const [sortOrder, setSortOrder] = useState<string>('latest');
   const [searchText, setSearchText] = useState('');
   const [isSearchActive, setIsSearchActive] = useState(false);
+  const userLocation = useSelector((state: RootState) => state.auth.userLocation);
+
 
 
   interface QnaListDTO {
@@ -46,10 +49,7 @@ const Board: React.FC = () => {
   const getData = async () => {
 
     try {
-      const response: AxiosResponse<QnaListDTO[]> = await request({
-        method: 'GET',
-        url: 'http://localhost:8080/qnalist',
-      });
+      const response: AxiosResponse<QnaListDTO[]> = await qnaService.getQnaList(sortOrder, userLocation);
 
       if (response && response.data) {
         console.log('Response Data: ', response.data);
@@ -65,10 +65,10 @@ const Board: React.FC = () => {
   }
 
 
-  // 컴포넌트가 마운트될 때 데이터 가져오기
+  // sortOrder나 userLocation이 변경될 때마다 데이터 새로 불러오기
   useEffect(() => {
     getData();
-  }, []);
+  }, [sortOrder, userLocation]);
 
 
   const handleCategoryChange = useCallback((categoryName: string) => {

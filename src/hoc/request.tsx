@@ -76,6 +76,7 @@ interface RequestConfig {
     url: string;       // API endpoint URL
     data?: unknown;        // Optional data to be sent in the request body
     headers?: Record<string, string>;  // headers 추가
+    params?: Record<string, string>;  // params 추가
 }
 
 
@@ -86,7 +87,7 @@ axios.defaults.baseURL = config.apiUrl;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 // 로그인 성공시, getAuthToken()을 통해 로그인 정보를 가져오고, request틀을 만들어 준다.
-export const request = async <T = unknown>({ method, url, data, headers }: RequestConfig): Promise<AxiosResponse<T>> => {
+export const request = async <T = unknown>({ method, url, data, headers, params }: RequestConfig): Promise<AxiosResponse<T>> => {
     const authToken = getAuthToken();
     const defaultHeaders: Record<string, string> = {};
 
@@ -102,6 +103,7 @@ export const request = async <T = unknown>({ method, url, data, headers }: Reque
             url,
             headers: { ...defaultHeaders, ...headers },
             data,
+            params: params
         });
         console.log('Response:', response);
         return response;

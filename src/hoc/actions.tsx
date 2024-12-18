@@ -4,7 +4,7 @@ export interface LoginSuccessPayload {
     userId: number;
     userRole : string;
     location: string;
-    nickname: string | null;
+    nickname: string;
 }
 
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
