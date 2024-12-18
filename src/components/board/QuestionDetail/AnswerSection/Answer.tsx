@@ -4,16 +4,18 @@ import { Button, Tooltip } from 'antd';
 import { HomeOutlined, CalendarOutlined } from '@ant-design/icons';
 import userIcon from '../../../../assets/img/icon_user.png';
 import { relativeTime } from '../../../../utils/stringFormat';
-import { AnswerInterface } from '../../../../types/post';
-import { findBanker } from '../../../../utils/userStorage';
+import { AnswerResponseDTO } from '../../../../types/dto/answer.dto';
 
 interface AnswerProps {
-  answer: AnswerInterface;
+  answer: AnswerResponseDTO;
 }
 
 const Answer: React.FC<AnswerProps> = ({ answer }) => {
   const navigate = useNavigate();
-  const banker = findBanker(answer.authorEmail || '');
+  const banker = {
+    branchName: '하나은행 영등포지점',
+    name: '김영희',
+  }
 
   const handleProfileBtn = () => {
     navigate('/bankerProfile');

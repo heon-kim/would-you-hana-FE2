@@ -5,6 +5,7 @@ import { AuthActionTypes, LOGIN_SUCCESS, LOGOUT } from './actions';
 interface AuthState {
     isAuthenticated: boolean;
     authToken: string | null;
+    userId: number | null;
     userEmail: string | null;
     userRole: string | null;
     userLocation: string | null;
@@ -13,12 +14,13 @@ interface AuthState {
 
 // 초기 상태를 `localStorage`에서 불러오기
 const initialAuthState: AuthState = {
-    isAuthenticated: localStorage.getItem('authToken') === null ? false : true, // localStorage에 authToken이 있으면 true
-    authToken: localStorage.getItem('authToken') || null,
-    userEmail: localStorage.getItem('userEmail') || null,
-    userRole: localStorage.getItem('userRole') || null,
-    userLocation: localStorage.getItem('userLocation') || null,
-    nickname: localStorage.getItem('nickname') || null,
+    isAuthenticated: localStorage.getItem('authToken') !== null,
+    authToken: localStorage.getItem('authToken'),
+    userId: Number(localStorage.getItem('userId')),
+    userEmail: localStorage.getItem('userEmail'),
+    userRole: localStorage.getItem('userRole'),
+    userLocation: localStorage.getItem('userLocation'),
+    nickname: localStorage.getItem('nickname'),
 };
 
 
@@ -26,32 +28,26 @@ const initialAuthState: AuthState = {
 const authReducer = (state = initialAuthState, action: AuthActionTypes): AuthState => {
     switch (action.type) {
         case LOGIN_SUCCESS:
-
-            // 로그인 성공 시, 각 값들이 올바르게 전달되는지 로그 확인
-            console.log(action.payload);
-            // localStorage에 올바르게 저장
-            // localStorage.setItem('authToken', action.payload.token);
-            // localStorage.setItem('userRole', action.payload.userRole);
-            // localStorage.setItem('userEmail', action.payload.email);
-            // localStorage.setItem('userLocation', action.payload.location);
             return {
                 ...state,
                 isAuthenticated: true,
                 authToken: action.payload.token,
+                userId: action.payload.userId,
                 userEmail: action.payload.userEmail,
                 userRole: action.payload.userRole,
                 userLocation: action.payload.location,
-                nickname: action.payload.nickname || null,
+                nickname: action.payload.nickname
             };
         case LOGOUT:
             return {
                 ...state,
                 isAuthenticated: false,
                 authToken: null,
+                userId: null,
                 userEmail: null,
                 userRole: null,
                 userLocation: null,
-                nickname: null,
+                nickname: null
             };
         default:
             return state;
