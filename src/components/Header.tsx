@@ -11,6 +11,7 @@ import { MenuOutlined } from "@ant-design/icons";
 import type { SelectProps } from 'antd';
 import { findUser, findBanker } from '../utils/userStorage';
 import { locations } from '../constants/locations';
+import { User } from '../constants/users'
 
 // 지역 선택 검색창 컴포넌트
 const SearchInput: React.FC<{
@@ -92,6 +93,9 @@ function Header() {
 
   const isLoggedIn = useSelector((state: RootState) => state.auth.isAuthenticated);
   const userRole = useSelector((state: RootState) => state.auth.userRole);
+  const userEmail = useSelector((state: RootState) => state.auth.userEmail);
+  const userNickname = localStorage.getItem('nickName');
+  // const userRole = localStorage.getItem('userRole');
 
   const loggedUser = localStorage.getItem('userEmail');
   let user, banker;
@@ -170,8 +174,8 @@ function Header() {
               </span>
               <Link to="/my/profile" className="flex items-center gap-2">
                 <img src={userIcon} alt="user icon" width={35} />
-                {user && (<span>{user.nickname}</span>)}
-                {banker && (<span>{banker.name}</span>)}
+                {userRole == 'C' && (<span>{userNickname}</span>)} 
+                {/* {userRole == 'B' && (<span>{userName}</span>)} */}
               </Link>
             </div>
           ) : (
