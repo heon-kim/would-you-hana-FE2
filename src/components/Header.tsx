@@ -150,15 +150,11 @@ function Header() {
 
   const isLoggedIn = useSelector((state: RootState) => state.auth.isAuthenticated);
   const userRole = useSelector((state: RootState) => state.auth.userRole);
-  const userEmail = useSelector((state: RootState) => state.auth.userEmail);
-  const userNickname = localStorage.getItem('nickName');
-  // const userRole = localStorage.getItem('userRole');
-
   const loggedUser = localStorage.getItem('userEmail');
-  let user, banker;
+
+  let nickname;
   if (loggedUser) {
-    user = userRole == 'C' ? findUser(loggedUser) : undefined;
-    banker = userRole == 'B' ? findBanker(loggedUser) : undefined;
+    nickname = localStorage.getItem('nickname');
   }
 
   useEffect(() => {
@@ -231,8 +227,7 @@ function Header() {
               </span>
               <Link to="/my/profile" className="flex items-center gap-2">
                 <img src={userIcon} alt="user icon" width={35} />
-                {userRole == 'C' && (<span>{userNickname}</span>)} 
-                {/* {userRole == 'B' && (<span>{userName}</span>)} */}
+                {nickname && (<span>{nickname}</span>)} 
               </Link>
             </div>
           ) : (
