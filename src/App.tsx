@@ -7,7 +7,8 @@ import MyPage from "./pages/MyPage/MyPage";
 import Profile from "./pages/MyPage/Profile";
 import Posts from "./pages/MyPage/Posts";
 import Likes from "./pages/MyPage/Likes";
-import Scrap from "./pages/MyPage/Scraps";
+import QnAScrap from "./pages/MyPage/QnAScraps";
+import CommunityScrap from "./pages/MyPage/CommunityScraps"
 import EditProfile from "./pages/MyPage/EditProfile";
 import Login from "./pages/Auth/Login";
 import FindPassword from "./pages/Auth/FindPassword";
@@ -54,7 +55,8 @@ function App() {
                 <Route path="profile" element={<Profile />} />
                 <Route path="posts" element={<Posts />} />
                 <Route path="likes" element={<Likes />} />
-                <Route path="scrap" element={<Scrap />} />
+                <Route path="qnaScrap" element={<QnAScrap />} />
+                <Route path="communityScrap" element={<CommunityScrap />} />
                 <Route path="edit" element={<EditProfile />} />
                 <Route path="district" element={<SetDistrict />} />
               </Route>

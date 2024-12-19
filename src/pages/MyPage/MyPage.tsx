@@ -22,7 +22,8 @@ const MyPage: React.FC = () => {
     { key: 'profile', label: '프로필'},
     { key: 'posts', label: '게시글' },
     { key: 'likes', label: '좋아요' },
-    { key: 'scrap', label: '스크랩' },
+    { key: 'qnaScrap', label: 'QnA 스크랩' },
+    { key: 'communityScrap', label: '커뮤니티 스크랩' },
     { key: 'edit', label: '개인정보 수정' },
     { key: 'district', label: '관심지역 설정' },
   ];

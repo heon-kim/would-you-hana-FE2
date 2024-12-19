@@ -2,25 +2,32 @@ import React, { useState, useEffect } from 'react';
 import { Layout, Progress, Avatar } from 'antd';
 import userIcon from '../../assets/img/icon_user.png';
 import { findUser, findBanker } from '../../utils/userStorage';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../hoc/store';
 
 const { Content } = Layout;
 
+const getNickname = (): string => {
+  const nickname = localStorage.getItem('userNickname');
+  return nickname? nickname : 'None'
+}
+
 const UserInfo: React.FC = () => {
-  const [nicknameOrRealname, setNicknameOrRealname] = useState<string>('None'); // 닉네임 상태 관리
+  const [nicknameOrRealname, setNicknameOrRealname] = useState<string>('Loading...'); // 닉네임 상태 관리
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const userRole = useSelector((state: RootState) => state.auth.userRole);
 
   // 현재 로그인한 사용자 확인
-  useEffect(() => {
-    const loggedUser = localStorage.getItem('userEmail'); // 저장된 사용자 정보 가져오기
-    if (loggedUser) {
-      const user = findUser(loggedUser);
-      const banker = findBanker(loggedUser);
-      if (user) {
+  useEffect(() => {  
+    if (isLoggedIn) {
+      const nickname = getNickname();
+
+      if (userRole == 'C') {
         // 고객이라면
-        setNicknameOrRealname(user.nickname); // 닉네임 설정
-      } else if (banker) {
+        setNicknameOrRealname(nickname); // 닉네임 설정
+      } else if (userRole == 'B') {
         // 행원이라면
-        const user = banker;
-        setNicknameOrRealname(user.name);
+        setNicknameOrRealname(nickname);
       }
     }
   }, []);
