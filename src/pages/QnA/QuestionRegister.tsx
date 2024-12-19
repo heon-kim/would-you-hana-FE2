@@ -31,7 +31,7 @@ const QuestionRegister: React.FC = () => {
   const [formData, setFormData] = useState({
     title: '',
     content: '',
-    category: '',
+    categoryName: '',
   });
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -80,9 +80,9 @@ const QuestionRegister: React.FC = () => {
   }, []);
 
   const handleRegister = useCallback(() => {
-    const { category, title, content } = formData;
+    const { categoryName, title, content } = formData;
     
-    if (!category || !title || !content) {
+    if (!categoryName || !title || !content) {
       message.error('모든 필드를 입력해주세요.');
       return;
     }
@@ -98,17 +98,14 @@ const QuestionRegister: React.FC = () => {
     }
 
     try {
-      const formData = new FormData();
+      const form = new FormData();
       
-      // 텍스트 데이터 추가
-      // TODO: 하드코딩된 데이터 수정해야함
-      // TODO: 파일 업로드 에러 있음
       const question: QuestionAddRequestDTO = {
         title,
         content,
         customerId: userId,
-        categoryName: "적금",
-        location: userLocation || '서울시 광진구'
+        categoryName,
+        location: userLocation || '성동구'
       }
 
       // question JSON 데이터 추가 시 content-type 설정
@@ -116,16 +113,16 @@ const QuestionRegister: React.FC = () => {
         type: 'application/json'
       });
       console.log(questionBlob);
-      formData.append('question', questionBlob);
+      form.append('question', questionBlob);
 
       //파일 데이터 추가
       fileList.forEach((file) => {
         if (file.originFileObj) {
-          formData.append('file', file.originFileObj);
+          form.append('file', file.originFileObj);
         }
       });
 
-      qnaService.createQuestion(formData);
+      qnaService.createQuestion(form);
       message.success('질문이 등록되었습니다!');
       navigate('/qna');
     } catch (error) {
@@ -149,7 +146,7 @@ const QuestionRegister: React.FC = () => {
         className="w-full h-[50px]"
         placeholder="어떤 분야가 궁금한가요?"
         optionFilterProp="label"
-        onChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
+        onChange={(selected) => setFormData(prev => ({ ...prev, categoryName: selected.label }))}
         options={Categories.map(category => ({
           value: category,
           label: category

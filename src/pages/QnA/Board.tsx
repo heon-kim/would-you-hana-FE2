@@ -22,7 +22,7 @@ const Board: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<string>('latest');
   const [searchText, setSearchText] = useState('');
   const [isSearchActive, setIsSearchActive] = useState(false);
-  const userLocation = useSelector((state: RootState) => state.auth.userLocation);
+  const {userLocation, userRole} = useSelector((state: RootState) => state.auth);
 
 
 
@@ -49,7 +49,10 @@ const Board: React.FC = () => {
   const getData = async () => {
 
     try {
-      const response: AxiosResponse<QnaListDTO[]> = await qnaService.getQnaList(sortOrder, userLocation);
+      const response: AxiosResponse<QnaListDTO[]> =
+        userRole === 'B'
+          ? await qnaService.getQnaListBanker(sortOrder, userLocation)
+          : await qnaService.getQnaList(sortOrder, userLocation);
 
       if (response && response.data) {
         console.log('Response Data: ', response.data);
