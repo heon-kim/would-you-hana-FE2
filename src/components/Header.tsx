@@ -44,10 +44,38 @@ const SearchInput: React.FC<{
   const isLoggedIn = useSelector((state: RootState) => state.auth.isAuthenticated);
 
   useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === 'interestLocations') {
+        const locations: string[] = JSON.parse(event.newValue || '["광진구"]');
+        setFavoriteLocations(locations);
+        setData(locations.map((loc) => ({ text: loc, value: loc })));
+      }
+    };
+  
+    window.addEventListener('storage', handleStorageChange);
+  
+    // 초기 설정
     const loggedUser = localStorage.getItem('userEmail');
     if (loggedUser) {
-      const user = findUser(loggedUser);
-      const locations = user?.favoriteLocations || ['광진구'];
+      const locations: string[] = JSON.parse(localStorage.getItem('interestLocations') || '["광진구"]');
+      setFavoriteLocations(locations);
+      setData(locations.map((loc) => ({ text: loc, value: loc })));
+    } else {
+      setFavoriteLocations(locations);
+      setData(locations.map((loc) => ({ text: loc, value: loc })));
+    }
+  
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    const loggedUser = localStorage.getItem('userEmail');
+    if (loggedUser) {
+      //const user = findUser(loggedUser);
+      const locations: string[] = JSON.parse(localStorage.getItem('interestLocations') || '[광진구]');
+      //const locations = user?.favoriteLocations || ['광진구'];
       setFavoriteLocations(locations);
       setData(locations.map((loc) => ({ text: loc, value: loc }))); // 초기 데이터 설정
     } else {
@@ -167,6 +195,7 @@ function Header() {
 
   const handleLogout = () => {
     dispatch(logout());
+    localStorage.removeItem('interestLocations')
     message.success('로그아웃 성공!');
     setSearchValue('');
     navigate('/');
