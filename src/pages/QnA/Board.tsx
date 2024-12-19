@@ -24,7 +24,7 @@ const Board: React.FC = () => {
   const {userLocation, userRole, branchName} = useSelector((state: RootState) => state.auth);
 
   const [questions, setQuestions] = useState<QnaListDTO[]>([]); // QnaListDTO 배열 타입 지정
-  const [popularQuestions, setPopularQuestions] = useState<TodayQnaListDTO[]>([]);
+  const [todayQuestions, setTodayQuestions] = useState<TodayQnaListDTO[]>([]);
 
   // 데이터 가져오기 함수
   const getQuestions = async () => {
@@ -56,8 +56,8 @@ const Board: React.FC = () => {
           await qnaService.getTodayQuestions(userLocation);
   
         if (response && response.data) {
-          setPopularQuestions(response.data);
-          console.log('Popular Questions: ', response.data);
+          setTodayQuestions(response.data);
+          console.log('Today Questions: ', response.data);
         } else {
   
           console.error('Error fetching data: response.data is undefined');
@@ -127,7 +127,7 @@ const Board: React.FC = () => {
           </div>
 
           <div className="mb-6">
-            <HotPosts popularQuestions={popularQuestions} />
+            <HotPosts todayQuestions={todayQuestions} />
           </div>
 
           <SearchBar

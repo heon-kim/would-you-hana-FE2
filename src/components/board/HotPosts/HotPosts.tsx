@@ -33,18 +33,18 @@ const HotPost: React.FC<HotPostProps> = ({ rank, title }) => {
   );
 };
 
-const HotPosts: React.FC<{ popularQuestions: TodayQnaListDTO[] }> = ({ popularQuestions }) => {
+const HotPosts: React.FC<{ todayQuestions: TodayQnaListDTO[] }> = ({ todayQuestions }) => {
   const gridRowsClass = 
-    popularQuestions.length === 0 
+    todayQuestions.length === 0 
       ? "hidden" 
-      : `grid-rows-${Math.ceil(popularQuestions.length / 2)}`; // 2개씩 한 줄로 배치
+      : `grid-rows-${Math.ceil(todayQuestions.length / 2)}`; // 2개씩 한 줄로 배치
 
   return (
-    <div className={`bg-[#E8F7E6] p-5 rounded-lg w-full ${popularQuestions.length === 0 ? "hidden" : ""}`}>
+    <div className={`bg-[#E8F7E6] p-5 rounded-lg w-full ${todayQuestions.length === 0 ? "hidden" : ""}`}>
     <div className="text-lg font-bold mb-2.5">인기 있는 오늘의 질문</div>
     <div className="text-xs text-gray-600 mb-4">{getTodayDate()} 기준</div>
     <div className={`grid grid-cols-2 auto-cols-fr gap-5 ${gridRowsClass}`}>
-      {popularQuestions.map((post: TodayQnaListDTO, index: number) => (
+      {todayQuestions.map((post: TodayQnaListDTO, index: number) => (
         <div
           key={post.questionId}
           className="bg-white p-2.5 rounded-lg min-h-[50px] flex flex-col items-center justify-center border border-[#F3F5F7]"
