@@ -50,11 +50,11 @@ export const qnaService = {
   },
 
   // 전체 질문 목록 조회(행원)
-  getQnaListBanker: (sort: string, location: string|null) => {
+  getQnaListBanker: (sort: string, branch: string) => {
     return request<QnaListDTO[]>({
       method: 'GET',
       url: `${BASE_URL}/qna/qnaList/${sort}/branch`,
-      params: location ? { branch:location } : {} // location이 null이 아니면 location을 포함한 객체를 만들어 준다.
+      params: branch ? { branch } : {} // location이 null이 아니면 location을 포함한 객체를 만들어 준다.
     });
   },
 
