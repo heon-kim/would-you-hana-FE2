@@ -9,10 +9,9 @@ import SearchBar from '../../components/board/SearchBar/SearchBar';
 import SortButtons from '../../components/board/SortButtons/SortButtons';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../hoc/store';
-import { Post } from '../../types/post';
 import { AxiosResponse } from 'axios';
 import { qnaService } from '../../services/qna.service';
-
+import { QnaListDTO, TodayQnaListDTO } from '../../types/dto/question.dto';
 const POSTS_PER_PAGE = 5;
 
 const Board: React.FC = () => {
@@ -24,27 +23,11 @@ const Board: React.FC = () => {
   const [isSearchActive, setIsSearchActive] = useState(false);
   const {userLocation, userRole, branchName} = useSelector((state: RootState) => state.auth);
 
-  interface QnaListDTO {
-    questionId: number;
-    customerId: number;
-    categoryId: number;
-    categoryName: string;
-    title: string;
-    location: string;
-    createdAt: string; // LocalDateTime은 ISO 8601 문자열로 처리됨
-    commentCount: number;
-    likeCount: number;
-    scrapCount: number;
-    viewCount: number;
-    answerBanker: string;
-  }
-
-
-  const [data, setData] = useState<QnaListDTO[]>([]); // QnaListDTO 배열 타입 지정
-  const posts = data;
+  const [questions, setQuestions] = useState<QnaListDTO[]>([]); // QnaListDTO 배열 타입 지정
+  const [popularQuestions, setPopularQuestions] = useState<TodayQnaListDTO[]>([]);
 
   // 데이터 가져오기 함수
-  const getData = async () => {
+  const getQuestions = async () => {
 
     try {
       const response: AxiosResponse<QnaListDTO[]> =
@@ -54,7 +37,7 @@ const Board: React.FC = () => {
 
       if (response && response.data) {
         console.log('Response Data: ', response.data);
-        setData(response.data);
+        setQuestions(response.data);
       } else {
 
         console.error('Error fetching data: response.data is undefined');
@@ -65,10 +48,31 @@ const Board: React.FC = () => {
     }
   }
 
+    // 인기 질문글 데이터 가져오기 함수
+    const getTodayQuestions = async () => {
+
+      try {
+        const response: AxiosResponse<QnaListDTO[]> =
+          await qnaService.getTodayQuestions(userLocation);
+  
+        if (response && response.data) {
+          setPopularQuestions(response.data);
+          console.log('Popular Questions: ', response.data);
+        } else {
+  
+          console.error('Error fetching data: response.data is undefined');
+        }
+      } catch (err) {
+        console.error('Error fetching data:', err);
+  
+      }
+    }
+
 
   // sortOrder나 userLocation이 변경될 때마다 데이터 새로 불러오기
   useEffect(() => {
-    getData();
+    getQuestions();
+    getTodayQuestions();
   }, [sortOrder, userLocation]);
 
 
@@ -96,7 +100,7 @@ const Board: React.FC = () => {
     navigate(`/qna/detail/${postId}`);
   }, [navigate]);
 
-  const filteredAndSearchedPosts = posts.filter((post: Post) => {
+  const filteredAndSearchedPosts = questions.filter((post: QnaListDTO) => {
     const categoryMatches =
       selectedCategory === '전체' || post.categoryName === selectedCategory;
     const searchMatches = post.title
@@ -123,7 +127,7 @@ const Board: React.FC = () => {
           </div>
 
           <div className="mb-6">
-            <HotPosts />
+            <HotPosts popularQuestions={popularQuestions} />
           </div>
 
           <SearchBar
