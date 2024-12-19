@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../hoc/store';
 import { myPageService } from '../../services/mypage.service';
 
-const Scraps: React.FC = () => {
+const QnAScraps: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
@@ -31,18 +31,8 @@ const Scraps: React.FC = () => {
     const fetchScraps = async() => {
       try{
         const customerId = Number(localStorage.getItem('userId'));
-        const [communityResponse, qnaResponse] = await Promise.all([
-          myPageService.getScrapedPosts(customerId),
-          myPageService.getScrapedQnas(customerId),
-        ]);
-
-        // 두 결과를 병합하여 상태 업데이트
-        const combinedPosts = [
-          ...(Array.isArray(communityResponse.data) ? communityResponse.data : []),
-          ...(Array.isArray(qnaResponse.data) ? qnaResponse.data : []),
-        ];
-
-        setPosts(combinedPosts);
+        const response = await myPageService.getScrapedQnas(customerId);
+        setPosts(response.data);
       }catch(error){
         console.error('failed to fetch scraps:', error);
       }
@@ -56,7 +46,7 @@ const Scraps: React.FC = () => {
       <div
         style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}
       >
-        스크랩
+        QnA 스크랩
       </div>
 
       <PostList
@@ -71,4 +61,4 @@ const Scraps: React.FC = () => {
   );
 };
 
-export default Scraps;
+export default QnAScraps;
