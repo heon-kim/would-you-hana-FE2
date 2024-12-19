@@ -9,30 +9,34 @@ import CommunityCategory from '../../components/board/Category/CommunityCategory
 import ImgBank from '../../assets/img/img_community3.jpg';
 import ImgBank2 from '../../assets/img/img_community2.png';
 import IconPencil from '../../assets/img/icon_pencil.svg';
-
-const COLUMN_BREAKPOINT = 1340;
+import { communityService } from '../../services/community.service';
+import { CommunityListDTO } from '../../types/dto/community.dto';
 
 const Community: React.FC = () => {
+  const userLocation = localStorage.getItem('userLocation');
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<Post[]>([]);
+  const [data, setData] = useState<CommunityListDTO[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('전체');
-  const [columnCount, setColumnCount] = useState(2);
-
-  const updateColumnCount = useCallback(() => {
-    setColumnCount(window.innerWidth < COLUMN_BREAKPOINT ? 1 : 2);
-  }, []);
 
   useEffect(() => {
-    updateColumnCount();
-    window.addEventListener('resize', updateColumnCount);
-    return () => window.removeEventListener('resize', updateColumnCount);
-  }, [updateColumnCount]);
+    const fetchPosts = async () => {
+      try {
+        setLoading(true);
+        const response = await communityService.getCommunityList(userLocation); // location이 필요한 경우 state로 처리 가능
+        setData(Array.isArray(response.data) ? response.data : []); // 배열 여부 확인
+        setHasMore(Array.isArray(response) && response.length > 0);
+        console.log('data ------------------', data);
+      } catch (error) {
+        console.error('Failed to fetch posts:', error);
+        message.error('게시물을 불러오는 데 실패했습니다.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  useEffect(() => {
-    const storedData = localStorage.getItem('community_posts');
-    setData(storedData ? JSON.parse(storedData) : []);
+    fetchPosts();
   }, []);
 
   const handlePostClick = useCallback((postId: number) => {
@@ -63,30 +67,36 @@ const Community: React.FC = () => {
   }, [loading, data]);
 
   const truncateText = useCallback((text: string, maxLength: number) => {
-    if (columnCount === 1) return text;
+    // if (columnCount === 1) return text;
     return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
-  }, [columnCount]);
+  }, []);
 
+  console.log('selected cat', selectedCategory);
+  console.log(data);
   const filteredData = selectedCategory === '전체'
     ? data
-    : data.filter((post) => post.category === selectedCategory);
+    : data.filter((post) => post.categoryName === selectedCategory);
 
-  const renderListItem = useCallback((item: Post, index: number) => (
+  const renderListItem = useCallback((item: CommunityListDTO, index: number) => (
     <List.Item
-      key={item.id}
+      key={item.postId}
       className={`w-full h-auto p-0.5 m-0 relative border-b border-[rgba(140,140,140,0.35)] 
-        ${columnCount === 2 && index % 2 === 0 ? 'border-r' : ''}`}
-      onClick={() => handlePostClick(item.id)}
+        `}
+        style={{
+          borderBottom: '1px solid rgba(140, 140, 140, 0.35)', // 구분선 스타일 추가
+          paddingBottom:'15px'
+        }}
+      onClick={() => handlePostClick(item.postId)}
     >
       <div className="p-3">
         <div className="flex items-center justify-center">
           <div className="flex flex-col w-4/5 text-start justify-start gap-2">
-            <p className="text-sm text-gray-500">{item.category}</p>
+            <p className="text-sm text-gray-500">{item.categoryName}</p>
             <h1 className="text-lg font-bold">
               {truncateText(item.title, 23)}
             </h1>
             <h3 className="text-base">
-              {truncateText(item.content, columnCount === 1 ? 85 : 30)}
+              {/* {truncateText(item.content, maxlength === 1 ? 85 : 30)} */}
             </h3>
           </div>
           <div className="w-1/5 flex justify-center mt-5">
@@ -97,17 +107,17 @@ const Community: React.FC = () => {
             />
           </div>
         </div>
-        <p>{item.author}</p>
+        <p>{item.nickname}</p>
         <div className="flex gap-3">
           <p className="text-sm text-gray-500">
-            <span className="text-mainColor">조회 {item.counts.views}</span>
-            {' · '}좋아요 {item.counts.likes}
-            {' · '}댓글 {item.counts.comments}
+            <span className="text-mainColor">조회 {item.viewCount}</span>
+            {' · '}좋아요 {item.likeCount}
+            {/* {' · '}댓글 {item.counts.comments} */}
           </p>
         </div>
       </div>
     </List.Item>
-  ), [columnCount, handlePostClick, truncateText]);
+  ), [1, handlePostClick, truncateText]);
 
   return (
     <div id="scrollableDiv" className="h-auto overflow-auto px-4 mt-5">
@@ -133,7 +143,7 @@ const Community: React.FC = () => {
         <CommunityCategory setCategory={setSelectedCategory} />
 
         <List
-          grid={{ gutter: 0, column: columnCount }}
+          grid={{ gutter: 0, column: 1 }}
           dataSource={filteredData}
           renderItem={renderListItem}
         />

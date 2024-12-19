@@ -19,6 +19,7 @@ const CommunityCategory: React.FC<CommunityCategoryProps> = ({ setCategory }) =>
     { label: '신용점수 올리기', key: '신용점수 올리기'},
     { label: '세금/납부', key: '세금/납부'},
     { label: '학자금대출', key: '학자금대출'},
+    { label: '퇴직연금', key: '퇴직연금'},
     
   ];
 

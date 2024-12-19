@@ -18,6 +18,7 @@ export interface Post {
   createdAt: string;
   location: string;
   customerId: number;
+  customerName: string;
   images?: Image[];
   questionId: number;
   viewCount: number;
