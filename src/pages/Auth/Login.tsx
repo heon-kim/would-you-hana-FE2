@@ -22,6 +22,7 @@ interface CustomerSignInReturnDto {
   role: string;
   location: string;
   nickName: string;
+  branchName?: string;
 }
 
 const Login: React.FC = () => {
@@ -52,6 +53,7 @@ const Login: React.FC = () => {
       });
       
       const { token, email: returnedEmail, id, role, location, nickName:nickname } = response.data;
+      const branchName = userType == 'B' ? response.data.branchName : undefined;
 
       if (token && location) {
         // Redux 상태 업데이트
@@ -62,8 +64,9 @@ const Login: React.FC = () => {
           role: role,
           location: location,
           nickname: nickname,
+          branchName: branchName,
         });
-        dispatch(loginSuccess(token, Number(id), returnedEmail, role, location, nickname));
+        dispatch(loginSuccess(token, Number(id), returnedEmail, role, location, nickname, branchName));
 
         // 메시지 및 네비게이션 처리
         message.success('로그인 성공!');

@@ -4,7 +4,7 @@ import App from './App.tsx';
 import './index.css';
 import { Provider } from 'react-redux';
 import store from './hoc/store';
-import { getAuthToken, getUserRole, getUserEmail, getUserId, getUserLocation, getUserNickname } from './hoc/request';
+import { getAuthToken, getUserRole, getUserEmail, getUserId, getUserLocation, getUserNickname, getUserBranchName } from './hoc/request';
 import { loginSuccess } from './hoc/actions';
 
 const storedAuthToken = getAuthToken(); //로컬스토리지에서 토큰이 있으면 가져옴
@@ -13,6 +13,7 @@ const userEmail = getUserEmail() || ''; // 로컬스토리지에서 해당 유�
 const userLocation = getUserLocation() || '';
 const userNickname = getUserNickname() || '';
 const userId = getUserId();
+const userBranchName = getUserBranchName() || undefined;
 
 // const localStorageCleared = localStorage.getItem('localStorageCleared'); //로컬 스토리지에서 클리어되었는지 여부 가져옴
 
@@ -26,7 +27,7 @@ if (storedAuthToken) {
   //저장된 토큰이 있다면 로그인완료 상태로 디스패치 -> f5누르면 index.js로 다시 오는데, 이거 때문에 로그인 상태가 유지되는 것임
   
    // 저장된 토큰과 역할로 로그인 액션 디스패치
-  store.dispatch(loginSuccess(storedAuthToken, Number(userId), userEmail, userRole, userLocation, userNickname));
+  store.dispatch(loginSuccess(storedAuthToken, Number(userId), userEmail, userRole, userLocation, userNickname, userBranchName));
 
 
 }
