@@ -46,7 +46,7 @@ const authReducer = (state = initialAuthState, action: AuthActionTypes): AuthSta
                 userId: null,
                 userEmail: null,
                 userRole: null,
-                userLocation: null,
+                userLocation: '성동구',
                 nickname: null
             };
         default:

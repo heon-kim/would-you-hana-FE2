@@ -46,7 +46,7 @@ export const logout = (): LogoutAction => {
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userId');
     localStorage.removeItem('userRole');
-    localStorage.removeItem('userLocation');
+    localStorage.setItem('userLocation', '성동구');
     localStorage.removeItem('userNickname');
     return {
         type: LOGOUT

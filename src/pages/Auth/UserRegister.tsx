@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { User } from "../../constants/users";
-import { saveUser, findUser, hasNickname } from '../../utils/userStorage';
+import { findUser, hasNickname } from '../../utils/userStorage';
 import { RuleObject } from 'antd/es/form';
 import { Form, Input, Button, message, Select, Radio, Space } from 'antd';
 import {

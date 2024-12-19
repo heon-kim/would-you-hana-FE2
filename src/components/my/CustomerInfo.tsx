@@ -8,7 +8,7 @@ import { RootState } from '../../hoc/store';
 const { Content } = Layout;
 
 const getNickname = (): string => {
-  const nickname = localStorage.getItem('nickname');
+  const nickname = localStorage.getItem('userNickname');
   return nickname? nickname : 'None'
 }
 
