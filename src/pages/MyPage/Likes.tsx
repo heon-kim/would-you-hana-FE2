@@ -23,7 +23,7 @@ const Likes: React.FC = () => {
   };
 
   const handlePostClick = (postId: number) => {
-    navigate(`/qna/detail/${postId}`); // 특정 포스트 ID로 페이지 이동
+    navigate(`/community/detail/${postId}`); // 특정 커뮤니티 포스트 ID로 페이지 이동
   };
 
   useEffect(() => {
