@@ -34,7 +34,7 @@ export const loginSuccess = (
   localStorage.setItem('userEmail', userEmail);
   localStorage.setItem('userRole', userRole);
   localStorage.setItem('userLocation', location);
-  localStorage.setItem('nickname', nickname);
+  localStorage.setItem('userNickname', nickname);
   return {
     type: LOGIN_SUCCESS,
     payload: { token, userEmail, userId, userRole, location, nickname }
@@ -47,7 +47,7 @@ export const logout = (): LogoutAction => {
     localStorage.removeItem('userId');
     localStorage.removeItem('userRole');
     localStorage.setItem('userLocation', '성동구');
-    localStorage.removeItem('nickname');
+    localStorage.removeItem('userNickname');
     return {
         type: LOGOUT
     };
