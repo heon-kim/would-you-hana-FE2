@@ -12,6 +12,7 @@ import { MenuOutlined } from "@ant-design/icons";
 import type { SelectProps } from 'antd';
 import { findUser, findBanker } from '../utils/userStorage';
 import { locations } from '../constants/locations';
+import { User } from '../constants/users'
 
 // Kakao Maps API 스크립트를 로드하는 함수
 const loadKakaoMapScript = (): Promise<void> => {
@@ -177,12 +178,11 @@ function Header() {
 
   const isLoggedIn = useSelector((state: RootState) => state.auth.isAuthenticated);
   const userRole = useSelector((state: RootState) => state.auth.userRole);
-
   const loggedUser = localStorage.getItem('userEmail');
-  let user, banker;
+
+  let nickname;
   if (loggedUser) {
-    user = userRole == 'C' ? findUser(loggedUser) : undefined;
-    banker = userRole == 'B' ? findBanker(loggedUser) : undefined;
+    nickname = localStorage.getItem('userNickname');
   }
 
   useEffect(() => {
@@ -256,8 +256,7 @@ function Header() {
               </span>
               <Link to="/my/profile" className="flex items-center gap-2">
                 <img src={userIcon} alt="user icon" width={35} />
-                {user && (<span>{user.nickname}</span>)}
-                {banker && (<span>{banker.name}</span>)}
+                {nickname && (<span>{nickname}</span>)} 
               </Link>
             </div>
           ) : (
