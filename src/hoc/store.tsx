@@ -20,7 +20,7 @@ const initialAuthState: AuthState = {
     userEmail: localStorage.getItem('userEmail'),
     userRole: localStorage.getItem('userRole'),
     userLocation: localStorage.getItem('userLocation'),
-    nickname: localStorage.getItem('nickname'),
+    nickname: localStorage.getItem('userNickname'),
 };
 
 

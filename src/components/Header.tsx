@@ -154,7 +154,7 @@ function Header() {
 
   let nickname;
   if (loggedUser) {
-    nickname = localStorage.getItem('nickname');
+    nickname = localStorage.getItem('userNickname');
   }
 
   useEffect(() => {

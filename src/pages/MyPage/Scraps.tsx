@@ -15,13 +15,9 @@ const Scraps: React.FC = () => {
   const postsPerPage = 5;
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-
-  // const posts: Post[] = getPosts();
-  const isLoggedIn = useSelector((state: RootState) => state.auth.isAuthenticated);
-  // const token = useSelector((state: RootState) => state.auth.authToken);
-
-  // 좋아요 list 중 userId == loggedUserId인 post 필터링
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+  
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isAuthenticated);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -35,17 +31,18 @@ const Scraps: React.FC = () => {
     const fetchScraps = async() => {
       try{
         const customerId = Number(localStorage.getItem('userId'));
-        // // const customerId = 1;
-        // const token = localStorage.getItem('authToken');
-        // console.log('token:=--', token);
-        // const response = await axios.get(`http://localhost:8080/mypage/getScrap/${customerId}`, {
-        //   headers: {
-        //     Authorization: `Bearer ${token}`,
-        //   },
-        // });
-        
-        const response = await myPageService.getScrapedPosts(customerId);
-        setPosts(response.data);
+        const [communityResponse, qnaResponse] = await Promise.all([
+          myPageService.getScrapedPosts(customerId),
+          myPageService.getScrapedQnas(customerId),
+        ]);
+
+        // 두 결과를 병합하여 상태 업데이트
+        const combinedPosts = [
+          ...(Array.isArray(communityResponse.data) ? communityResponse.data : []),
+          ...(Array.isArray(qnaResponse.data) ? qnaResponse.data : []),
+        ];
+
+        setPosts(combinedPosts);
       }catch(error){
         console.error('failed to fetch scraps:', error);
       }
