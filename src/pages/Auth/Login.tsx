@@ -71,8 +71,7 @@ const Login: React.FC = () => {
           role: role,
           location: location,
           nickname: nickname,
-
-          interestLocations: interestLocations
+          interestLocations: interestLocations,
           branchName: branchName,
         });
         localStorage.setItem('interestLocations', JSON.stringify(interestLocations));
