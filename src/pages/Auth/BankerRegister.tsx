@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Banker } from "../../constants/users";
-import { saveBanker, findBanker } from '../../utils/userStorage';
-import { Form, Input, Button, message, Select } from 'antd';
+import { findBanker } from '../../utils/userStorage';
+import { Form, Input, Button, message, Select, Space } from 'antd';
 import { RuleObject } from 'antd/es/form';
 import {
   UserOutlined,
@@ -9,11 +9,13 @@ import {
   LockOutlined,
   DownOutlined,
   BankOutlined,
+  HomeOutlined,
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { Categories } from '../../constants/posts';
 import '../../styles/formInput.css';
 import wyhn from '../../assets/img/would_you_hana.png';
+import { bankerService } from '../../services/banker.service'; 
 
 
 interface formProps {
@@ -22,6 +24,7 @@ interface formProps {
   passwordConfirm: string;
   authNum: number;
   name: string;
+  location: string;
   branchName: string;
 }
 
@@ -89,6 +92,7 @@ const InputForm: React.FC<{
         password: '',
         passwordConfirm: '',
         authNum: null,
+        location: '',
         name: '',
         branchName: '',
       }}
@@ -158,6 +162,17 @@ const InputForm: React.FC<{
       >
         <Input.Password prefix={<LockOutlined />} placeholder="비밀번호 확인" />
       </Form.Item>
+      <Form.Item
+        // label="주소(구)"
+        name="location"
+        rules={[{ required: true, message: '지점이 위치한 지역구를 입력해주세요.' }]}
+      >
+        <Space.Compact block size="large">
+          <Button icon={<HomeOutlined />}></Button>
+          <Input placeholder="서울시" disabled />
+          <Input placeholder="지점이 속한 구) ex: 광진구" />
+        </Space.Compact>
+      </Form.Item>
 
       <Form.Item
         // label="지점명"
@@ -196,11 +211,21 @@ const SelectInterest: React.FC<{
     }
   };
 
-  const handleSaveBanker = () => {
-    saveBanker(banker);
-    message.success('회원가입이 완료되었습니다!');
-    navigate('/');
-  };
+  const handleSaveBanker = useCallback(async () => {
+  
+      try{
+        bankerService.registerBanker(banker);
+        message.success('회원가입이 완료되었습니다!');
+        navigate('/');
+      } catch(error){
+        console.error('Failed to create User:', error);
+        message.error('행원 계정 생성에 실패했습니다.');
+      }
+      //saveUser(user);
+      
+      
+      
+    },[]);
 
   const suffix = (
     <>
@@ -253,6 +278,7 @@ const BankerRegister: React.FC = () => {
     email: '',
     password: '',
     name: '',
+    location: '',
     branchName: '',
     interests: '',
   });

@@ -16,6 +16,7 @@ export interface User {
     password: string;
     name: string;
     branchName: string;
+    location: string;
     interests: string;
     photo?: string;
     desc?: string;
