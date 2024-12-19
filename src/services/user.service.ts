@@ -11,6 +11,15 @@ export const userService = {
       url: `${BASE_URL}/members/signUp`,
       data,
     });
+  },
+
+  // 일반회원 관심지역 받아오기
+  getInterestLocationList: (customer_id: string) => {
+    return request<string[]>({
+      method: 'GET',
+      url: `${BASE_URL}/my/interestList`,
+      params: customer_id ? {customer_id} : {}
+    })
   }
  
 }; 

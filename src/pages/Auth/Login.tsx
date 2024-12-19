@@ -22,6 +22,7 @@ interface CustomerSignInReturnDto {
   role: string;
   location: string;
   nickName: string;
+  interestLocations: string[];
 }
 
 const Login: React.FC = () => {
@@ -51,7 +52,7 @@ const Login: React.FC = () => {
         data: { email, password }
       });
       
-      const { token, email: returnedEmail, id, role, location, nickName:nickname } = response.data;
+      const { token, email: returnedEmail, id, role, location, nickName:nickname, interestLocations:interestLocations } = response.data;
 
       if (token && location) {
         // Redux 상태 업데이트
@@ -62,7 +63,9 @@ const Login: React.FC = () => {
           role: role,
           location: location,
           nickname: nickname,
+          interestLocations: interestLocations
         });
+        localStorage.setItem('interestLocations', JSON.stringify(interestLocations));
         dispatch(loginSuccess(token, Number(id), returnedEmail, role, location, nickname));
 
         // 메시지 및 네비게이션 처리
