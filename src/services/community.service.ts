@@ -12,5 +12,14 @@ export const communityService = {
             url: `${BASE_URL}/post/postList`,
             params: location ? { location } : {}
         })
+    },
+
+    //커뮤니티 카테고리별 목록 불러오기
+    getCommunityByCategory:(category: number, location: string|null) => {
+        return request<CommunityListDTO[]>({
+            method: 'GET',
+            url: `${BASE_URL}/post/postList`,
+            params: location ? { location } : {}
+        })
     }
 }

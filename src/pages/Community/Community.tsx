@@ -27,7 +27,6 @@ const Community: React.FC = () => {
         const response = await communityService.getCommunityList(userLocation); // location이 필요한 경우 state로 처리 가능
         setData(Array.isArray(response.data) ? response.data : []); // 배열 여부 확인
         setHasMore(Array.isArray(response) && response.length > 0);
-        console.log('data ------------------', data);
       } catch (error) {
         console.error('Failed to fetch posts:', error);
         message.error('게시물을 불러오는 데 실패했습니다.');
@@ -67,25 +66,46 @@ const Community: React.FC = () => {
   }, [loading, data]);
 
   const truncateText = useCallback((text: string, maxLength: number) => {
-    // if (columnCount === 1) return text;
     return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
   }, []);
 
-  console.log('selected cat', selectedCategory);
-  console.log(data);
-  const filteredData = selectedCategory === '전체'
-    ? data
-    : data.filter((post) => post.categoryName === selectedCategory);
+  // getCommunityByCategory API 함수
+  const getCommunityByCategory = useCallback(async (category: string, location: string | null) => {
+    try {
+      setLoading(true);
+      const response = await communityService.getCommunityByCategory(category, location); // 카테고리와 위치에 맞는 데이터 가져오기
+      if (category === '전체') {
+        setData(Array.isArray(response.data) ? response.data : []); // 전체 카테고리일 때는 모든 데이터 설정
+      } else {
+        const filteredData = response.data.filter((post: CommunityListDTO) => post.categoryName === category);
+        setData(Array.isArray(filteredData) ? filteredData : []); // 카테고리와 일치하는 데이터만 필터링
+      }
+      setHasMore(Array.isArray(response) && response.length > 0);
+    } catch (error) {
+      console.error('Failed to fetch posts by category:', error);
+      message.error('게시물을 불러오는 데 실패했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    // 카테고리나 위치가 변경될 때마다 데이터를 새로 가져옴
+    getCommunityByCategory(selectedCategory, userLocation);
+  }, [selectedCategory, userLocation, getCommunityByCategory]);
+
+  const handleCategoryChange = useCallback((category: string) => {
+    setSelectedCategory(category); // 카테고리 변경 시 업데이트
+  }, []);
 
   const renderListItem = useCallback((item: CommunityListDTO, index: number) => (
     <List.Item
       key={item.postId}
-      className={`w-full h-auto p-0.5 m-0 relative border-b border-[rgba(140,140,140,0.35)] 
-        `}
-        style={{
-          borderBottom: '1px solid rgba(140, 140, 140, 0.35)', // 구분선 스타일 추가
-          paddingBottom:'15px'
-        }}
+      className={`w-full h-auto p-0.5 m-0 relative border-b border-[rgba(140,140,140,0.35)]`}
+      style={{
+        borderBottom: '1px solid rgba(140, 140, 140, 0.35)', // 구분선 스타일 추가
+        paddingBottom: '15px'
+      }}
       onClick={() => handlePostClick(item.postId)}
     >
       <div className="p-3">
@@ -95,9 +115,7 @@ const Community: React.FC = () => {
             <h1 className="text-lg font-bold">
               {truncateText(item.title, 23)}
             </h1>
-            <h3 className="text-base">
-              {/* {truncateText(item.content, maxlength === 1 ? 85 : 30)} */}
-            </h3>
+            <h3 className="text-base"></h3>
           </div>
           <div className="w-1/5 flex justify-center mt-5">
             <img
@@ -112,12 +130,11 @@ const Community: React.FC = () => {
           <p className="text-sm text-gray-500">
             <span className="text-mainColor">조회 {item.viewCount}</span>
             {' · '}좋아요 {item.likeCount}
-            {/* {' · '}댓글 {item.counts.comments} */}
           </p>
         </div>
       </div>
     </List.Item>
-  ), [1, handlePostClick, truncateText]);
+  ), [handlePostClick, truncateText]);
 
   return (
     <div id="scrollableDiv" className="h-auto overflow-auto px-4 mt-5">
@@ -140,11 +157,10 @@ const Community: React.FC = () => {
             <img src={IconPencil} alt="Write" className="w-5 ml-1" />
           </button>
         </div>
-        <CommunityCategory setCategory={setSelectedCategory} />
-
+        <CommunityCategory setCategory={handleCategoryChange} />
         <List
           grid={{ gutter: 0, column: 1 }}
-          dataSource={filteredData}
+          dataSource={data} // 필터링된 data 사용
           renderItem={renderListItem}
         />
       </InfiniteScroll>
