@@ -10,9 +10,8 @@ import { logout } from '../hoc/actions';
 import { message, Select, Button, Drawer } from 'antd';
 import { MenuOutlined } from "@ant-design/icons";
 import type { SelectProps } from 'antd';
-import { findUser, findBanker } from '../utils/userStorage';
 import { locations } from '../constants/locations';
-import { User } from '../constants/users'
+
 
 // Kakao Maps API 스크립트를 로드하는 함수
 const loadKakaoMapScript = (): Promise<void> => {
@@ -43,38 +42,34 @@ const SearchInput: React.FC<{
   const [favoriteLocations, setFavoriteLocations] = useState<string[]>([]);
   const isLoggedIn = useSelector((state: RootState) => state.auth.isAuthenticated);
 
-  useEffect(() => {
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === 'interestLocations') {
-        const locations: string[] = JSON.parse(event.newValue || '["광진구"]');
-        setFavoriteLocations(locations);
-        setData(locations.map((loc) => ({ text: loc, value: loc })));
-      }
-    };
-  
-    window.addEventListener('storage', handleStorageChange);
-  
-    // 초기 설정
-    const loggedUser = localStorage.getItem('userEmail');
-    if (loggedUser) {
-      const locations: string[] = JSON.parse(localStorage.getItem('interestLocations') || '["광진구"]');
-      setFavoriteLocations(locations);
-      setData(locations.map((loc) => ({ text: loc, value: loc })));
-    } else {
-      setFavoriteLocations(locations);
-      setData(locations.map((loc) => ({ text: loc, value: loc })));
+  const handleStorageChange = (event: StorageEvent) => {
+    // Check if the changed key is 'interestLocations'
+    if (event.key === 'interestLocations') {
+      const updatedLocations = JSON.parse(event.newValue || '[]');
+      setFavoriteLocations(updatedLocations); // Update state with the new locations
     }
-  
+  };
+
+  useEffect(() => {
+    // Set the initial state from localStorage when the component mounts
+    const initialLocations = JSON.parse(localStorage.getItem('interestLocations') || '[]');
+    setFavoriteLocations(initialLocations);
+
+    // Listen for changes to localStorage
+    window.addEventListener('storage', handleStorageChange);
+
+    // Clean up the event listener when the component unmounts
     return () => {
       window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
 
+
   useEffect(() => {
     const loggedUser = localStorage.getItem('userEmail');
     if (loggedUser) {
       //const user = findUser(loggedUser);
-      const locations: string[] = JSON.parse(localStorage.getItem('interestLocations') || '[광진구]');
+      const locations: string[] = JSON.parse(localStorage.getItem('interestLocations') || '["성동구"]');
       //const locations = user?.favoriteLocations || ['광진구'];
       setFavoriteLocations(locations);
       setData(locations.map((loc) => ({ text: loc, value: loc }))); // 초기 데이터 설정
