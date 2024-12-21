@@ -20,3 +20,8 @@ export interface Banker {
   photo?: string;
   desc?: string;
 }
+
+export interface InterestLocationRequestDTO{
+  customerId: number;
+  location: string;
+}

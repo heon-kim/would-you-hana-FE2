@@ -1,22 +1,29 @@
 // @ts-nocheck
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import seoulDistricts from '../../assets/location/seoul_districts.json'; // Adjust path as needed
-import { findUser, updateUser } from '../../utils/userStorage';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from '../../hoc/actions';
 import iconSearch from '../../assets/img/icon_search.png';
 import iconPlus from '../../assets/img/icon_plus.svg';
 import store from '../../hoc/store';
 import { message } from 'antd';
+import { userService } from '../../services/user.service';
+import { AxiosResponse } from 'axios';
+
 
 const SetDistrict = () => {
   const [mapInstance, setMapInstance] = useState(null);
   const [inputDistrict, setInputDistrict] = useState('');
   const [selectedDistricts, setSelectedDistricts] = useState([]);
+  const [isDelete, setIsDelete] = useState<boolean>(false);
+  const [isAdd, setIsAdd] = useState<boolean>(false);
   const [polygon, setPolygon] = useState(null);
   const [searchedDistrict, setSearchedDistrict] = useState(null);
-  const [user, setUser] = useState(null);
+
   const dispatch = useDispatch<typeof store.dispatch>();
+  interface InterestLocationsDTO {
+    location: string;
+  }
 
   // 페이지에 새로 접근 시 동작 => 회원 정보를 가져오고, 회원의 favoriteLocations 배열을 selectedDistricts에 넣어주기
   useEffect(() => {
@@ -24,66 +31,95 @@ const SetDistrict = () => {
       const loggedUser = localStorage.getItem('userEmail');
       if (loggedUser) {
         try {
-          const userData = await findUser(loggedUser); // `await` 추가
-          if (userData) {
-            setUser(userData);
+          // 백엔드에서 관심지역 받아오기(get)
+          const userId = localStorage.getItem('userId');
+          const response: AxiosResponse<InterestLocationsDTO[]> = await userService.getInterestLocationList(userId);
 
-            // favoriteLocations가 배열이라면, 이 배열을 기반으로 selectedDistricts 업데이트
-            if (userData.favoriteLocations) {
-
-              const districts = userData.favoriteLocations.map((districtName) => {
-                // 해당 지역 이름에 대한 추가 정보를 seoulDistricts에서 찾아서 반환
-                const district = seoulDistricts.features.find(
-                  (d) => d.properties.SIG_KOR_NM === districtName
-                );
-                return district || null; // 찾은 지역 데이터가 없으면 null 반환
-              }).filter(district => district !== null); // null 값 필터링
-
-              setSelectedDistricts(districts); // selectedDistricts를 업데이트
-
-              // 관심지역을 가져온 후, 헤더에는 관심지역의 0번째 인덱스가 반영되도록 초기 설정
-              const token: string = 'generatedAuthToken';
-              const role: string = 'C';
-              const location: string = userData.favoriteLocations[0];
-              dispatch(loginSuccess(token, userData.email, role, location));
-            }
-
-            console.log('유저 데이터를 성공적으로 가져왔습니다.', userData);
+          // selectedDistricts에 받아온 데이터 세팅
+          if (response && response.data) {
+            console.log('Response Data: ', response.data);
+            localStorage.setItem('interestLocations', JSON.stringify(response.data));
+            const favoriteLocations: string[] = JSON.parse(localStorage.getItem('interestLocations') || '[성동구]');
+            setSelectedDistricts(favoriteLocations); // selectedDistricts를 업데이트
+            const token: string = localStorage.getItem('authToken');
+            const role: string = 'C';
+            const location: string = favoriteLocations[0];
+            const email: string = localStorage.getItem('userEmail');
+            const nickName: string = localStorage.getItem('nickName');
+            dispatch(loginSuccess(token, Number(userId), email, role, location, nickName));
           }
+          console.log('유저 데이터를 성공적으로 가져왔습니다.');
         } catch (error) {
           console.error('유저 데이터를 가져올 수 없습니다.', error); // 에러 처리 추가
         }
-      } else {
-        console.log('로그인되지 않은 유저입니다.');
       }
     };
 
     fetchUserData();
-  }, []);
+  }, [dispatch]);
 
-  // selectedDistricts 배열이 변경될 때마다 실행
-  // user가 존재하고, selectedDistricts의 길이가 user.favoriteLocations의 길이와 다를 때에만 이 useEffect가 실행됨. 이는 무한 루프를 방지하기 위해 추가된 조건
-  // selectedDistricts가 갱신될 때, selectedDistricts에 있는 지역구 객체를 SIG_KOR_NM 속성(지역 이름)으로 매핑하여 새로운 favoriteLocations 배열을 만듬.
-  // 기존 user 상태를 복사한 후, favoriteLocations 속성을 갱신된 selectedDistricts에 기반한 배열로 업데이트한 updatedUser 객체를 만듭니다.
-  // setUser(updatedUser)를 호출하여 user 상태를 새로운 사용자 데이터로 업데이트합니다.
-  // updateUser(updatedUser)를 호출하여 로컬 저장소 등 외부 데이터 저장소에 갱신된 사용자 데이터를 반영합니다.
+  // 삭제 버튼이 눌렸을 때 데이터 다시 받아오기
   useEffect(() => {
-    if (user && selectedDistricts.length !== user.favoriteLocations?.length) {
-      const updatedUser = {
-        ...user,
-        favoriteLocations: selectedDistricts.map((d) => d.properties.SIG_KOR_NM),
-        location: selectedDistricts[0].properties.SIG_KOR_NM,
+    if (isDelete) {
+      const fetchUserData = async () => {
+        const loggedUser = localStorage.getItem('userEmail');
+        if (loggedUser) {
+          try {
+            const userId = localStorage.getItem('userId');
+            const response: AxiosResponse<InterestLocationsDTO[]> = await userService.getInterestLocationList(userId);
+            if (response && response.data) {
+              localStorage.setItem('interestLocations', JSON.stringify(response.data));
+              const favoriteLocations: string[] = JSON.parse(localStorage.getItem('interestLocations') || '[성동구]');
+              setSelectedDistricts(favoriteLocations); // selectedDistricts를 업데이트
+              // localStorage.setItem('userLocation',favoriteLocations[0]);
+              const token: string = localStorage.getItem('authToken');
+            const role: string = 'C';
+            const location: string = favoriteLocations[0];
+            const email: string = localStorage.getItem('userEmail');
+            const nickName: string = localStorage.getItem('nickName');
+            dispatch(loginSuccess(token, Number(userId), email, role, location, nickName));
+              
+            }
+          } catch (error) {
+            console.error('유저 데이터를 가져올 수 없습니다.', error);
+          }
+        }
       };
-      setUser(updatedUser);
-      updateUser(updatedUser);
 
-      // 관심지역 변경사항이 있을경우, 헤더에는 관심지역의 0번째 인덱스로 자동으로 변경되도록 설정
-      const token: string = 'generatedAuthToken';
-      const role: string = 'C';
-      const location: string = updatedUser.favoriteLocations[0];
-      dispatch(loginSuccess(token, updatedUser.email, role, location));
+      fetchUserData();
+      setIsDelete(false);
+      
     }
-  }, [selectedDistricts]);
+  }, [isDelete]);
+
+    // 추가 버튼이 눌렸을 때 데이터 다시 받아오기
+  useEffect(() => {
+    if (isAdd) {
+      const fetchUserData = async () => {
+        const loggedUser = localStorage.getItem('userEmail');
+        if (loggedUser) {
+          try {
+            const userId = localStorage.getItem('userId');
+            const response: AxiosResponse<InterestLocationsDTO[]> = await userService.getInterestLocationList(userId);
+            if (response && response.data) {
+              localStorage.setItem('interestLocations', JSON.stringify(response.data));
+              const favoriteLocations: string[] = JSON.parse(localStorage.getItem('interestLocations') || '[성동구]');
+              setSelectedDistricts(favoriteLocations); // selectedDistricts를 업데이트
+              
+              
+            }
+          } catch (error) {
+            console.error('유저 데이터를 가져올 수 없습니다.', error);
+          }
+        }
+      };
+
+      fetchUserData();
+      setIsAdd(false);
+      
+    }
+  }, [isAdd]);
+
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -111,9 +147,11 @@ const SetDistrict = () => {
     const district = seoulDistricts.features.find(
       (district) => district.properties.SIG_KOR_NM === inputDistrict.trim()
     );
-
+    
+    //console.log(typeof(district.properties.SIG_KOR_NM));
     if (district) {
-      setSearchedDistrict(district);
+      //setSearchedDistrict(district);
+      setSearchedDistrict(district.properties.SIG_KOR_NM);
 
       const coordinates = district.geometry.coordinates[0].map(
         (coord) => new window.kakao.maps.LatLng(coord[1], coord[0])
@@ -128,29 +166,52 @@ const SetDistrict = () => {
     }
   };
 
-  const addDistrict = () => {
+  const addDistrict = (async () => {
+    // 선택된 지역구 리스트가 3개 이상이면
     if (selectedDistricts.length >= 3) {
       message.warning('최대 3개의 지역구만 추가할 수 있습니다.');
       return;
     }
-
+  
+    // 검색된 지역이 있다면, 해당 지역이 이미 추가되었는지 확인
     if (searchedDistrict) {
       const isAlreadySelected = selectedDistricts.some(
-        (d) => d.properties.SIG_KOR_NM === searchedDistrict.properties.SIG_KOR_NM
+        (d) => d === searchedDistrict
       );
-
+  
+      // 이미 추가된 지역이 아니라면, 지역 추가
       if (!isAlreadySelected) {
-        setSelectedDistricts([...selectedDistricts, searchedDistrict]);
-        setInputDistrict('');
-        setSearchedDistrict(null);
-        message.success('관심 지역이 성공적으로 추가되었습니다.')
+        const customerId = localStorage.getItem('userId');
+        const location = searchedDistrict;
+        const item: InterestLocationRequestDTO = {
+          customerId,
+          location
+        };
+  
+        try {
+          // 삭제 요청 후 지역 추가
+          await userService.addSpecificInterestLocation(item);
+          setIsAdd(true);
+          setSelectedDistricts((prevSelectedDistricts) => [
+            ...prevSelectedDistricts,
+            searchedDistrict
+          ]);
+          setInputDistrict('');
+          setSearchedDistrict(null);
+          message.success('관심 지역이 성공적으로 추가되었습니다.');
+        } catch (error) {
+          message.error('지역 추가 중 오류가 발생했습니다.');
+          console.error(error);
+        }
+      
       } else {
         message.warning('이미 추가된 지역입니다.');
       }
     } else {
       message.warning('먼저 검색 후 추가하세요.');
     }
-  };
+  });
+
 
   const calculateCenter = (coordinates) => {
     const totalLat = coordinates.reduce((sum, coord) => sum + coord.getLat(), 0);
@@ -179,16 +240,30 @@ const SetDistrict = () => {
 
 
 
-  const removeDistrict = (districtName) => {
+  const removeDistrict = useCallback(async (districtName) => {
     if (selectedDistricts.length === 1) {
       message.warning('최소 하나의 관심지역은 설정되어 있어야 합니다.');
       return;
     }
+    const customerId = localStorage.getItem('userId');
+    const location = districtName;
+    const item: InterestLocationRequestDTO ={
+      customerId,
+      location
+    }
 
-    setSelectedDistricts(
-      selectedDistricts.filter((d) => d.properties.SIG_KOR_NM !== districtName)
-    );
-  };
+    try {
+      await userService.deleteSpecificInterestLocation(item);
+      setIsDelete(true);  // Trigger the useEffect when a district is deleted
+      setSelectedDistricts((prevDistricts) =>
+        prevDistricts.filter((district) => district !== districtName)
+      );
+      message.success('관심 지역이 성공적으로 삭제되었습니다.');
+    } catch (error) {
+      console.error('관심 지역 삭제 중 오류가 발생했습니다.', error);
+      message.error('관심 지역 삭제에 실패했습니다.');
+    }
+  }, [selectedDistricts]);
 
   return (
     <>
@@ -278,9 +353,9 @@ const SetDistrict = () => {
                   boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
                 }}
               >
-                <span style={{ marginLeft: '10%', fontSize: '17px' }}>{district.properties.SIG_KOR_NM}</span>
+                <span style={{ marginLeft: '10%', fontSize: '17px' }}>{district}</span>
                 <button
-                  onClick={() => removeDistrict(district.properties.SIG_KOR_NM)}
+                  onClick={() => removeDistrict(district)}
                   style={{
                     marginLeft: 'auto',
                     backgroundColor: 'transparent',
