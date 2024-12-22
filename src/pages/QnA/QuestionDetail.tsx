@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, message } from 'antd';
-import { StarOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons';
+import { StarOutlined, StarFilled, FormOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../hoc/store';
 import { QuestionResponseDTO } from '../../types/dto/question.dto';
@@ -12,6 +12,7 @@ import PostRegisterButton from '../../components/board/PostRegisterButton/PostRe
 import Chatbot from '../../components/Chatbot';
 import { relativeTime } from '../../utils/stringFormat';
 import { qnaService } from '../../services/qna.service';
+import { likesscrapService } from '../../services/likesscrap.service';
 
 
 const QuestionDetail: React.FC = () => {
@@ -21,23 +22,8 @@ const QuestionDetail: React.FC = () => {
   const [post, setPost] = useState<QuestionResponseDTO | null>(null);
   const [showAnswerInput, setShowAnswerInput] = useState(false);
   const [isChatbotVisible, setIsChatbotVisible] = useState(false);
-
+  const [isScraped, setIsScraped] = useState<boolean>(false);
   const { isAuthenticated, userRole, userId } = useSelector((state: RootState) => state.auth);
-
-  // 임시 주석 처리
-  // const loadAnswers = useCallback(() => {
-  //   const storedAnswers = localStorage.getItem('answers');
-  //   return storedAnswers ? JSON.parse(storedAnswers) : {};
-  // }, []);
-
-  // const incrementViewCount = useCallback((post: Post) => {
-  //   const updatedPost = {
-  //     ...post,
-  //     viewCount: post.viewCount + 1
-  //   };
-  //   updatePost(updatedPost);
-  //   setPost(updatedPost);
-  // }, []);
 
   // 게시글 조회
   useEffect(() => {
@@ -60,6 +46,12 @@ const QuestionDetail: React.FC = () => {
 
     fetchPost();
   }, [postId, navigate]);
+
+  // 스크랩 여부 조회
+  useEffect(() => {
+    fetchScrapedQna();
+  }, [userId]);
+
 
   // 답변 제출
   const handleAnswerSubmit = useCallback(async (content: string) => {
@@ -98,6 +90,19 @@ const QuestionDetail: React.FC = () => {
     }
   }, [postId, navigate]);
 
+  const handleScrapClick = useCallback(async () => {
+    if (!postId || !userId) return;
+    await likesscrapService.scrapQuestion({questionId: parseInt(postId), customerId: Number(userId)});
+    fetchScrapedQna();
+  }, [postId, userId]);
+
+  // 스크랩한 qna 조회 후 스크랩 여부 설정 (백엔드에서 스크랩 여부 반환되도록 수정되면 삭제)
+  const fetchScrapedQna = async () => {
+    if (!userId) return;
+    const response = await likesscrapService.getScrapedQna(Number(userId)); // 스크랩한 qna 조회
+    setIsScraped(response.data.some(qna => qna.questionId === Number(postId))); // 스크랩한 qna 중 현재 게시글의 id와 일치하는 게시글이 있는지 확인
+  };
+
   const toggleChatbot = useCallback(() => {
     setIsChatbotVisible(prev => !prev);
   }, []);
@@ -135,7 +140,7 @@ const QuestionDetail: React.FC = () => {
                     삭제
                   </Button>
                 )}
-                <Button icon={<StarOutlined />}>스크랩</Button>
+                <Button icon={isScraped ? <StarFilled style={{color: 'orange'}} /> : <StarOutlined />} onClick={handleScrapClick}>스크랩</Button>
               </div>
             </div>
             <div className="w-full">
