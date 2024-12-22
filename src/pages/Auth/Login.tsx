@@ -74,8 +74,7 @@ const Login: React.FC = () => {
           interestLocations: interestLocations,
           branchName: branchName,
         });
-        localStorage.setItem('interestLocations', JSON.stringify(interestLocations));
-        dispatch(loginSuccess(token, Number(id), returnedEmail, role, location, nickname, branchName));
+        dispatch(loginSuccess(token, Number(id), returnedEmail, role, location, nickname, branchName, interestLocations));
 
 
         // 메시지 및 네비게이션 처리
