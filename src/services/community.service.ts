@@ -1,6 +1,6 @@
 import { request } from '../hoc/request';
 import { config } from '../config/config';
-import { CommunityListDTO } from '../types/dto/community.dto';
+import { CommunityListDTO, CommunityResponseDTO } from '../types/dto/community.dto';
 
 const BASE_URL = config.apiUrl;
 
@@ -20,6 +20,14 @@ export const communityService = {
             method: 'GET',
             url: `${BASE_URL}/post/postList`,
             params: location ? { location } : {}
+        })
+    },
+
+    //커뮤니티 상세 보기
+    getCommunityDetail: (postId : number) => {
+        return request<CommunityResponseDTO>({
+            method: 'GET',
+            url: `${BASE_URL}/post/${postId}`
         })
     }
 }

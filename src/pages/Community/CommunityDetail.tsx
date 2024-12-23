@@ -9,47 +9,50 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../hoc/store';
 import { getCommunityPosts } from '../../utils/communityPostStorage';
 import { Post } from '../../types/post';
-interface Reply {
-  id: number;
-  author: string;
-  content: string;
-  replies: Reply[];
-}
+import { communityService } from '../../services/community.service';
+import { CommunityResponseDTO } from '../../types/dto/community.dto';
+// interface Reply {
+//   id: number;
+//   author: string;
+//   content: string;
+//   replies: Reply[];
+// }
 
-interface Comment {
-  id: number;
-  author: string;
-  content: string;
-  replies: Reply[];
-}
+// interface Comment {
+//   id: number;
+//   author: string;
+//   content: string;
+//   replies: Reply[];
+// }
 
-interface DataType {
-  id: number;
-  category: string;
-  title: string;
-  content: string;
-  author: string;
-  views: number;
-  likes: number;
-  scraps: number;
-  image: boolean;
-  comments: Comment[];
-}
+// interface DataType {
+//   id: number;
+//   category: string;
+//   title: string;
+//   content: string;
+//   author: string;
+//   views: number;
+//   likes: number;
+//   scraps: number;
+//   image: boolean;
+//   comments: Comment[];
+// }
 
-// Post를 DataType으로 변환하는 함수 추가
-const convertPostToDataType = (post: Post): DataType => ({
-  ...post,
-  views: post.counts.views,
-  likes: post.counts.likes,
-  scraps: 0,
-  image: true,
-  comments: []
-});
+// // Post를 DataType으로 변환하는 함수 추가
+// const convertPostToDataType = (post: Post): DataType => ({
+//   ...post,
+//   views: post.counts.views,
+//   likes: post.counts.likes,
+//   scraps: 0,
+//   image: true,
+//   comments: []
+// });
 
 const CommunityDetail: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
   const navigate = useNavigate();
-  const [post, setPost] = useState<DataType | null>(null);
+  // const [post, setPost] = useState<DataType | null>(null);
+  const [post, setPost] = useState<CommunityResponseDTO|null>(null);
   
   const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
@@ -60,14 +63,22 @@ const CommunityDetail: React.FC = () => {
       return;
     }
 
-    const foundPost = getCommunityPosts().find((data) => data.id === parseInt(postId));
-    if (!foundPost) {
-      message.error('게시글을 찾을 수 없습니다.');
-      navigate('/404');
-      return;
-    }
+    const fetchPost = async() => {
+      try{
+        const response = await communityService.getCommunityDetail(parseInt(postId));
+        if(!response || !response.data){
+          message.error('게시글을 찾을 수 없습니다.');
+          navigate('/404');
+          return;
+        }
 
-    setPost(convertPostToDataType(foundPost));
+        setPost(response.data);
+      }catch(error){
+        message.error('게시글을 불러오는 중 오류가 발생했습니다.');
+        navigate('/404');
+      }
+    };
+    fetchPost();
   }, [postId, navigate]);
 
   if (!post) return null;
@@ -83,9 +94,10 @@ const CommunityDetail: React.FC = () => {
                 {post.title}
               </h1>
               <div className="flex gap-4 text-xs text-gray-400">
-                <span>{post.author}</span>
-                <span>조회 {post.views}</span>
-                <span>스크랩 {post.scraps}</span>
+                <span>조회 {post.viewCount}</span>
+                <span>좋아요 {post.likeCount}</span>
+                <span>스크랩 {post.scrapCount}</span>
+                <span>{post.nickname}</span>
               </div>
               <div className="flex justify-end">
                 <Button icon={<StarOutlined />}>스크랩</Button>
@@ -106,12 +118,13 @@ const CommunityDetail: React.FC = () => {
 
             {/* 게시글 푸터 */}
             <div className="text-gray-400">
-              <span>{relativeTime(+new Date())}</span>
+              <span>{relativeTime(+new Date(post.createdAt))}</span>
               <span className="ml-4">
-                <LikeOutlined /> {post.likes}
+                <LikeOutlined /> {post.viewCount}
               </span>
               <span className="ml-4">
-                <MessageOutlined /> {post.comments.length}
+                {/* 임시 주석!! */}
+                {/* <MessageOutlined /> {post.comments.length} */} 
               </span>
             </div>
           </div>
