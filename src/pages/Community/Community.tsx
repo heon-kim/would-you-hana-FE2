@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { Divider, List, message, Skeleton } from 'antd';
 import { getAuthToken } from '../../hoc/request';
-import { Post } from '../../types/post';
 import CommunityNotice from '../../components/board/CommunityNotice/CommunityNotice';
 import CommunityCategory from '../../components/board/Category/CommunityCategory';
 import ImgBank from '../../assets/img/img_community3.jpg';
@@ -27,7 +26,7 @@ const Community: React.FC = () => {
         setLoading(true);
         const response = await communityService.getCommunityList(userLocation); // location이 필요한 경우 state로 처리 가능
         setData(Array.isArray(response.data) ? response.data : []); // 배열 여부 확인
-        setHasMore(Array.isArray(response) && response.length > 0);
+        setHasMore(Array.isArray(response) && response.data.length > 0);
       } catch (error) {
         console.error('Failed to fetch posts:', error);
         message.error('게시물을 불러오는 데 실패했습니다.');
@@ -70,7 +69,7 @@ const Community: React.FC = () => {
   }, [loading, data]);
 
   const truncateText = useCallback((text: string, maxLength: number) => {
-    return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+    return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
   }, []);
 
   // getCommunityByCategory API 함수
