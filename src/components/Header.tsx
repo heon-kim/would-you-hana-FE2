@@ -150,6 +150,7 @@ const Header: React.FC = () => {
   const handleLogout = useCallback(() => {
     dispatch(logout());
     navigate('/');
+    setDrawerVisible(false);
     message.success('로그아웃 성공!');
   }, [dispatch, navigate]);
 
@@ -228,32 +229,37 @@ const Header: React.FC = () => {
         open={drawerVisible}
       >
         <nav className="flex flex-col gap-4">
+        {isAuthenticated ? (
+            <div className="flex items-center justify-between">
+              <Link to="/my/profile" className="flex items-center gap-2" onClick={() => setDrawerVisible(false)}>
+                <img src={userIcon} alt="user icon" width={35} />
+                {nickname && (<span>{nickname}</span>)} 
+              </Link>
+              <span className="cursor-pointer" onClick={handleLogout}>
+                로그아웃
+              </span>
+            </div>
+          ):(
+            <>
+            <Link to="/register" onClick={() => setDrawerVisible(false)}>회원가입</Link>
+            <Link to="/login" onClick={() => setDrawerVisible(false)}>로그인</Link>
+            </>
+          )}
+
+          <hr></hr>
+          
           <Link to="/qna" onClick={() => setDrawerVisible(false)}>
             Q&A
           </Link>
           <Link to="/community" onClick={() => setDrawerVisible(false)}>
             커뮤니티
           </Link>
-          <Link to="/realty" onClick={() => setDrawerVisible(false)}>
-            부동산
+          <Link to={`/district/${userLocation}`} onClick={() => setDrawerVisible(false)}>
+          우주하나
           </Link>
           <Link to="/findbank" onClick={() => setDrawerVisible(false)}>
             영업점 찾기
           </Link>
-          
-          {isAuthenticated ? (
-            <>
-              <p className="cursor-pointer" onClick={handleLogout}>
-                로그아웃
-              </p>
-              <Link to="/my/profile">마이페이지</Link>
-            </>
-          ) : (
-            <>
-              <Link to="/register">회원가입</Link>
-              <Link to="/login">로그인</Link>
-            </>
-          )}
         </nav>
       </Drawer>
     </header>
