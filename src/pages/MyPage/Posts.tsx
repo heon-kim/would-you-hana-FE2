@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { getPostsByEmail } from '../../utils/postStorage';
 import { Post } from '../../types/post';
 import PostList from '../../components/board/PostList/PostList';
@@ -6,15 +6,17 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../hoc/store';
 import icon_logo from '../../assets/img/icon_logo.png';
+import {myPageService} from "../../services/mypage.service.ts";
 
 const Posts: React.FC = () => {
+  const [posts, setPosts] = useState<Post[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
   const postsPerPage = 5;
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const userEmail = useSelector((state: RootState) => state.auth.userEmail);
-  const posts: Post[] = userEmail ? getPostsByEmail(userEmail) : [];
+  //const userEmail = useSelector((state: RootState) => state.auth.userEmail);
+  //const posts: Post[] = userEmail ? getPostsByEmail(userEmail) : [];
   // userId == loggedUserId인 post 필터링
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
 
@@ -25,6 +27,20 @@ const Posts: React.FC = () => {
   const handlePostClick = (postId: number) => {
     navigate(`/qna/detail/${postId}`); // 특정 포스트 ID로 페이지 이동
   };
+
+  useEffect(() => {
+    const fetchPosts = async() => {
+      try{
+        const customerId = Number(localStorage.getItem('userId'));
+        const response = await myPageService.getRegisteredQuestions(customerId);
+        setPosts(response.data);
+      }catch(error){
+        console.error('failed to fetch scraps:', error);
+      }
+    };
+
+    fetchPosts();
+  }, []);
 
   return (
     <>
