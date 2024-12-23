@@ -1,9 +1,9 @@
 import { request } from '../hoc/request';
-import { 
-  QuestionAddRequestDTO, 
+import {
+  QuestionAddRequestDTO,
   QuestionAllResponseDTO,
   QnaListDTO,
-  QuestionResponseDTO
+  QuestionResponseDTO,
 } from '../types/dto/question.dto';
 import { AnswerAddRequestDTO, AnswerResponseDTO } from '../types/dto/answer.dto';
 import { config } from '../config/config';

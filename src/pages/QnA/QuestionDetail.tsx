@@ -4,7 +4,7 @@ import { Button, message } from 'antd';
 import { StarOutlined, StarFilled, FormOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../hoc/store';
-import { QuestionResponseDTO } from '../../types/dto/question.dto';
+import {QuestionMineCheckDTO, QuestionResponseDTO} from '../../types/dto/question.dto';
 import Answer from '../../components/board/QuestionDetail/AnswerSection/Answer';
 import AnswerInput from '../../components/board/QuestionDetail/AnswerSection/AnswerInput';
 import Comments from '../../components/board/QuestionDetail/Comments/Comments';
@@ -24,6 +24,7 @@ const QuestionDetail: React.FC = () => {
   const [isChatbotVisible, setIsChatbotVisible] = useState(false);
   const [isScraped, setIsScraped] = useState<boolean>(false);
   const { isAuthenticated, userRole, userId } = useSelector((state: RootState) => state.auth);
+  const [isMyQna, setIsMyQna] = useState<boolean>(false);
 
   // 게시글 조회
   useEffect(() => {
@@ -37,6 +38,13 @@ const QuestionDetail: React.FC = () => {
       try {
         const response = await qnaService.getQuestionDetail(parseInt(postId));
         setPost(response.data);
+        // 내가 작성한 글인지 여부를 확인
+        console.log(response.data)
+        if (response.data.customerId === userId) {
+          setIsMyQna(true); // 내가 작성한 글인 경우 true
+        } else {
+          setIsMyQna(false); // 내가 작성한 글이 아니면 false
+        }
       } catch (error) {
         console.error('Failed to fetch post:', error);
         message.error('게시글을 불러오는데 실패했습니다.');
@@ -45,13 +53,12 @@ const QuestionDetail: React.FC = () => {
     };
 
     fetchPost();
-  }, [postId, navigate]);
+  }, [postId, navigate, userId]);
 
   // 스크랩 여부 조회
   useEffect(() => {
     fetchScrapedQna();
   }, [userId]);
-
 
   // 답변 제출
   const handleAnswerSubmit = useCallback(async (content: string) => {
@@ -75,7 +82,6 @@ const QuestionDetail: React.FC = () => {
       message.error('답변 등록에 실패했습니다.');
     }
   }, [postId, post, userId]);
-
   // 게시글 삭제
   const handlePostDelete = useCallback(async () => {
     if (!postId) return;
@@ -132,7 +138,7 @@ const QuestionDetail: React.FC = () => {
                     답변하기
                   </Button>
                 )}
-                {post.customerId === userId && (
+                {isMyQna && (
                   <Button
                     icon={<DeleteOutlined />}
                     onClick={handlePostDelete}
