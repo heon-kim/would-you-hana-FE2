@@ -27,5 +27,12 @@ export const myPageService = {
         method: 'GET',
         url: `${BASE_URL}/my/post/likeList/${customerId}`
     });
+  },
+
+  getRegisteredQuestions : (customerId: number) => {
+    return request<LikesScrapDTO>({
+      method: 'GET',
+      url: `${BASE_URL}/my/questions/${customerId}`
+    })
   }
 };

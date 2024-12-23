@@ -5,6 +5,7 @@ export interface CommunityListDTO{
     nickname : string;
     categoryName : string;
     title : string;
+    content : string;
     location : string;
     createdAt : string;
     contentCount : number;
@@ -43,3 +44,11 @@ export interface CommunityAllResponseDTO {
     viewCount: number;
     file: string[];
 } 
+
+export interface CommunityRegisterDTO{
+    title : string;
+    customerId : number;
+    categoryName : string;
+    location : string
+    content : string;
+}
