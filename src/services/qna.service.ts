@@ -5,7 +5,7 @@ import {
   QnaListDTO,
   QuestionResponseDTO,
 } from '../types/dto/question.dto';
-import { AnswerAddRequestDTO, AnswerResponseDTO } from '../types/dto/answer.dto';
+import { AnswerAddRequestDTO, AnswerGoodRequestDTO, AnswerResponseDTO } from '../types/dto/answer.dto';
 import { config } from '../config/config';
 
 const BASE_URL = config.apiUrl;
@@ -97,6 +97,14 @@ export const qnaService = {
     return request<AnswerResponseDTO>({
       method: 'POST',
       url: `${BASE_URL}/qna/answer/${questionId}`,
+      data
+    });
+  },
+  // 도움돼요 누르기
+  postGood: (data: AnswerGoodRequestDTO) => {
+    return request<String>({
+      method: 'POST',
+      url: `${BASE_URL}/qna/answerLike`,
       data
     });
   }
