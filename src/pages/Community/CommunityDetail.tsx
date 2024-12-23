@@ -131,9 +131,9 @@ const CommunityDetail: React.FC = () => {
           </div>
 
           {/* 댓글 섹션 */}
-          <Comments 
+          {/* <Comments 
             isAuthenticated={isAuthenticated}
-          />
+          /> */}
         </div>
 
         {/* 사이드바 영역이 필요한 경우 추가 */}
