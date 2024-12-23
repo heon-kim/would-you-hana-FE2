@@ -68,7 +68,7 @@ export const qnaService = {
   },
 
   // 인기 질문 목록 조회
-  getPopularQuestions: (location: string|null) => {
+  getTodayQuestions: (location: string|null) => {
     return request<QnaListDTO[]>({
       method: 'GET',
       url: `${BASE_URL}/qna/todayQnaList`,

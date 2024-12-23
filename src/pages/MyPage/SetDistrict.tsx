@@ -1,383 +1,240 @@
-// @ts-nocheck
 import React, { useEffect, useState, useCallback } from 'react';
-import seoulDistricts from '../../assets/location/seoul_districts.json'; // Adjust path as needed
-import { useDispatch } from 'react-redux';
-import { loginSuccess } from '../../hoc/actions';
-import iconSearch from '../../assets/img/icon_search.png';
-import iconPlus from '../../assets/img/icon_plus.svg';
-import store from '../../hoc/store';
+import { useSelector, useDispatch } from 'react-redux';
 import { message } from 'antd';
+import seoulDistricts from '../../assets/location/seoul_districts.json';
 import { userService } from '../../services/user.service';
-import { AxiosResponse } from 'axios';
+import { RootState } from '../../hoc/store';
+import { setInterestLocations, updateLocationWithApi } from '../../hoc/actions';
 
-
-const SetDistrict = () => {
-  const [mapInstance, setMapInstance] = useState(null);
+const SetDistrict: React.FC = () => {
+  const dispatch = useDispatch<any>();
+  const { userId, interestLocations, userLocation } = useSelector((state: RootState) => state.auth);
+  
+  const [mapInstance, setMapInstance] = useState<any>(null);
   const [inputDistrict, setInputDistrict] = useState('');
-  const [selectedDistricts, setSelectedDistricts] = useState([]);
-  const [isDelete, setIsDelete] = useState<boolean>(false);
-  const [isAdd, setIsAdd] = useState<boolean>(false);
-  const [polygon, setPolygon] = useState(null);
-  const [searchedDistrict, setSearchedDistrict] = useState(null);
+  const [polygon, setPolygon] = useState<any>(null);
+  const [searchedDistrict, setSearchedDistrict] = useState<string | null>(null);
 
-  const dispatch = useDispatch<typeof store.dispatch>();
-  interface InterestLocationsDTO {
-    location: string;
-  }
-
-  // 페이지에 새로 접근 시 동작 => 회원 정보를 가져오고, 회원의 favoriteLocations 배열을 selectedDistricts에 넣어주기
+  // 카카오맵 초기화
   useEffect(() => {
-    const fetchUserData = async () => {
-      const loggedUser = localStorage.getItem('userEmail');
-      if (loggedUser) {
-        try {
-          // 백엔드에서 관심지역 받아오기(get)
-          const userId = localStorage.getItem('userId');
-          const response: AxiosResponse<InterestLocationsDTO[]> = await userService.getInterestLocationList(userId);
+    const initializeMap = async () => {
+      const script = document.createElement('script');
+      script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=26b73c9fe72dd7a39fc3df547c6175f2&libraries=services&autoload=false`;
+      document.head.appendChild(script);
 
-          // selectedDistricts에 받아온 데이터 세팅
-          if (response && response.data) {
-            console.log('Response Data: ', response.data);
-            localStorage.setItem('interestLocations', JSON.stringify(response.data));
-            const favoriteLocations: string[] = JSON.parse(localStorage.getItem('interestLocations') || '[성동구]');
-            setSelectedDistricts(favoriteLocations); // selectedDistricts를 업데이트
-            const token: string = localStorage.getItem('authToken');
-            const role: string = 'C';
-            const location: string = favoriteLocations[0];
-            const email: string = localStorage.getItem('userEmail');
-            const nickName: string = localStorage.getItem('nickName');
-            dispatch(loginSuccess(token, Number(userId), email, role, location, nickName));
-          }
-          console.log('유저 데이터를 성공적으로 가져왔습니다.');
-        } catch (error) {
-          console.error('유저 데이터를 가져올 수 없습니다.', error); // 에러 처리 추가
-        }
-      }
-    };
-
-    fetchUserData();
-  }, [dispatch]);
-
-  // 삭제 버튼이 눌렸을 때 데이터 다시 받아오기
-  useEffect(() => {
-    if (isDelete) {
-      const fetchUserData = async () => {
-        const loggedUser = localStorage.getItem('userEmail');
-        if (loggedUser) {
-          try {
-            const userId = localStorage.getItem('userId');
-            const response: AxiosResponse<InterestLocationsDTO[]> = await userService.getInterestLocationList(userId);
-            if (response && response.data) {
-              localStorage.setItem('interestLocations', JSON.stringify(response.data));
-              const favoriteLocations: string[] = JSON.parse(localStorage.getItem('interestLocations') || '[성동구]');
-              setSelectedDistricts(favoriteLocations); // selectedDistricts를 업데이트
-              // localStorage.setItem('userLocation',favoriteLocations[0]);
-              const token: string = localStorage.getItem('authToken');
-            const role: string = 'C';
-            const location: string = favoriteLocations[0];
-            const email: string = localStorage.getItem('userEmail');
-            const nickName: string = localStorage.getItem('nickName');
-            dispatch(loginSuccess(token, Number(userId), email, role, location, nickName));
-              
-            }
-          } catch (error) {
-            console.error('유저 데이터를 가져올 수 없습니다.', error);
-          }
-        }
+      script.onload = () => {
+        window.kakao.maps.load(() => {
+          const mapContainer = document.getElementById('map');
+          const mapOption = {
+            center: new window.kakao.maps.LatLng(37.5665, 126.9780),
+            level: 7,
+          };
+          setMapInstance(new window.kakao.maps.Map(mapContainer, mapOption));
+        });
       };
-
-      fetchUserData();
-      setIsDelete(false);
-      
-    }
-  }, [isDelete]);
-
-    // 추가 버튼이 눌렸을 때 데이터 다시 받아오기
-  useEffect(() => {
-    if (isAdd) {
-      const fetchUserData = async () => {
-        const loggedUser = localStorage.getItem('userEmail');
-        if (loggedUser) {
-          try {
-            const userId = localStorage.getItem('userId');
-            const response: AxiosResponse<InterestLocationsDTO[]> = await userService.getInterestLocationList(userId);
-            if (response && response.data) {
-              localStorage.setItem('interestLocations', JSON.stringify(response.data));
-              const favoriteLocations: string[] = JSON.parse(localStorage.getItem('interestLocations') || '[성동구]');
-              setSelectedDistricts(favoriteLocations); // selectedDistricts를 업데이트
-              
-              
-            }
-          } catch (error) {
-            console.error('유저 데이터를 가져올 수 없습니다.', error);
-          }
-        }
-      };
-
-      fetchUserData();
-      setIsAdd(false);
-      
-    }
-  }, [isAdd]);
-
-
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=26b73c9fe72dd7a39fc3df547c6175f2&libraries=services&autoload=false`;
-    document.head.appendChild(script);
-
-    script.onload = () => {
-      window.kakao.maps.load(() => {
-        const mapContainer = document.getElementById('map');
-        const mapOption = {
-          center: new window.kakao.maps.LatLng(37.5665, 126.9780),
-          level: 7,
-        };
-        const map = new window.kakao.maps.Map(mapContainer, mapOption);
-        setMapInstance(map);
-      });
     };
 
-    script.onerror = () => {
-      console.error("Kakao Maps SDK 로드에 실패했습니다.");
-    };
+    initializeMap();
   }, []);
 
-  const searchDistrict = () => {
-    const district = seoulDistricts.features.find(
-      (district) => district.properties.SIG_KOR_NM === inputDistrict.trim()
-    );
-    
-    //console.log(typeof(district.properties.SIG_KOR_NM));
-    if (district) {
-      //setSearchedDistrict(district);
-      setSearchedDistrict(district.properties.SIG_KOR_NM);
+  // 사용자 관심지역 조회
+  const fetchInterestLocations = useCallback(async () => {
+    if (!userId) return;
 
-      const coordinates = district.geometry.coordinates[0].map(
-        (coord) => new window.kakao.maps.LatLng(coord[1], coord[0])
-      );
-
-      const center = calculateCenter(coordinates);
-      mapInstance.setCenter(center);
-
-      drawDistrictPolygon(coordinates);
-    } else {
-      message.warning('지역을 찾을 수 없습니다. 올바른 지역명을 입력해 주세요.');
+    try {
+      const response = await userService.getInterestLocationList(userId);
+      if (response?.data) {
+        dispatch(setInterestLocations(response.data));
+      }
+    } catch (error) {
+      console.error('Failed to fetch interest locations:', error);
+      message.error('관심 지역 정보를 불러오는데 실패했습니다.');
     }
-  };
+  }, [userId, dispatch]);
 
-  const addDistrict = (async () => {
-    // 선택된 지역구 리스트가 3개 이상이면
-    if (selectedDistricts.length >= 3) {
-      message.warning('최대 3개의 지역구만 추가할 수 있습니다.');
+  // useEffect(() => {
+  //   fetchInterestLocations();
+  // }, [fetchInterestLocations]);
+
+  // 지역구 검색
+  const searchDistrict = useCallback(() => {
+    const district = seoulDistricts.features.find(
+      (d) => d.properties.SIG_KOR_NM === inputDistrict.trim()
+    );
+
+    if (!district) {
+      message.warning('지역을 찾을 수 없습니다.');
       return;
     }
-  
-    // 검색된 지역이 있다면, 해당 지역이 이미 추가되었는지 확인
-    if (searchedDistrict) {
-      const isAlreadySelected = selectedDistricts.some(
-        (d) => d === searchedDistrict
-      );
-  
-      // 이미 추가된 지역이 아니라면, 지역 추가
-      if (!isAlreadySelected) {
-        const customerId = localStorage.getItem('userId');
-        const location = searchedDistrict;
-        const item: InterestLocationRequestDTO = {
-          customerId,
-          location
-        };
-  
-        try {
-          // 삭제 요청 후 지역 추가
-          await userService.addSpecificInterestLocation(item);
-          setIsAdd(true);
-          setSelectedDistricts((prevSelectedDistricts) => [
-            ...prevSelectedDistricts,
-            searchedDistrict
-          ]);
-          setInputDistrict('');
-          setSearchedDistrict(null);
-          message.success('관심 지역이 성공적으로 추가되었습니다.');
-        } catch (error) {
-          message.error('지역 추가 중 오류가 발생했습니다.');
-          console.error(error);
-        }
-      
-      } else {
-        message.warning('이미 추가된 지역입니다.');
-      }
-    } else {
-      message.warning('먼저 검색 후 추가하세요.');
-    }
-  });
 
+    setSearchedDistrict(district.properties.SIG_KOR_NM);
 
-  const calculateCenter = (coordinates) => {
-    const totalLat = coordinates.reduce((sum, coord) => sum + coord.getLat(), 0);
-    const totalLng = coordinates.reduce((sum, coord) => sum + coord.getLng(), 0);
-    const centerLat = totalLat / coordinates.length;
-    const centerLng = totalLng / coordinates.length;
-    return new window.kakao.maps.LatLng(centerLat, centerLng);
-  };
+    const coordinates = district.geometry.coordinates[0].map(
+      (coord) => new window.kakao.maps.LatLng(coord[1], coord[0])
+    );
 
-  const drawDistrictPolygon = (coordinates) => {
-    if (polygon) {
-      polygon.setMap(null);
-    }
+    // 중심점 계산 및 지도 이동
+    const center = coordinates.reduce((acc, curr) => ({
+      getLat: () => (acc.getLat() + curr.getLat()) / 2,
+      getLng: () => (acc.getLng() + curr.getLng()) / 2
+    }));
+    
+    mapInstance.setCenter(new window.kakao.maps.LatLng(center.getLat(), center.getLng()));
 
+    // 폴리곤 그리기
+    if (polygon) polygon.setMap(null);
     const newPolygon = new window.kakao.maps.Polygon({
-      map: mapInstance,
       path: coordinates,
       strokeWeight: 2,
       strokeColor: '#498DF7',
       strokeOpacity: 0.8,
       fillColor: '#498DF7',
-      fillOpacity: 0.4,
+      fillOpacity: 0.4
     });
+    
+    newPolygon.setMap(mapInstance);
     setPolygon(newPolygon);
-  };
+  }, [inputDistrict, mapInstance, polygon]);
 
-
-
-  const removeDistrict = useCallback(async (districtName) => {
-    if (selectedDistricts.length === 1) {
-      message.warning('최소 하나의 관심지역은 설정되어 있어야 합니다.');
+  // 지역구 추가
+  const addDistrict = useCallback(async () => {
+    if (interestLocations.length >= 3) {
+      message.warning('최대 3개의 지역구만 추가할 수 있습니다.');
       return;
     }
-    const customerId = localStorage.getItem('userId');
-    const location = districtName;
-    const item: InterestLocationRequestDTO ={
-      customerId,
-      location
+
+    if (!searchedDistrict || !userId) {
+      message.warning('먼저 검색 후 추가하세요.');
+      return;
     }
 
     try {
-      await userService.deleteSpecificInterestLocation(item);
-      setIsDelete(true);  // Trigger the useEffect when a district is deleted
-      setSelectedDistricts((prevDistricts) =>
-        prevDistricts.filter((district) => district !== districtName)
-      );
-      message.success('관심 지역이 성공적으로 삭제되었습니다.');
+      await userService.addSpecificInterestLocation({
+        customerId: userId,
+        location: searchedDistrict
+      });
+      await fetchInterestLocations(); // 관심 지역 목록 새로고침
+      setSearchedDistrict(null);
+      message.success('관심 지역이 추가되었습니다.');
     } catch (error) {
-      console.error('관심 지역 삭제 중 오류가 발생했습니다.', error);
+      message.error('지역 추가에 실패했습니다.');
+    }
+  }, [searchedDistrict, interestLocations.length, userId, fetchInterestLocations]);
+
+  // 지역구 삭제
+  const removeDistrict = useCallback(async (districtName: string) => {
+    if (interestLocations.length <= 1) {
+      message.warning('최소 하나의 관심지역은 필요합니다.');
+      return;
+    }
+
+    if (!userId) return;
+
+    try {
+      await userService.deleteSpecificInterestLocation({
+        customerId: userId,
+        location: districtName
+      });
+      await fetchInterestLocations(); // 관심 지역 목록 새로고침
+
+      // 현재 지역이 삭제되는 경우, 첫 번째 관심 지역으로 설정
+      if (districtName === userLocation) {
+        const remainingLocations = interestLocations.filter(loc => loc !== districtName);
+        if (remainingLocations.length > 0) {
+          dispatch(updateLocationWithApi(remainingLocations[0]));
+          message.info(`현재 지역이 ${remainingLocations[0]}로 변경되었습니다.`);
+        }
+      }
+
+      message.success('관심 지역이 삭제되었습니다.');
+    } catch (error) {
       message.error('관심 지역 삭제에 실패했습니다.');
     }
-  }, [selectedDistricts]);
+  }, [interestLocations, userId, fetchInterestLocations, userLocation, dispatch]);
+
+  // 지역 선택 처리
+  const handleSelectLocation = useCallback((location: string) => {
+    dispatch(updateLocationWithApi(location));
+    message.success(`${location}이(가) 현재 지역으로 설정되었습니다.`);
+  }, [dispatch]);
+
+
 
   return (
-    <>
-      <div
-        style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '20px' }}
-      >
-        관심 지역 설정
+    <div className="space-y-5">
+      <h2 className="text-xl font-bold">관심 지역 설정</h2>
+      
+      <div className="flex justify-center items-start gap-5">
+        {/* 지도 영역 */}
+        <div className="w-1/2 h-[500px] rounded-lg overflow-hidden shadow-md border border-gray-100" id="map" />
 
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', marginTop: '5%' }}>
-
-
-
-        <div
-          style={{
-            width: '50%',
-            height: '500px',
-            marginBottom: '5%',
-            borderRadius: '10px',
-            overflow: 'hidden',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-            position: 'relative',
-            border: '1px solid #F3F5F7'
-          }}
-          id="map"
-        />
-
-        <div style={{ marginLeft: '20px', display: 'flex', flexDirection: 'column', width: '35%' }}>
-          <div style={{ display: 'flex', marginBottom: '10px' }}>
+        {/* 검색 및 선택 영역 */}
+        <div className="w-[35%] space-y-5">
+          {/* 검색 영역 */}
+          <h3 className="text-lg font-bold">관심 지역 검색</h3>
+          <div className="flex gap-2">
             <input
               type="text"
-              placeholder="관심 지역 검색 (ex: 광진구, 성동구)"
               value={inputDistrict}
               onChange={(e) => setInputDistrict(e.target.value)}
-              style={{
-                flex: 1,
-                padding: '10px',
-                borderRadius: '5px',
-                border: '1px solid #ddd',
-                marginRight: '5px',
-              }}
+              placeholder="지역구를 입력하세요"
+              className="flex-1 p-2 border rounded-md"
             />
             <button
               onClick={searchDistrict}
-              style={{
-                padding: '10px',
-                borderRadius: '5px',
-                backgroundColor: '#008485',
-                color: '#FFFFFF',
-                cursor: 'pointer',
-                marginRight: '5px'
-              }}
+              className="px-4 py-2 bg-mainColor text-white rounded-md hover:bg-mainDark"
             >
-              <img src={iconSearch} style={{ width: '20px' }} />
+              검색
             </button>
             <button
               onClick={addDistrict}
-              style={{
-
-                padding: '7px',
-                borderRadius: '5px',
-                backgroundColor: '#808080',
-                color: '#FFFFFF',
-                cursor: 'pointer',
-              }}
+              className="px-4 py-2 bg-mainColor text-white rounded-md hover:bg-mainDark"
             >
-              <img src={iconPlus} />
+              추가
             </button>
           </div>
 
-          <div style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '10px',
-            marginTop: '15px'
-          }}>
-            {selectedDistricts.map((district, index) => (
+          {/* 선택된 지역 목록 */}
+          <h3 className="text-lg font-bold">선택된 지역</h3>
+          <div className="space-y-2">
+            {interestLocations.map((district, index) => (
               <div
                 key={index}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: '15px ',
-                  borderRadius: '15px',
-                  backgroundColor: '#54A0A1',
-                  color: '#ffffff',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                }}
+                className={`flex items-center justify-between p-3 ${
+                  district === userLocation 
+                    ? 'bg-mainColor' 
+                    : 'bg-mainColor bg-opacity-65'
+                } text-white rounded-lg cursor-pointer hover:bg-mainColor transition-colors`}
+                onClick={() => handleSelectLocation(district)}
               >
-                <span style={{ marginLeft: '10%', fontSize: '17px' }}>{district}</span>
+                <div className="flex items-center gap-2">
+                  <span>{district}</span>
+                  {district === userLocation && (
+                    <span className="text-xs bg-white text-mainColor px-2 py-0.5 rounded-full">
+                      현재 지역
+                    </span>
+                  )}
+                </div>
                 <button
-                  onClick={() => removeDistrict(district)}
-                  style={{
-                    marginLeft: 'auto',
-                    backgroundColor: 'transparent',
-                    border: 'none',
-                    color: '#ffffff',
-                    cursor: 'pointer',
-                    fontWeight: 'bold',
-                    fontSize: '20px',
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeDistrict(district);
                   }}
+                  className="text-xl font-bold hover:text-gray-200"
                 >
                   ×
                 </button>
               </div>
-
             ))}
-            <div style={{ fontSize: '17px', textAlign: 'center', marginTop: '20px' }}>
-              📢 관심 지역은 최대 3개까지 등록 가능합니다.
-            </div>
           </div>
+
+          <p className="text-center text-gray-600">
+            관심 지역은 최대 3개까지 등록 가능합니다.<br />
+            클릭하여 현재 지역으로 설정할 수 있습니다.
+          </p>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

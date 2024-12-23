@@ -1,6 +1,7 @@
 import { request } from '../hoc/request';
 import { config } from '../config/config';
 import { User, InterestLocationRequestDTO  } from '../types/user';
+import { CustomerInfoRequestDTO, CustomerInfoResponseDTO } from '../types/dto/mypage.dto';
 
 const BASE_URL = config.apiUrl;
 export const userService = {
@@ -14,11 +15,11 @@ export const userService = {
   },
 
   // 일반회원 관심지역 받아오기
-  getInterestLocationList: (customer_id: string) => {
+  getInterestLocationList: (customer_id: number) => {
     return request<string[]>({
       method: 'GET',
       url: `${BASE_URL}/my/interestList`,
-      params: customer_id ? {customer_id} : {}
+      params: customer_id ? {customer_id: customer_id.toString()} : {}
     })
   },
 
@@ -37,6 +38,25 @@ export const userService = {
       method: 'POST',
       url: `${BASE_URL}/my/add/interest`,
       data,
+    })
+  },
+
+  // 일반 회원 정보 조회
+  getCustomerInfo: (customerId: number) => {
+    return request<CustomerInfoResponseDTO>({
+      method: 'GET',
+      url: `${BASE_URL}/my/edit/info`,
+      params: customerId ? {customerId: customerId.toString()} : {}
+    })
+  },
+
+  // 일반 회원 정보 수정
+  updateCustomerInfo: (data: CustomerInfoRequestDTO, customerId: number) => {
+    return request<void>({
+      method: 'PUT',
+      url: `${BASE_URL}/my/edit/info/submit`,
+      data,
+      params: customerId ? {customerId: customerId.toString()} : {}
     })
   },
  
