@@ -4,7 +4,7 @@ import { Button, message } from 'antd';
 import { StarOutlined, StarFilled, FormOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../hoc/store';
-import { QuestionResponseDTO } from '../../types/dto/question.dto';
+import {QuestionResponseDTO} from '../../types/dto/question.dto';
 import Answer from '../../components/board/QuestionDetail/AnswerSection/Answer';
 import AnswerInput from '../../components/board/QuestionDetail/AnswerSection/AnswerInput';
 import Comments from '../../components/board/QuestionDetail/Comments/Comments';
@@ -19,15 +19,16 @@ const QuestionDetail: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
   const navigate = useNavigate();
   
-  const [post, setPost] = useState<QuestionResponseDTO | null>(null);
+  const [question, setQuestion] = useState<QuestionResponseDTO | null>(null);
   const [showAnswerInput, setShowAnswerInput] = useState(false);
   const [isChatbotVisible, setIsChatbotVisible] = useState(false);
   const [isScraped, setIsScraped] = useState<boolean>(false);
-  const { isAuthenticated, userRole, userId } = useSelector((state: RootState) => state.auth);
+  const { userRole, userId } = useSelector((state: RootState) => state.auth);
+  const [isMyQna, setIsMyQna] = useState<boolean>(false);
 
   // 게시글 조회
   useEffect(() => {
-    const fetchPost = async () => {
+    const fetchQuestion = async () => {
       if (!postId) {
         message.error('질문 ID가 없습니다.');
         navigate('/404');
@@ -36,26 +37,31 @@ const QuestionDetail: React.FC = () => {
 
       try {
         const response = await qnaService.getQuestionDetail(parseInt(postId));
-        setPost(response.data);
+        setQuestion(response.data);
+        // 내가 작성한 글인지 여부를 확인
+        console.log(response.data)
+        if (response.data.customerId === userId) {
+          setIsMyQna(true); // 내가 작성한 글인 경우 true
+        } else {
+          setIsMyQna(false); // 내가 작성한 글이 아니면 false
+        }
       } catch (error) {
-        console.error('Failed to fetch post:', error);
+        console.error('Failed to fetch question:', error);
         message.error('게시글을 불러오는데 실패했습니다.');
         navigate('/404');
       }
     };
 
-    fetchPost();
-  }, [postId, navigate]);
+    fetchQuestion();
+  }, [postId, navigate, userId]);
 
   // 스크랩 여부 조회
-  useEffect(() => {
-    fetchScrapedQna();
-  }, [userId]);
-
+  // useEffect(() => {
+  // }, [userId]);
 
   // 답변 제출
   const handleAnswerSubmit = useCallback(async (content: string) => {
-    if (!postId || !post || !userId) return;
+    if (!postId || !question || !userId) return;
 
     try {
       // 답변 등록 API 호출 
@@ -65,8 +71,8 @@ const QuestionDetail: React.FC = () => {
       });
 
       // 답변 등록 후 게시글 새로고침
-      const updatedPost = await qnaService.getQuestionDetail(parseInt(postId));
-      setPost(updatedPost.data);
+      const updatedQuestion = await qnaService.getQuestionDetail(parseInt(postId));
+      setQuestion(updatedQuestion.data);
       setShowAnswerInput(false);
       console.log(showAnswerInput)
       message.success('답변이 등록되었습니다.');
@@ -74,10 +80,10 @@ const QuestionDetail: React.FC = () => {
       console.error('Failed to submit answer:', error);
       message.error('답변 등록에 실패했습니다.');
     }
-  }, [postId, post, userId]);
+  }, [postId, question, userId]);
 
   // 게시글 삭제
-  const handlePostDelete = useCallback(async () => {
+  const handleQuestionDelete = useCallback(async () => {
     if (!postId) return;
 
     try {
@@ -85,29 +91,23 @@ const QuestionDetail: React.FC = () => {
       message.success('게시글이 삭제되었습니다.');
       navigate('/qna');
     } catch (error) {
-      console.error('Failed to delete post:', error);
+      console.error('Failed to delete question:', error);
       message.error('게시글 삭제에 실패했습니다.');
     }
   }, [postId, navigate]);
 
-  const handleScrapClick = useCallback(async () => {
+  // 스크랩 클릭
+  const handleScrapClick = async () => {
     if (!postId || !userId) return;
     await likesscrapService.scrapQuestion({questionId: parseInt(postId), customerId: Number(userId)});
-    fetchScrapedQna();
-  }, [postId, userId]);
-
-  // 스크랩한 qna 조회 후 스크랩 여부 설정 (백엔드에서 스크랩 여부 반환되도록 수정되면 삭제)
-  const fetchScrapedQna = async () => {
-    if (!userId) return;
-    const response = await likesscrapService.getScrapedQna(Number(userId)); // 스크랩한 qna 조회
-    setIsScraped(response.data.some(qna => qna.questionId === Number(postId))); // 스크랩한 qna 중 현재 게시글의 id와 일치하는 게시글이 있는지 확인
+    setIsScraped(!isScraped);
   };
 
   const toggleChatbot = useCallback(() => {
     setIsChatbotVisible(prev => !prev);
   }, []);
 
-  if (!post) return null;
+  if (!question) return null;
 
   return (
     <div className="w-full px-[15%] py-10">
@@ -115,15 +115,15 @@ const QuestionDetail: React.FC = () => {
         <div className="w-3/4 flex flex-col gap-6">
           <div className="pb-3 border-b border-gray-200">
             <div className="flex flex-col gap-3">
-              <h1 className="text-3xl font-bold">Q. {post.title}</h1>
+              <h1 className="text-3xl font-bold">Q. {question.title}</h1>
               <div className="flex gap-4 text-xs text-gray-400">
-                <span>{post.customerId}</span>
-                <span>조회 {post.viewCount}</span>
-                <span>좋아요 {post.likeCount}</span>
-                <span>스크랩 {post.scrapCount}</span>
+                <span>{question.customerId}</span>
+                <span>조회 {question.viewCount}</span>
+                <span>도움돼요 {question.likeCount}</span>
+                <span>스크랩 {question.scrapCount}</span>
               </div>
               <div className="flex justify-end gap-2">
-                {post.commentList.length === 0 && userRole === 'B' && (
+                {question.answer === null && userRole === 'B' && (
                   <Button
                     type="primary"
                     icon={<FormOutlined />}
@@ -132,10 +132,10 @@ const QuestionDetail: React.FC = () => {
                     답변하기
                   </Button>
                 )}
-                {post.customerId === userId && (
+                {isMyQna && (
                   <Button
                     icon={<DeleteOutlined />}
-                    onClick={handlePostDelete}
+                    onClick={handleQuestionDelete}
                   >
                     삭제
                   </Button>
@@ -144,15 +144,15 @@ const QuestionDetail: React.FC = () => {
               </div>
             </div>
             <div className="w-full">
-              <p>{post.content}</p>
+              <p>{question.content}</p>
             </div>
             <div className="text-gray-400">
-              <span>{relativeTime(+new Date(post.createdAt))}</span>
+              <span>{relativeTime(+new Date(question.createdAt))}</span>
             </div>
           </div>
 
-          {post.answer ? (
-            <Answer answer={post.answer} />
+          {question.answer ? (
+            <Answer answer={question.answer} />
           ) : (
             showAnswerInput && (
               <AnswerInput
@@ -163,7 +163,7 @@ const QuestionDetail: React.FC = () => {
           )} 
 
           <Comments
-            isAuthenticated={isAuthenticated}
+            commentList={question.commentList}
           />
         </div>
 
