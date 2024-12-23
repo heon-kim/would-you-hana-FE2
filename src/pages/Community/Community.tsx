@@ -129,14 +129,8 @@ const Community: React.FC = () => {
                 {truncateText(item.title, 23)}
               </h1>
               <p>
-              {truncateText(item.content, 200)}
+              {truncateText(item.content, 180)}
               </p>
-              {/* <p className='font-medium'>
-                이것은 임시 커뮤니티 게시물 내용입니다. 임시용으로 작성한
-                겁니다. 오늘은 밥플러스에서 점심을 먹었습니다. 1호점에서 먹었고
-                메뉴는 돼지불백과 뿌링클너겟이었습니다. 사실 뿌링클 너겟을 제일
-                기대했지만 그것보다는 계란찜이 더 맛있었습니다.
-              </p> */}
               <div className='flex gap-3 mt-5'>
                 <p className='text-sm text-gray-500'>
                   <span className='text-mainColor'>조회 {item.viewCount}</span>
