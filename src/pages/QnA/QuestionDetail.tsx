@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, message } from 'antd';
-import { StarOutlined, StarFilled, FormOutlined, DeleteOutlined } from '@ant-design/icons';
+import { StarOutlined, StarFilled, FormOutlined, DeleteOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../hoc/store';
 import {QuestionResponseDTO} from '../../types/dto/question.dto';
@@ -113,14 +113,15 @@ const QuestionDetail: React.FC = () => {
     <div className="w-full px-[15%] py-10">
       <div className="flex gap-5">
         <div className="w-3/4 flex flex-col gap-6">
-          <div className="pb-3 border-b border-gray-200">
+          <div className="flex flex-col gap-6 pb-3 border-b border-gray-200">
             <div className="flex flex-col gap-3">
-              <h1 className="text-3xl font-bold">Q. {question.title}</h1>
-              <div className="flex gap-4 text-xs text-gray-400">
-                <span>{question.customerId}</span>
+              <h1 className="text-3xl font-bold">
+                Q. {question.title}
+              </h1>
+              <div className="flex gap-1 text-gray-400" style={{fontSize:'13px'}}>
                 <span>조회 {question.viewCount}</span>
-                <span>도움돼요 {question.likeCount}</span>
-                <span>스크랩 {question.scrapCount}</span>
+                <span>·</span>
+                <span>{question.nickname}</span>
               </div>
               <div className="flex justify-end gap-2">
                 {question.answer === null && userRole === 'B' && (
@@ -143,11 +144,18 @@ const QuestionDetail: React.FC = () => {
                 <Button icon={isScraped ? <StarFilled style={{color: 'orange'}} /> : <StarOutlined />} onClick={handleScrapClick}>스크랩</Button>
               </div>
             </div>
+
+            {/* 게시글 내용 */}
             <div className="w-full">
               <p>{question.content}</p>
             </div>
-            <div className="text-gray-400">
+
+            {/* 게시글 푸터 */}
+            <div className="text-gray-400" style={{fontSize:'13px'}}>
               <span>{relativeTime(+new Date(question.createdAt))}</span>
+              <span className="ml-4">
+                <MessageOutlined /> {question.commentList.length} 
+              </span>
             </div>
           </div>
 
@@ -163,6 +171,7 @@ const QuestionDetail: React.FC = () => {
           )} 
 
           <Comments
+            type="question"
             commentList={question.commentList}
           />
         </div>

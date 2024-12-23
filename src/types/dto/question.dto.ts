@@ -45,6 +45,7 @@ export interface QuestionResponseDTO {
     questionId: number;
     customerId: number;
     categoryId: number;    
+    nickname: string;
     title: string;
     content: string;
     location: string;
