@@ -13,7 +13,7 @@ import { locations } from '../constants/locations';
 import logo from '../assets/img/logo.png';
 import userIcon from '../assets/img/icon_user.png';
 import locationIcon from '../assets/img/icon_location.svg';
-
+import { config } from '../config/config';
 // Kakao Maps API 스크립트를 로드하는 함수
 const loadKakaoMapScript = (): Promise<void> => {
   return new Promise((resolve, reject) => {
@@ -24,7 +24,7 @@ const loadKakaoMapScript = (): Promise<void> => {
     const script = document.createElement('script');
     script.id = 'kakao-map-script';
     script.async = true;
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=26b73c9fe72dd7a39fc3df547c6175f2&libraries=services&autoload=false`;
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${config.kakaoJsKey}&libraries=services&autoload=false`;
     script.onload = () => resolve();
     script.onerror = () => reject(new Error('Kakao Maps API 스크립트를 로드하지 못했습니다.'));
     document.head.appendChild(script);

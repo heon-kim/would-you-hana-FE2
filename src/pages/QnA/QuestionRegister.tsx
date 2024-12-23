@@ -81,7 +81,7 @@ const QuestionRegister: React.FC = () => {
 
   const handleRegister = useCallback(() => {
     const { categoryName, title, content } = formData;
-    
+
     if (!categoryName || !title || !content) {
       message.error('모든 필드를 입력해주세요.');
       return;
@@ -146,7 +146,7 @@ const QuestionRegister: React.FC = () => {
         className="w-full h-[50px]"
         placeholder="어떤 분야가 궁금한가요?"
         optionFilterProp="label"
-        onChange={(selected) => setFormData(prev => ({ ...prev, categoryName: selected.label }))}
+        onChange={(selected) => setFormData(prev => ({ ...prev, categoryName: selected }))}
         options={Categories.map(category => ({
           value: category,
           label: category

@@ -5,6 +5,7 @@ import seoulDistricts from '../../assets/location/seoul_districts.json';
 import { userService } from '../../services/user.service';
 import { RootState } from '../../hoc/store';
 import { setInterestLocations, updateLocationWithApi } from '../../hoc/actions';
+import { config } from '../../config/config';
 
 const SetDistrict: React.FC = () => {
   const dispatch = useDispatch<any>();
@@ -19,7 +20,7 @@ const SetDistrict: React.FC = () => {
   useEffect(() => {
     const initializeMap = async () => {
       const script = document.createElement('script');
-      script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=26b73c9fe72dd7a39fc3df547c6175f2&libraries=services&autoload=false`;
+      script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${config.kakaoJsKey}&libraries=services&autoload=false`;
       document.head.appendChild(script);
 
       script.onload = () => {
