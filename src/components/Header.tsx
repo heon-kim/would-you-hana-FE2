@@ -1,17 +1,18 @@
-// @ts-nocheck
 import { Link, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import logo from '../assets/img/logo.png';
-import userIcon from '../assets/img/icon_user.png';
-import locationIcon from '../assets/img/icon_location.svg';
+import { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import store, { RootState } from '../hoc/store';
-import { logout } from '../hoc/actions';
 import { message, Select, Button, Drawer } from 'antd';
 import { MenuOutlined } from "@ant-design/icons";
 import type { SelectProps } from 'antd';
+
+import { RootState } from '../hoc/store';
+import { logout, updateLocation, updateLocationWithApi } from '../hoc/actions';
 import { locations } from '../constants/locations';
 
+// Assets
+import logo from '../assets/img/logo.png';
+import userIcon from '../assets/img/icon_user.png';
+import locationIcon from '../assets/img/icon_location.svg';
 
 // Kakao Maps API 스크립트를 로드하는 함수
 const loadKakaoMapScript = (): Promise<void> => {
@@ -21,132 +22,100 @@ const loadKakaoMapScript = (): Promise<void> => {
       return;
     }
     const script = document.createElement('script');
+    script.id = 'kakao-map-script';
     script.async = true;
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=26b73c9fe72dd7a39fc3df547c6175f2&libraries=services&autoload=false`;
     script.onload = () => resolve();
     script.onerror = () => reject(new Error('Kakao Maps API 스크립트를 로드하지 못했습니다.'));
-    script.id = 'kakao-map-script';
     document.head.appendChild(script);
   });
 };
 
-// 지역 선택 검색창 컴포넌트
-const SearchInput: React.FC<{
+// 지역 선택 검색창 컴포넌트 Props
+interface SearchInputProps {
   placeholder: string;
   style: React.CSSProperties;
   value: string;
   onChange: (newValue: string) => void;
-}> = (props) => {
+}
+
+const SearchInput: React.FC<SearchInputProps> = ({ placeholder, style, value, onChange }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch<any>();
   const [data, setData] = useState<SelectProps['options']>([]);
-  const [favoriteLocations, setFavoriteLocations] = useState<string[]>([]);
-  const isLoggedIn = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const { isAuthenticated, interestLocations = ['성동구'] } = useSelector((state: RootState) => state.auth);
 
-  const handleStorageChange = (event: StorageEvent) => {
-    // Check if the changed key is 'interestLocations'
-    if (event.key === 'interestLocations') {
-      const updatedLocations = JSON.parse(event.newValue || '[]');
-      setFavoriteLocations(updatedLocations); // Update state with the new locations
-    }
-  };
-
+  // 관심 지역 초기화
   useEffect(() => {
-    // Set the initial state from localStorage when the component mounts
-    const initialLocations = JSON.parse(localStorage.getItem('interestLocations') || '[]');
-    setFavoriteLocations(initialLocations);
-
-    // Listen for changes to localStorage
-    window.addEventListener('storage', handleStorageChange);
-
-    // Clean up the event listener when the component unmounts
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, []);
-
-
-  useEffect(() => {
-    const loggedUser = localStorage.getItem('userEmail');
-    if (loggedUser) {
-      //const user = findUser(loggedUser);
-      const locations: string[] = JSON.parse(localStorage.getItem('interestLocations') || '["성동구"]');
-      //const locations = user?.favoriteLocations || ['광진구'];
-      setFavoriteLocations(locations);
-      setData(locations.map((loc) => ({ text: loc, value: loc }))); // 초기 데이터 설정
+    if (isAuthenticated) {
+      setData(interestLocations.map((loc: string) => ({ text: loc, value: loc })));
     } else {
-      setFavoriteLocations(locations); // 모든 지역을 기본 값으로 설정
-      setData(locations.map((loc) => ({ text: loc, value: loc }))); // 초기 데이터 설정
+      setData(locations.map((loc: string) => ({ text: loc, value: loc })));
     }
-  }, [isLoggedIn]);
+  }, [isAuthenticated, interestLocations]);
 
-  const handleSearch = async (value: string) => {
-    const filteredData = favoriteLocations
-      .map((loc) => ({ text: loc, value: loc }))
-      .filter((item) => item.text.toLowerCase().includes(value.toLowerCase()));
+  // 검색 처리
+  const handleSearch = useCallback((value: string) => {
+    const searchLocations = isAuthenticated ? interestLocations : locations;
+    const filteredData = searchLocations
+      .map(loc => ({ text: loc, value: loc }))
+      .filter(item => item.text.toLowerCase().includes(value.toLowerCase()));
     setData(filteredData);
-  };
+  }, [isAuthenticated, interestLocations]);
 
-  const navigateToLanding = (district: string) => {
-    if (district) {
-      navigate(`/district/${district}`);
-    } else {
-      navigate('/');
-    }
-  };
+  // 지역 선택 시 페이지 이동
+  const handleChange = useCallback((selectedDistrict: string) => {
+    onChange(selectedDistrict);
+    dispatch(updateLocationWithApi(selectedDistrict));
+    navigate(`/district/${selectedDistrict}`);
+  }, [navigate, onChange, dispatch]);
 
-  const handleChange = (selectedDistrict: string) => {
-    props.onChange(selectedDistrict); // 부모 컴포넌트에 선택된 값을 전달
-    navigateToLanding(selectedDistrict); // 선택된 지역으로 페이지 이동
-  };
-
-  const handleGetCurrentLocation = async () => {
+  // 현재 위치 가져오기
+  const handleGetCurrentLocation = useCallback(async () => {
     try {
-      await loadKakaoMapScript(); // Kakao Maps API 스크립트 로드
+      await loadKakaoMapScript();
 
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-
-            // Kakao Maps API를 사용하여 좌표를 주소로 변환
-            window.kakao.maps.load(() => {
-              const geocoder = new window.kakao.maps.services.Geocoder();
-              const coord = new window.kakao.maps.LatLng(latitude, longitude);
-
-              geocoder.coord2Address(coord.getLng(), coord.getLat(), (result, status) => {
-                if (status === window.kakao.maps.services.Status.OK) {
-                  const address = result[0]?.address?.address_name || '주소를 찾을 수 없습니다.';
-                  console.log('현재 위치 정보:', address);
-
-                  const district = address.split(' ')[1]; // 주소의 두 번째 부분이 구/동
-                  props.onChange(district); // 부모 컴포넌트에 구/동 정보 전달
-                  navigateToLanding(district);
-                } else {
-                  console.error('주소 변환 실패:', status);
-                }
-              });
-            });
-          },
-          (error) => {
-            console.error('위치 정보를 가져오는 데 실패했습니다:', error);
-          }
-        );
-      } else {
-        console.error('이 브라우저에서는 Geolocation API를 지원하지 않습니다.');
+      if (!navigator.geolocation) {
+        throw new Error('Geolocation이 지원되지 않습니다.');
       }
-    } catch (error) {
-      console.error('Kakao Maps API 로드 중 오류:', error);
-    }
-  };
 
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          const { latitude, longitude } = position.coords;
+
+          window.kakao.maps.load(() => {
+            const geocoder = new window.kakao.maps.services.Geocoder();
+            const coord = new window.kakao.maps.LatLng(latitude, longitude);
+
+            geocoder.coord2Address(coord.getLng(), coord.getLat(), (result: any, status: any) => {
+              if (status === window.kakao.maps.services.Status.OK && result[0]) {
+                const district = result[0].address?.address_name.split(' ')[1];
+                if (district) {
+                  onChange(district);
+                  navigate(`/district/${district}`);
+                }
+              }
+            });
+          });
+        },
+        error => {
+          console.error('위치 정보 가져오기 실패:', error);
+          message.error('위치 정보를 가져올 수 없습니다.');
+        }
+      );
+    } catch (error) {
+      console.error('위치 서비스 오류:', error);
+      message.error('위치 서비스를 사용할 수 없습니다.');
+    }
+  }, [navigate, onChange]);
 
   return (
     <div className='flex gap-3 items-center'>
       <Select
         showSearch
-        value={props.value || null}
-        placeholder={props.placeholder}
-        style={props.style}
+        value={value || null}
+        placeholder={placeholder}
+        style={style}
         defaultActiveFirstOption={false}
         filterOption={false}
         onSearch={handleSearch}
@@ -165,41 +134,29 @@ const SearchInput: React.FC<{
   );
 };
 
-function Header() {
-  const [searchValue, setSearchValue] = useState<string>('');
-  const [drawerVisible, setDrawerVisible] = useState(false);
+const Header: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch<typeof store.dispatch>();
+  const dispatch = useDispatch<any>();
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  
+  const { 
+    isAuthenticated, 
+    userRole, 
+    nickname,
+    userLocation 
+  } = useSelector((state: RootState) => state.auth);
 
-  const isLoggedIn = useSelector((state: RootState) => state.auth.isAuthenticated);
-  const userRole = useSelector((state: RootState) => state.auth.userRole);
-  const loggedUser = localStorage.getItem('userEmail');
-
-  let nickname;
-  if (loggedUser) {
-    nickname = localStorage.getItem('userNickname');
-  }
-
-  useEffect(() => {
-    const storedLocation = localStorage.getItem('userLocation');
-    if (storedLocation) {
-      setSearchValue(storedLocation); // localStorage에서 userLocation 값 가져와 초기값 설정
-    }
-    setDrawerVisible(false);
-  }, [navigate, isLoggedIn]);
-
-  const handleLogout = () => {
+  // 로그아웃 처리
+  const handleLogout = useCallback(() => {
     dispatch(logout());
-    localStorage.removeItem('interestLocations')
-    message.success('로그아웃 성공!');
-    setSearchValue('');
     navigate('/');
-  };
+    message.success('로그아웃 성공!');
+  }, [dispatch, navigate]);
 
-  const handleSearchValueChange = (newValue: string) => {
-    setSearchValue(newValue);
-    localStorage.setItem('userLocation', newValue);
-  };
+  // 검색값 변경 처리
+  const handleLocationChange = useCallback((newLocation: string) => {
+    dispatch(updateLocation(newLocation));
+  }, [dispatch]);
 
   return (
     <header className="w-screen px-6 py-3 bg-white border-b bold-header">
@@ -226,7 +183,7 @@ function Header() {
               <Link to='/community'>커뮤니티</Link>
             </li>
             <li>
-              <Link to='/district/광진구'>우주하나</Link>
+              <Link to={`/district/${userLocation}`}>우주하나</Link>
             </li>
             <li>
               <Link to='/findbank'>영업점 찾기</Link>
@@ -240,11 +197,11 @@ function Header() {
             <SearchInput
               placeholder="지역을 입력하세요"
               style={{ width: 200 }}
-              value={ searchValue || ''}
-              onChange={handleSearchValueChange}
+              value={userLocation || ''}
+              onChange={handleLocationChange}
             />
           )}
-          {isLoggedIn ? (
+          {isAuthenticated ? (
             <div className="flex items-center gap-6">
               <span className="cursor-pointer" onClick={handleLogout}>
                 로그아웃
@@ -284,7 +241,7 @@ function Header() {
             영업점 찾기
           </Link>
           
-          {isLoggedIn ? (
+          {isAuthenticated ? (
             <>
               <p className="cursor-pointer" onClick={handleLogout}>
                 로그아웃
@@ -301,6 +258,6 @@ function Header() {
       </Drawer>
     </header>
   );
-}
+};
 
 export default Header;

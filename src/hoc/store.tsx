@@ -1,5 +1,5 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import { AuthActionTypes, LOGIN_SUCCESS, LOGOUT } from './actions';
+import { AuthActionTypes, LOGIN_SUCCESS, LOGOUT, UPDATE_LOCATION, SET_INTEREST_LOCATIONS } from './actions';
 
 // Define the initial state for authentication
 interface AuthState {
@@ -11,6 +11,7 @@ interface AuthState {
     userLocation: string | null;
     nickname: string | null;
     branchName?: string;
+    interestLocations: string[];
 }
 
 // 초기 상태를 `localStorage`에서 불러오기
@@ -23,6 +24,7 @@ const initialAuthState: AuthState = {
     userLocation: localStorage.getItem('userLocation'),
     nickname: localStorage.getItem('userNickname'),
     branchName: localStorage.getItem('userBranchName') || undefined,
+    interestLocations: JSON.parse(localStorage.getItem('interestLocations') || '["성동구"]'),
 };
 
 
@@ -52,6 +54,16 @@ const authReducer = (state = initialAuthState, action: AuthActionTypes): AuthSta
                 userLocation: '성동구',
                 nickname: null,
                 branchName: undefined,
+            };
+        case UPDATE_LOCATION:
+            return {
+                ...state,
+                userLocation: action.payload
+            };
+        case SET_INTEREST_LOCATIONS:
+            return {
+                ...state,
+                interestLocations: action.payload
             };
         default:
             return state;

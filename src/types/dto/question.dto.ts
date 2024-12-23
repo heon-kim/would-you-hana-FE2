@@ -57,4 +57,9 @@ export interface QuestionResponseDTO {
     commentList: CommentDTO[];
 }
 
-//QuestionUpdateRequestDTO
+// 인기 질문 조회
+export interface TodayQnaListDTO {
+    questionId: number;
+    title: string;
+    viewCount: number;
+}
