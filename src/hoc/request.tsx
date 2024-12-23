@@ -31,6 +31,11 @@ export const getUserNickname = (): string | null => {
     return window.localStorage.getItem('userNickname');
 };
 
+//로컬 스토리지에서 'userBranchName'이라는 키로 저장된 사용자 이메일을 가져오는 함수
+export const getUserBranchName = (): string | null => {
+    return window.localStorage.getItem('userBranchName');
+};
+
 //로컬 스토리지에서 'user_location'이라는 키로 저장된 사용자 위치를 가져오는 함수
 export const getUserLocation= (): string | null =>{
     return window.localStorage.getItem('userLocation');
