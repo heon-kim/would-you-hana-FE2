@@ -22,3 +22,9 @@ export interface CustomerInfoRequestDTO {
     location: string;
     phone: string;
 }
+
+export interface BankerInfoResponeDTO {
+    bankerName: string;
+    bankerEmail: string;
+    branchName: string;
+}
