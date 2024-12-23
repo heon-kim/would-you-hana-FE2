@@ -8,8 +8,6 @@ export interface LikesScrapDTO{
     createdAt : string;
     answerBanker : string;
 }
-
-<<<<<<< HEAD
 export interface ScrapQuestionDTO{
     requestId : number;
     questionId : number;
@@ -31,7 +29,7 @@ export interface ScrapPostDTO{
     viewCount : number;
     createdAt : string;
     updatedAt : string;
-=======
+}
 export interface ScrapQuestionRequestDTO {
     questionId: number;
     customerId: number;
@@ -49,5 +47,19 @@ export interface ScrapQuestionResponseDTO {
     viewCount: number;
     createdAt: string;
     bankerName: string;
->>>>>>> eeca7712ae644034c4fc72c3ff4c6d5187068fb1
+}
+
+export interface ScrapPostResponseDTO {
+    requestId: number;
+    postId: number;
+
+    // 화면에 보여지는 내용
+    categoryName: string;
+    title: string;
+    customerName: string;
+    likeCount: number;
+    viewCount: number;
+    commentCount: number;
+    createdAt: string;
+    updatedAt: string;
 }

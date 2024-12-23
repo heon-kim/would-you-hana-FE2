@@ -27,7 +27,7 @@ const PostList: React.FC<PostListProps> = ({
           <li
             key={post.questionId}
             className="py-5 cursor-pointer hover:bg-gray-50 transition-colors"
-            onClick={() => onPostClick(post.questionId)}
+            onClick={() => onPostClick(post.questionId? post.questionId : post.postId)}
           >
             <div className="text-start">
               <p className="text-gray-500 mb-2 text-[15px]">
