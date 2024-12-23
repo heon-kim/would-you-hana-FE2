@@ -16,7 +16,7 @@ const Community: React.FC = () => {
   const userLocation = localStorage.getItem('userLocation');
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<CommunityListDTO[]>([]);
+  const [communityList, setCommunityList] = useState<CommunityListDTO[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('전체');
 
@@ -25,7 +25,7 @@ const Community: React.FC = () => {
       try {
         setLoading(true);
         const response = await communityService.getCommunityList(userLocation); // location이 필요한 경우 state로 처리 가능
-        setData(Array.isArray(response.data) ? response.data : []); // 배열 여부 확인
+        setCommunityList(Array.isArray(response.data) ? response.data : []); // 배열 여부 확인
         setHasMore(Array.isArray(response) && response.data.length > 0);
       } catch (error) {
         console.error('Failed to fetch posts:', error);
@@ -59,14 +59,14 @@ const Community: React.FC = () => {
     if (loading) return;
     setLoading(true);
 
-    setData((prevData) => {
-      const nextData = data.slice(prevData.length, prevData.length + 5);
+    setCommunityList((prevData) => {
+      const nextData = communityList.slice(prevData.length, prevData.length + 5);
       if (nextData.length === 0) setHasMore(false);
       return [...prevData, ...nextData];
     });
 
     setLoading(false);
-  }, [loading, data]);
+  }, [loading, communityList]);
 
   const truncateText = useCallback((text: string, maxLength: number) => {
     return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
@@ -77,17 +77,14 @@ const Community: React.FC = () => {
     async (category: string, location: string | null) => {
       try {
         setLoading(true);
-        const response = await communityService.getCommunityByCategory(
-          category,
-          location
-        ); // 카테고리와 위치에 맞는 데이터 가져오기
+        const response = await communityService.getCommunityList(location);
         if (category === '전체') {
-          setData(Array.isArray(response.data) ? response.data : []); // 전체 카테고리일 때는 모든 데이터 설정
+          setCommunityList(Array.isArray(response.data) ? response.data : []); // 전체 카테고리일 때는 모든 데이터 설정
         } else {
           const filteredData = response.data.filter(
             (post: CommunityListDTO) => post.categoryName === category
           );
-          setData(Array.isArray(filteredData) ? filteredData : []); // 카테고리와 일치하는 데이터만 필터링
+          setCommunityList(Array.isArray(filteredData) ? filteredData : []); // 카테고리와 일치하는 데이터만 필터링
         }
         setHasMore(Array.isArray(response) && response.length > 0);
       } catch (error) {
@@ -164,7 +161,7 @@ const Community: React.FC = () => {
   return (
     <div id='scrollableDiv' className='h-auto overflow-auto px-4 mt-5'>
       <InfiniteScroll
-        dataLength={data.length}
+        dataLength={communityList.length}
         next={loadMoreData}
         hasMore={hasMore}
         loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
@@ -185,7 +182,7 @@ const Community: React.FC = () => {
         <CommunityCategory setCategory={handleCategoryChange} />
         <List
           grid={{ gutter: 0, column: 1 }}
-          dataSource={data} // 필터링된 data 사용
+          dataSource={communityList} // 필터링된 data 사용
           renderItem={renderListItem}
         />
       </InfiniteScroll>
