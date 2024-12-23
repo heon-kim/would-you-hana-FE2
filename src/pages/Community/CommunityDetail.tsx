@@ -84,9 +84,9 @@ const CommunityDetail: React.FC = () => {
   if (!post) return null;
 
   return (
-    <div className="w-full px-[15%] py-10">
+    <div className="w-full px-[25%] py-10">
       <div className="flex gap-5">
-        <div className="w-3/4 flex flex-col gap-6">
+        <div className="w-full flex flex-col gap-6">
           {/* 게시글 헤더 */}
           <div className="flex flex-col gap-6 pb-3 border-b border-gray-200">
             <div className="flex flex-col gap-3">
@@ -137,9 +137,9 @@ const CommunityDetail: React.FC = () => {
         </div>
 
         {/* 사이드바 영역이 필요한 경우 추가 */}
-        <div className="w-1/4">
+        {/* <div className="w-1/4"> */}
           {/* 사이드바 컴포넌트들 */}
-        </div>
+        {/* </div> */}
       </div>
     </div>
   );
