@@ -8,6 +8,7 @@ import iconLocationWhite from '../../assets/img/icon_location_white.svg';
 import hwayangImg from '../../assets/img/bank/hwayang.jpg';
 import seongsuImg from '../../assets/img/bank/seongsu.png';
 import seouluuuuuupImg from '../../assets/img/bank/seoulsuuuuuup.jpg';
+import { config } from '../../config/config';
 
 const FindBank = () => {
   const [selectedLocation, setSelectedLocation] = useState(null);
@@ -105,7 +106,7 @@ const FindBank = () => {
           setUserLocation(userLatLng);
 
           const script = document.createElement('script');
-          script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=26b73c9fe72dd7a39fc3df547c6175f2&libraries=services&autoload=false`;
+          script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${config.kakaoJsKey}&libraries=services&autoload=false`;
           document.head.appendChild(script);
 
           script.onload = () => {
@@ -135,7 +136,7 @@ const FindBank = () => {
 
     const script = document.createElement('script');
     script.async = true;
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=26b73c9fe72dd7a39fc3df547c6175f2&libraries=services&autoload=false`;
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${config.kakaoJsKey}&libraries=services&autoload=false`;
     document.head.appendChild(script);
 
     script.onload = () => {
