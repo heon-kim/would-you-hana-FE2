@@ -7,6 +7,7 @@ import {
 } from '../types/dto/question.dto';
 import { AnswerAddRequestDTO, AnswerGoodRequestDTO, AnswerResponseDTO } from '../types/dto/answer.dto';
 import { config } from '../config/config';
+import { CommentAddRequestDTO, CommentResponseDTO } from '../types/dto/comment.dto';
 
 const BASE_URL = config.apiUrl;
 
@@ -105,6 +106,14 @@ export const qnaService = {
     return request<String>({
       method: 'POST',
       url: `${BASE_URL}/qna/answerLike`,
+      data
+    });
+  },
+  // 댓글 달기
+  addComment: (questionId: number, data: CommentAddRequestDTO) => {
+    return request<CommentResponseDTO>({
+      method: 'POST',
+      url: `${BASE_URL}/qna/comment/${questionId}`,
       data
     });
   }
