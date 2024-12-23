@@ -27,7 +27,7 @@ const PostList: React.FC<PostListProps> = ({
           <li
             key={post.questionId}
             className="py-5 cursor-pointer hover:bg-gray-50 transition-colors"
-            onClick={() => onPostClick(post.questionId)}
+            onClick={() => onPostClick(post.questionId? post.questionId : post.postId)}
           >
             <div className="text-start">
               <p className="text-gray-500 mb-2 text-[15px]">
@@ -40,27 +40,52 @@ const PostList: React.FC<PostListProps> = ({
                 <span className="text-mainColor">
                   조회 {post.viewCount}
                 </span>
+                
+                {post.answerBanker ? (
+                  <>
+                   <span className="mx-1">·</span>
+                   <span>도움돼요 {post.likeCount}</span>
+                  </>
+                  ):(
+                    <>
+                   <span className="mx-1">·</span>
+                   <span>좋아요 {post.likeCount}</span>
+                  </>
+                  )}
+
+                {/* <span className="mx-1">·</span> */}
+                {/* <span>댓글 {post.commentCount}</span> */}
+                
                 <span className="mx-1">·</span>
-                <span>도움돼요 {post.likeCount}</span>
-                <span className="mx-1">·</span>
-                <span>댓글 {post.commentCount}</span>
+                <span> {new Date(post.createdAt).toISOString().slice(2, 10).replace(/-/g, '/')}</span>
+
+                {post.customerName && (
+                  <>
+                  <span className="mx-1">·</span>
+                  <span className="text-gray-500 text-sm">
+                      {post.customerName}
+                    </span>
+                  </>
+                  )}
 
               </p>
               <div className="flex items-center">
-                <img
+                {post.answerBanker && post.answerBanker !== '답변 대기 중'? (
+                  <>
+                  <img
                   src={iconUser}
                   alt="User Avatar"
                   className="w-[25px] h-[25px] rounded-full"
                 />
-                {post.answerBanker ? (
-                  <span className="ml-2 text-hoverColor font-extrabold">
+                <span className="ml-2 text-hoverColor font-extrabold">
                     {post.answerBanker}
                   </span>
-                ) : (
-                  <span className="ml-2 text-gray-500 text-[13px]">답변 대기중</span>
-                )}
+                  </>
+                  
+                ) : post.answerBanker === '답변 대기 중' ?(
+                  <span className=" text-gray-500 text-[13px]">답변 대기중</span>
+                ): null}
               </div>
-
             </div>
           </li>
         ))}

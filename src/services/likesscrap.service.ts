@@ -1,6 +1,6 @@
 import { config } from "../config/config";
 import { request } from "../hoc/request";
-import { ScrapQuestionRequestDTO, ScrapQuestionResponseDTO } from "../types/dto/likesscrap.dto";
+import { ScrapPostResponseDTO, ScrapQuestionRequestDTO, ScrapQuestionResponseDTO } from "../types/dto/likesscrap.dto";
 
 const BASE_URL = config.apiUrl;
 
