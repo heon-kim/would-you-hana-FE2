@@ -2,11 +2,15 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Select, message, Input, Button } from 'antd';
 import type { UploadFile, UploadProps } from 'antd';
-import { findUser } from '../../utils/userStorage';
+// import { findUser } from '../../utils/userStorage';
 import { communityPostCount, saveCommunityPost } from '../../utils/communityPostStorage';
-import { getUserEmail } from '../../hoc/request';
+// import { getUserEmail } from '../../hoc/request';
 import { CommunityCategories } from '../../constants/posts';
 import ImageUpload from '../../components/board/QuestionForm/ImageUpload';
+import { communityService } from '../../services/community.service';
+import { CommunityRegisterDTO } from '../../types/dto/community.dto';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../hoc/store';
 
 const { TextArea } = Input;
 
@@ -25,12 +29,16 @@ const CommunityRegister: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: '',
+    customerId: '',
+    categoryName: '',
+    location: '',
     content: '',
-    category: '',
+
   });
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
+  const { userId, userLocation } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     const storedFiles = localStorage.getItem('uploadedImages');
@@ -73,41 +81,50 @@ const CommunityRegister: React.FC = () => {
     localStorage.setItem('uploadedImages', JSON.stringify(updatedFileList));
   }, []);
 
-  const handleRegister = useCallback(() => {
-    const { category, title, content } = formData;
-    
-    if (!category || !title || !content) {
+  const handleRegister = useCallback(async () => {
+    const { categoryName, title, content } = formData;
+
+    if (!categoryName || !title || !content) {
       message.error('모든 필드를 입력해주세요.');
       return;
     }
 
-    const userEmail = getUserEmail();
-    const user = findUser(userEmail || '');
-    
-    const postData = {
-      id: communityPostCount(),
-      category,
-      title,
-      content,
-      author: user?.nickname || '',
-      email: userEmail || '',
-      createdAt: new Date().toISOString(),
-      answered: false,
-      counts: {
-        views: 0,
-        likes: 0,
-        comments: 0,
-        scraps: 0,
-      },
-      images: fileList.map((file) => ({
-        name: file.name,
-        preview: file.preview || '',
-      })),
-    };
+    try {
+      const data = new FormData();
 
-    saveCommunityPost(postData);
-    message.success('게시글이 등록되었습니다!');
-    navigate('/community');
+      const question: CommunityRegisterDTO = {
+        title,
+        customerId: userId,
+        categoryName,
+        location: userLocation || '성동구',
+        content
+      }
+
+      // fileList.forEach((file, index) => {
+      //   if (file.originFileObj) {
+      //     data.append(`images[${index}]`, file.originFileObj);
+      //   }
+      // });
+      // question JSON 데이터 추가 시 content-type 설정
+      const questionBlob = new Blob([JSON.stringify(question)], {
+        type: 'application/json'
+      });
+      console.log(questionBlob);
+      data.append('question', questionBlob);
+
+      //파일 데이터 추가
+      fileList.forEach((file) => {
+        if (file.originFileObj) {
+          data.append('file', file.originFileObj);
+        }
+      });
+
+      await communityService.postCommunityPost(data);
+      message.success('게시글이 등록되었습니다!');
+      navigate('/community');
+    } catch (error) {
+      message.error(`게시글 등록 실패: ${error}`);
+    }
   }, [formData, fileList, navigate]);
 
   return (
@@ -124,10 +141,10 @@ const CommunityRegister: React.FC = () => {
         className="w-full h-[50px]"
         placeholder="카테고리 선택"
         optionFilterProp="label"
-        onChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
-        options={CommunityCategories.map(category => ({
-          value: category,
-          label: category
+        onChange={(value) => setFormData(prev => ({ ...prev, categoryName: value }))}
+        options={CommunityCategories.map(categoryName => ({
+          value: categoryName,
+          label: categoryName
         }))}
       />
 

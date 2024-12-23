@@ -1,3 +1,5 @@
+import { CommentDTO } from "./comment.dto";
+
 export interface CommunityListDTO{
     postId : number;
     nickname : string;
@@ -10,3 +12,34 @@ export interface CommunityListDTO{
     scrapCount : number;
     viewCount : number;
 }
+
+export interface CommunityResponseDTO{
+    postId : number;
+    nickname : string;
+    location : string;
+    categoryName : string;
+    title : string;
+    content : string;
+    createdAt : string;
+    updatedAt : string;
+    likeCount : number;
+    scrapCount : number;
+    viewCount : number;
+    commentList : CommentDTO[];
+}
+
+export interface CommunityAllResponseDTO {
+    postId: number;
+    customerId: number;
+    categoryId : number;
+    // categoryName: string;
+    title: string;
+    content: string;
+    location: string;
+    createdAt: string;
+    updatedAt: string;
+    likeCount: number;
+    scrapCount: number;
+    viewCount: number;
+    file: string[];
+} 

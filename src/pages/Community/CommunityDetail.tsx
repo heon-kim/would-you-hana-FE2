@@ -93,10 +93,11 @@ const CommunityDetail: React.FC = () => {
               <h1 className="text-3xl font-bold">
                 {post.title}
               </h1>
-              <div className="flex gap-4 text-xs text-gray-400">
+              <div className="flex gap-1 text-gray-400" style={{fontSize:'13px'}}>
                 <span>조회 {post.viewCount}</span>
-                <span>좋아요 {post.likeCount}</span>
-                <span>스크랩 {post.scrapCount}</span>
+                {/* <span>좋아요 {post.likeCount}</span>
+                <span>스크랩 {post.scrapCount}</span> */}
+                <span>·</span>
                 <span>{post.nickname}</span>
               </div>
               <div className="flex justify-end">
@@ -117,10 +118,10 @@ const CommunityDetail: React.FC = () => {
             </div>
 
             {/* 게시글 푸터 */}
-            <div className="text-gray-400">
+            <div className="text-gray-400" style={{fontSize:'13px'}}>
               <span>{relativeTime(+new Date(post.createdAt))}</span>
               <span className="ml-4">
-                <LikeOutlined /> {post.viewCount}
+                <LikeOutlined /> {post.likeCount}
               </span>
               <span className="ml-4">
                 {/* 임시 주석!! */}
