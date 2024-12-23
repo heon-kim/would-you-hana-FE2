@@ -48,6 +48,8 @@ const PostList: React.FC<PostListProps> = ({
                 <span className="mx-1">·</span>
                 <span>도움돼요 {post.likeCount}</span>
                 <span className="mx-1">·</span>
+                <span>댓글 {post.commentCount}</span>
+                <span className="mx-1">·</span>
                 <span>{relativeTime(+new Date(post.createdAt))}</span>
               </p>
               {/* 행원 이름 */}

@@ -47,7 +47,7 @@ function App() {
         }}
       >
         <Router>
-          <div className="h-dvh flex flex-col">
+          <div className="min-h-dvh flex flex-col">
             <Header />
             <Routes>
               <Route path="/" element={<Home />} />

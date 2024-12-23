@@ -8,7 +8,7 @@ export interface CommunityListDTO{
     content : string;
     location : string;
     createdAt : string;
-    contentCount : number;
+    commentCount : number;
     likeCount : number;
     scrapCount : number;
     viewCount : number;

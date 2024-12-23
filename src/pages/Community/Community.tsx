@@ -132,6 +132,7 @@ const Community: React.FC = () => {
                   <span className='text-mainColor'>조회 {item.viewCount}</span>
                   {' · '}좋아요 {item.likeCount}
                   {' · '}스크랩 {item.scrapCount}
+                  {' · '}댓글 {item.commentCount}
                 </p>
               </div>
             </div>
