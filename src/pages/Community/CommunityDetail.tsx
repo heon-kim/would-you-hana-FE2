@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, message } from 'antd';
-import { StarOutlined, LikeOutlined, MessageOutlined } from '@ant-design/icons';
+import {StarOutlined, LikeOutlined, MessageOutlined, DeleteOutlined} from '@ant-design/icons';
 import { relativeTime } from '../../utils/stringFormat';
 import Comments from '../../components/board/QuestionDetail/Comments/Comments';
 import { useSelector } from 'react-redux';
@@ -13,6 +13,8 @@ const CommunityDetail: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
   const navigate = useNavigate();
   const [post, setPost] = useState<CommunityResponseDTO|null>(null);
+  const { userRole, userId } = useSelector((state: RootState) => state.auth);
+  const [isMyPost, setIsMyPost] = useState<boolean>(false);
   
 
   useEffect(() => {
@@ -30,14 +32,32 @@ const CommunityDetail: React.FC = () => {
           navigate('/404');
           return;
         }
-
         setPost(response.data);
+        if(response.data.customerId == userId) {
+          setIsMyPost(true);
+        } else {
+          setIsMyPost(false);
+        }
       }catch(error){
         message.error('게시글을 불러오는 중 오류가 발생했습니다.');
         navigate('/404');
       }
     };
     fetchPost();
+  }, [postId, navigate, userId]);
+
+  // 게시글 삭제
+  const handlePostDelete = useCallback(async () => {
+    if (!postId) return;
+
+    try {
+      await communityService.deletePost(parseInt(postId));
+      message.success('게시글이 삭제되었습니다.');
+      navigate('/community');
+    } catch (error) {
+      console.error('Failed to delete question:', error);
+      message.error('게시글 삭제에 실패했습니다.');
+    }
   }, [postId, navigate]);
 
   if (!post) return null;
@@ -57,7 +77,15 @@ const CommunityDetail: React.FC = () => {
                 <span>·</span>
                 <span>{post.nickname}</span>
               </div>
-              <div className="flex justify-end">
+              <div className="flex justify-end gap-2">
+                {isMyPost && (
+                    <Button
+                        icon={<DeleteOutlined />}
+                        onClick={handlePostDelete}
+                    >
+                      삭제
+                    </Button>
+                )}
                 <Button icon={<StarOutlined />}>스크랩</Button>
               </div>
             </div>

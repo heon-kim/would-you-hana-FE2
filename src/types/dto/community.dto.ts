@@ -16,6 +16,7 @@ export interface CommunityListDTO{
 
 export interface CommunityResponseDTO{
     postId : number;
+    customerId : number;
     nickname : string;
     location : string;
     categoryName : string;

@@ -45,7 +45,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ onClose }) => {
 
     // 챗봇 응답 처리
     try {
-      const response = await axios.post("http://localhost:8000/get_answer", {
+      const response = await axios.post("https://api.wouldyouhana.site/get_answer", {
         question: input,
       });
 

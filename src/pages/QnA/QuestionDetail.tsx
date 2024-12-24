@@ -24,7 +24,7 @@ const QuestionDetail: React.FC = () => {
   const [isChatbotVisible, setIsChatbotVisible] = useState(false);
   const [isScraped, setIsScraped] = useState<boolean>(false);
   const { userRole, userId } = useSelector((state: RootState) => state.auth);
-  const [isMyQna, setIsMyQna] = useState<boolean>(false);
+  const [ isMyQna, setIsMyQna] = useState<boolean>(false);
 
   // 게시글 조회
   useEffect(() => {
