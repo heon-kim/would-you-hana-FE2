@@ -1,6 +1,8 @@
 import { request } from '../hoc/request';
 import { config } from '../config/config';
 import { CommunityAllResponseDTO, CommunityListDTO, CommunityResponseDTO } from '../types/dto/community.dto';
+import { CommentAddRequestDTO } from '../types/dto/comment.dto';
+import { CommentResponseDTO } from '../types/dto/comment.dto';
 
 const BASE_URL = config.apiUrl;
 
@@ -15,10 +17,10 @@ export const communityService = {
     },
 
     //커뮤니티 카테고리별 목록 불러오기
-    getCommunityByCategory:(category: number, location: string|null) => {
+    getCommunityByCategory:(category: string, location: string|null) => {
         return request<CommunityListDTO[]>({
             method: 'GET',
-            url: `${BASE_URL}/post/postList`,
+            url: `${BASE_URL}/post/postList/${category}`,
             params: location ? { location } : {}
         })
     },
@@ -39,5 +41,13 @@ export const communityService = {
             data,
             headers: { 'Content-Type': 'multipart/form-data' },
         })
+    },
+    // 댓글 달기
+    addComment: (postId: number, data: CommentAddRequestDTO) => {
+            return request<CommentResponseDTO>({
+            method: 'POST',
+            url: `${BASE_URL}/post/comment/${postId}`,
+            data
+        });
     }
 }

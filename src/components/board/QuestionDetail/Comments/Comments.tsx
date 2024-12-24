@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../hoc/store';
 import { qnaService } from '../../../../services/qna.service';
 import { useParams } from 'react-router-dom';
+import { communityService } from '../../../../services/community.service';
 
 const { TextArea } = Input;
 
@@ -72,7 +73,7 @@ const CommentItem: React.FC<{
     </div>
   );
 
-const Comments: React.FC<{ commentList: CommentDTO[] }> = ({ commentList }) => {
+const Comments: React.FC<{ type:String, commentList: CommentDTO[] }> = ({ type, commentList }) => {
   const [comments, setComments] = useState<CommentDTO[]>(commentList);
   const [newComment, setNewComment] = useState<string>('');
   const { postId } = useParams<{ postId: string }>();
@@ -80,12 +81,14 @@ const Comments: React.FC<{ commentList: CommentDTO[] }> = ({ commentList }) => {
 
 
   const addComment = async () => {
-    const response = await qnaService.addComment(Number(postId), {
+    const service = type === 'post' ? communityService : qnaService;
+    const response = await service.addComment(Number(postId), {
       customerId: Number(userId),
       content: newComment
     });
     setComments(comments => [...comments, { ...response.data, customerId: Number(userId) }]);
   };
+  
 
   return (
     <div className="comment flex flex-col gap-7">

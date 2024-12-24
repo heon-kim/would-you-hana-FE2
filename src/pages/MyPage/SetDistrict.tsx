@@ -162,7 +162,7 @@ const SetDistrict: React.FC = () => {
 
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-10">
       <h2 className="text-xl font-bold">관심 지역 설정</h2>
       
       <div className="flex justify-center items-start gap-5">

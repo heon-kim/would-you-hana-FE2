@@ -60,10 +60,10 @@ export const qnaService = {
   },
 
   // 카테고리별 질문 목록 조회
-  getQnaListByCategory: (category: number, location: string|null) => {
+  getQnaListByCategory: (category: string, location: string|null) => {
     return request<QnaListDTO[]>({
       method: 'GET',
-      url: `${BASE_URL}/qnalist/${category}`,
+      url: `${BASE_URL}/qna/qnaList/${category}`,
       params: location ? { location } : {} // location이 null이 아니면 location을 포함한 객체를 만들어 준다.
     });
   },

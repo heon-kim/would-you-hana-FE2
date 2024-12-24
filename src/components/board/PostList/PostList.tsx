@@ -1,10 +1,12 @@
 import React from 'react';
 import { Pagination } from 'antd';
 import iconUser from '../../../assets/img/icon_user_board.jpg';
-import { Post } from '../../../types/post';
+import { relativeTime } from '../../../utils/stringFormat';
+import { QnaListDTO } from '../../../types/dto/question.dto';
+
 
 interface PostListProps {
-  posts: Post[];
+  posts: QnaListDTO[];
   currentPage: number;
   postsPerPage: number;
   totalPosts: number;
@@ -27,50 +29,32 @@ const PostList: React.FC<PostListProps> = ({
           <li
             key={post.questionId}
             className="py-5 cursor-pointer hover:bg-gray-50 transition-colors"
-            onClick={() => onPostClick(post.questionId? post.questionId : post.postId)}
+            onClick={() => onPostClick(post.questionId)}
           >
             <div className="text-start">
+              {/* 카테고리 */}
               <p className="text-gray-500 mb-2 text-[15px]">
                 {post.categoryName}
               </p>
+              {/* 제목 */}
               <h3 className="text-lg font-semibold text-gray-800 mb-2">
                 {post.title}
               </h3>
+              {/* 정보 */}
               <p className="text-gray-500 mb-4 text-sm">
                 <span className="text-mainColor">
                   조회 {post.viewCount}
                 </span>
-                
-                {post.answerBanker ? (
-                  <>
-                   <span className="mx-1">·</span>
-                   <span>도움돼요 {post.likeCount}</span>
-                  </>
-                  ):(
-                    <>
-                   <span className="mx-1">·</span>
-                   <span>좋아요 {post.likeCount}</span>
-                  </>
-                  )}
-
-                {/* <span className="mx-1">·</span> */}
-                {/* <span>댓글 {post.commentCount}</span> */}
-                
                 <span className="mx-1">·</span>
-                <span> {new Date(post.createdAt).toISOString().slice(2, 10).replace(/-/g, '/')}</span>
-
-                {post.customerName && (
-                  <>
-                  <span className="mx-1">·</span>
-                  <span className="text-gray-500 text-sm">
-                      {post.customerName}
-                    </span>
-                  </>
-                  )}
-
+                <span>도움돼요 {post.likeCount}</span>
+                <span className="mx-1">·</span>
+                <span>댓글 {post.commentCount}</span>
+                <span className="mx-1">·</span>
+                <span>{relativeTime(+new Date(post.createdAt))}</span>
               </p>
+              {/* 행원 이름 */}
               <div className="flex items-center">
-                {post.answerBanker && post.answerBanker !== '답변 대기 중'? (
+                {post.answerBanker && post.answerBanker !== '답변 대기중'? (
                   <>
                   <img
                   src={iconUser}
@@ -82,9 +66,9 @@ const PostList: React.FC<PostListProps> = ({
                   </span>
                   </>
                   
-                ) : post.answerBanker === '답변 대기 중' ?(
+                ):(
                   <span className=" text-gray-500 text-[13px]">답변 대기중</span>
-                ): null}
+                )}
               </div>
             </div>
           </li>

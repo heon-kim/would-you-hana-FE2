@@ -87,8 +87,8 @@ const Answer: React.FC<AnswerProps> = ({ answer }) => {
           </div>
           <p className='comment__body font-light'>{answer.content}</p>
           <div className='comment__footer font-light flex flex-col gap-5'>
-            <p className='text-xs text-gray-400'>
-              {relativeTime(+new Date(answer.updatedAt))}
+            <p className="text-gray-400" style={{fontSize:'13px'}}>
+              {relativeTime(+new Date(answer.createdAt))}
             </p>
             <div className='flex justify-between'>
               <Button icon={isGood ? <LikeFilled style={{color: 'orange'}} /> : <LikeOutlined />} onClick={handleGoodClick}>도움돼요</Button>
