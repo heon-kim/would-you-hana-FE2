@@ -272,150 +272,104 @@ const FindBank = () => {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', marginTop: '5%' }}>
-      <div style={{ width: '50%', height: '500px', borderRadius: '10px', overflow: 'hidden', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }} id="map">
-        <div style={{ position: 'absolute', bottom: '10px', right: '10px', zIndex: '1000', display: 'flex', flexDirection: 'column' }}>
-          <button
-            onClick={toggleATMMarkers}
-            style={{
-              width: '50px',
-              height: '50px',
-              borderRadius: '50%',
-              backgroundColor: isATMActive ? '#FFFFFF' : '#008485',
-              color: isATMActive ? '#008485' : '#FFFFFF',
-              border: 'none',
-              cursor: 'pointer',
-              boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
-              marginBottom: '5px',
-            }}
-          >
-            ATM
-          </button>
-
-          <button
-            onClick={toggleBranchMarkers}
-            style={{
-              width: '50px',
-              height: '50px',
-              borderRadius: '50%',
-              backgroundColor: isBranchActive ? '#FFFFFF' : '#008485',
-              color: isBranchActive ? '#008485' : '#FFFFFF',
-              border: 'none',
-              cursor: 'pointer',
-              boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
-              marginBottom: '5px',
-            }}
-          >
-            영업점
-          </button>
-
-          <button
-            onClick={goToUserLocation}
-            style={{
-              width: '50px',
-              height: '50px',
-              borderRadius: '50%',
-              backgroundColor: isLocationActive ? '#008485' : '#FFFFFF',
-              color: isLocationActive ? '#FFFFFF' : '#008485',
-              border: 'none',
-              cursor: 'pointer',
-              boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <img
-              src={isLocationActive ? iconLocationWhite : iconLocation}
-              alt="Location Icon"
-              style={{ width: '24px', height: '24px' }}
-            />
-          </button>
-        </div>
-      </div>
-
-      <div
-        style={{
-          marginLeft: '20px',
-          padding: '0',
-          border: '1px solid #ccc',
-          borderRadius: '10px',
-          width: '300px',
-          height: '500px',
-          backgroundColor: '#f9f9f9',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
+    <div className="flex justify-center items-start mt-20 min-h-screen p-10">
+  {/* Map Container */}
+  <div
+    className="relative w-1/2 h-[500px] bg-white rounded-3xl overflow-hidden shadow-2xl transform transition-transform hover:scale-105"
+    id="map"
+  >
+    <div className="absolute bottom-6 right-6 z-50 flex flex-col space-y-4">
+      {/* ATM Button */}
+      <button
+        onClick={toggleATMMarkers}
+        className={`w-12 h-12 text-sm rounded-full transition-all transform hover:scale-110 shadow-lg ${
+          isATMActive
+            ? "bg-white text-mainColor"
+            : "bg-mainColor text-white"
+        }`}
       >
-        {/* 고정된 헤더 */}
-        <div
-          style={{
-            backgroundColor: '#008485',
-            padding: '12px',
-            borderTopLeftRadius: '10px',
-            borderTopRightRadius: '10px',
-          }}
-        >
-          <h3
-            style={{
-              fontSize: '1.25rem',
-              fontWeight: '500',
-              color: '#fff',
-            }}
-          >
-            {selectedLocation ? selectedLocation.title : '상세 정보'}
-          </h3>
-        </div>
+        ATM
+      </button>
 
-        {/* 스크롤 가능한 본문 */}
-        <div
-          style={{
-            flex: 1,
-            padding: '20px',
-            overflowY: 'auto',
-          }}
-        >
-          {selectedLocation ? (
-            <>
-              {selectedLocation.image && (
-                <img
-                  src={selectedLocation.image}
-                  alt={selectedLocation.title}
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                    borderRadius: '10px',
-                    marginBottom: '10px',
-                  }}
-                />
-              )}
-              <div style={{ marginTop: '10px' }} dangerouslySetInnerHTML={{ __html: selectedLocation.content }} />
-            </>
-          ) : (
-            <p style={{ color: '#888' }}>마커를 클릭하면 <br></br> 여기에 상세 정보가 표시됩니다.</p>
-          )}
-        </div>
+      {/* Branch Button */}
+      <button
+        onClick={toggleBranchMarkers}
+        className={`w-12 h-12 text-sm rounded-full transition-all transform hover:scale-110 shadow-lg ${
+          isBranchActive
+            ? "bg-white text-mainColor"
+            : "bg-mainColor text-white"
+        }`}
+      >
+        영업점
+      </button>
 
-        <div style={{ padding: '10px', textAlign: 'center' }}>
-          {selectedLocation && selectedLocation.type === 'branch' && (
-            <button
-              style={{
-                width: '100%',
-                backgroundColor: '#008485',
-                borderRadius: '3px',
-                padding: '5px',
-                color: 'white',
-              }}
-              onClick={showModal}
-            >
-              예약하기
-            </button>
-          )}
-        </div>
-      </div>
-      <ReservationModal isOpen={isModalOpen} onOk={handleOk} onCancel={handleCancel} />
+      {/* Location Button */}
+      <button
+        onClick={goToUserLocation}
+        className={`w-12 h-12 text-sm rounded-full transition-all transform hover:scale-110 shadow-lg flex items-center justify-center ${
+          isLocationActive
+            ? "bg-mainColor text-white"
+            : "bg-white text-mainColor"
+        }`}
+      >
+        <img
+          src={isLocationActive ? iconLocationWhite : iconLocation}
+          alt="Location Icon"
+          className="w-6 h-6"
+        />
+      </button>
     </div>
+  </div>
+
+  {/* Info Panel */}
+  <div className="ml-10 w-80 h-[500px] bg-white rounded-3xl shadow-2xl transform transition-transform hover:scale-105 flex flex-col overflow-hidden">
+    {/* Header */}
+    <div className="bg-mainColor p-4 text-center">
+      <h3 className="font-bold text-white tracking-wide">
+        {selectedLocation ? selectedLocation.title : "상세 정보"}
+      </h3>
+    </div>
+
+    {/* Scrollable Content */}
+    <div className="flex-1 p-6 overflow-y-auto bg-gradient-to-b from-gray-50 to-gray-100">
+      {selectedLocation ? (
+        <>
+          {selectedLocation.image && (
+            <img
+              src={selectedLocation.image}
+              alt={selectedLocation.title}
+              className="w-full h-auto rounded-2xl mb-4 shadow-lg"
+            />
+          )}
+          <div
+            className="mt-4 text-gray-700 leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: selectedLocation.content }}
+          />
+        </>
+      ) : (
+        <p className="text-gray-400 text-center mt-20 animate-fade">
+          마커를 클릭하면 <br /> 여기에 상세 정보가 표시됩니다.
+        </p>
+      )}
+    </div>
+
+    {/* Footer */}
+    <div className="p-4 text-center  bg-gradient-to-b from-gray-50 to-gray-100">
+      {selectedLocation && selectedLocation.type === "branch" && (
+        <button
+          className="w-full py-3 bg-white text-mainColor font-semibold rounded-lg shadow-md hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300"
+          onClick={showModal}
+        >
+          예약하기
+        </button>
+      )}
+    </div>
+  </div>
+
+  <ReservationModal isOpen={isModalOpen} onOk={handleOk} onCancel={handleCancel} />
+</div>
+
+  
   );
 };
 
