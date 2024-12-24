@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import axios from "axios";
 import Draggable from "react-draggable";
 import img_chatbot from "../assets/img/img_chatbot.png";
@@ -16,6 +16,8 @@ interface ChatbotProps {
 }
 
 const Chatbot: React.FC<ChatbotProps> = ({ onClose }) => {
+  const draggableRef = useRef<HTMLDivElement>(null);
+
   const getCurrentTime = () => {
     return new Date().toLocaleTimeString([], {
       hour: "2-digit",
@@ -78,8 +80,8 @@ const Chatbot: React.FC<ChatbotProps> = ({ onClose }) => {
   };
 
   return (
-    <Draggable>
-      <div className="w-[380px] bg-[#f5f5f5] rounded-2xl font-sans shadow-lg relative z-[2000]">
+    <Draggable nodeRef={draggableRef}>
+      <div  ref={draggableRef} className="chatbot-container w-[380px] bg-[#f5f5f5] rounded-2xl font-sans shadow-lg relative z-[2000]">
         <div className="flex justify-between items-center px-4 py-3 bg-gradient-to-r from-[#1A7CFF] via-[#7DE3EC] to-[#E1F4C0] text-white font-bold text-base rounded-t-2xl">
           <h3>우주하나 챗봇</h3>
           <button onClick={onClose}>
@@ -154,7 +156,6 @@ const Chatbot: React.FC<ChatbotProps> = ({ onClose }) => {
           </div>
         </div>
       </div>
-      <div></div>
     </Draggable>
   );
 };
