@@ -272,7 +272,7 @@ const FindBank = () => {
   };
 
   return (
-    <div className="flex justify-center items-start mt-20 min-h-screen p-10">
+    <div className="flex justify-center items-center h-auto py-[5%]">
   {/* Map Container */}
   <div
     className="relative w-1/2 h-[500px] bg-white rounded-3xl overflow-hidden shadow-2xl transform transition-transform hover:scale-105"
