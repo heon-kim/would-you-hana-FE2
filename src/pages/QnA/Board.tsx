@@ -121,7 +121,7 @@ const Board: React.FC = () => {
       <h1 className="text-2xl font-bold mb-6">금융 Q&A</h1>
 
       <div className="flex flex-row gap-5 w-full">
-        <div className="w-3/4">
+        <div>
           <div className="mb-6">
             <Category onSelectCategory={handleCategoryChange} />
           </div>
@@ -150,7 +150,7 @@ const Board: React.FC = () => {
             onPostClick={handlePostClick}
           />
         </div>
-        <div className="w-1/4 flex flex-col gap-6">
+        <div className="w-[300px] flex flex-col gap-6">
           <PostRegisterButton />
           <BankerList />
         </div>

@@ -75,7 +75,7 @@ function App() {
                 <Route path="detail/:postId" element={<CommunityDetail />} />
               </Route>
               <Route path="/district/:districtId" element={<District />} />
-              <Route path="/bankerProfile" element={<BankerProfile />} />
+              <Route path="/bankerProfile/:bankerId" element={<BankerProfile />} />
               {/* Error */}
               <Route path="/404" element={<NotFound />} />
             </Routes>
