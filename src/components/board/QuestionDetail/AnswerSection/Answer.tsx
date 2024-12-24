@@ -85,7 +85,7 @@ const Answer: React.FC<AnswerProps> = ({ answer }) => {
               </Tooltip>
             </div>
           </div>
-          <p className='comment__body font-light'>{answer.content}</p>
+          <p className='comment__body font-light whitespace-pre-line'>{answer.content}</p>
           <div className='comment__footer font-light flex flex-col gap-5'>
             <p className="text-gray-400" style={{fontSize:'13px'}}>
               {relativeTime(+new Date(answer.createdAt))}

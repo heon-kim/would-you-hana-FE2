@@ -177,18 +177,28 @@ const Header: React.FC = () => {
         {/* 큰 화면 네비게이션 */}
         <nav className="hidden lg:flex items-center gap-8">
           <ul className="flex gap-8">
-            <li>
-              <Link to='/qna'>Q&A</Link>
-            </li>
-            <li>
-              <Link to='/community'>커뮤니티</Link>
-            </li>
-            <li>
-              <Link to={`/district/${userLocation}`}>우주하나</Link>
-            </li>
-            <li>
-              <Link to='/findbank'>영업점 찾기</Link>
-            </li>
+          {userRole == 'C' ? (
+            <>
+              <li>
+                <Link to='/qna'>Q&A</Link>
+              </li>
+              <li>
+                <Link to='/community'>커뮤니티</Link>
+              </li>
+              <li>
+                <Link to={`/district/${userLocation}`}>우주하나</Link>
+              </li>
+              <li>
+                <Link to='/findbank'>영업점 찾기</Link>
+              </li>
+            </>
+            )
+            :(
+              <li>
+                <Link to='/qna/waiting'>대기중인 질문</Link>
+              </li>
+            )
+          }
           </ul>
         </nav>
 

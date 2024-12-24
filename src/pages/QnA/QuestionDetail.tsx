@@ -112,7 +112,7 @@ const QuestionDetail: React.FC = () => {
   return (
     <div className="w-full px-[15%] py-10">
       <div className="flex gap-5">
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 flex-1">
           <div className="flex flex-col gap-6 pb-3 border-b border-gray-200">
             <div className="flex flex-col gap-3">
               <h1 className="text-3xl font-bold">
@@ -164,6 +164,7 @@ const QuestionDetail: React.FC = () => {
           ) : (
             showAnswerInput && (
               <AnswerInput
+                question={{ title: question.title, content: question.content }}
                 onSubmitAnswer={handleAnswerSubmit}
                 onChatbotToggle={toggleChatbot}
               />
@@ -177,15 +178,18 @@ const QuestionDetail: React.FC = () => {
         </div>
 
         <aside className="w-[300px]">
-          <PostRegisterButton />
+          {userRole == 'C' && (
+            <PostRegisterButton />
+          )}
+
+          {isChatbotVisible && (
+            <div className="fixed top-[120px] right-[10%] z-50">
+              <Chatbot onClose={toggleChatbot} />
+            </div>
+          )}
         </aside>
       </div>
 
-      {isChatbotVisible && (
-        <div className="fixed top-[120px] right-[10%] z-50">
-          <Chatbot onClose={toggleChatbot} />
-        </div>
-      )}
     </div>
   );
 };

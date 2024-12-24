@@ -121,7 +121,7 @@ const Board: React.FC = () => {
       <h1 className="text-2xl font-bold mb-6">금융 Q&A</h1>
 
       <div className="flex flex-row gap-5 w-full">
-        <div>
+        <div className='flex-1'>
           <div className="mb-6">
             <Category onSelectCategory={handleCategoryChange} />
           </div>
