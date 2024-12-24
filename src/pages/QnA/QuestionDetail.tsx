@@ -112,7 +112,7 @@ const QuestionDetail: React.FC = () => {
   return (
     <div className="w-full px-[15%] py-10">
       <div className="flex gap-5">
-        <div className="w-3/4 flex flex-col gap-6">
+        <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-6 pb-3 border-b border-gray-200">
             <div className="flex flex-col gap-3">
               <h1 className="text-3xl font-bold">
@@ -176,7 +176,7 @@ const QuestionDetail: React.FC = () => {
           />
         </div>
 
-        <aside className="w-1/4">
+        <aside className="w-[300px]">
           <PostRegisterButton />
         </aside>
       </div>

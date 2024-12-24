@@ -10,8 +10,6 @@ import { RootState } from '../../hoc/store';
 
 import '../../App.css';
 
-import SearchInput from '../../components/common/SearchInput';
-
 const Home: React.FC = () => {
   const navigate = useNavigate();
 
@@ -135,12 +133,6 @@ const Home: React.FC = () => {
                 <br /> 답변 받아가세요!
               </strong>
             </h1>
-
-            {/* SearchInput 컴포넌트 사용 */}
-            <div style={{ marginRight: '100px' }}>
-              <SearchInput onSearch={onSearch} />
-            </div>
-
 
           </Col>
         </Row>
