@@ -10,7 +10,7 @@ import bankerImg from '../assets/img/banker1.png';
 
 const { Title } = Typography;
 
-interface bankerCardProps{exceptBankerId:number}
+interface bankerCardProps{exceptBankerId?:number}
 
 const BankerCard: React.FC<bankerCardProps> = ({exceptBankerId}) => {
   const [bankers, setBankers] = useState<BankerListReturnDTO[]>([]);
