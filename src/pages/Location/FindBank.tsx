@@ -9,6 +9,10 @@ import hwayangImg from '../../assets/img/bank/hwayang.jpg';
 import seongsuImg from '../../assets/img/bank/seongsu.png';
 import seouluuuuuupImg from '../../assets/img/bank/seoulsuuuuuup.jpg';
 import { config } from '../../config/config';
+import iconPin from '../../assets/img/icon_pin.svg';
+import iconClock from '../../assets/img/icon_clock.svg';
+import iconPhone from '../../assets/img/icon_phone.svg';
+import iconHome from '../../assets/img/icon_home.svg';
 
 const FindBank = () => {
   const [selectedLocation, setSelectedLocation] = useState(null);
@@ -162,13 +166,27 @@ const FindBank = () => {
                 latlng: new window.kakao.maps.LatLng(place.y, place.x),
                 image: getBranchImage(place.place_name),
                 content: `
-                  주소: ${place.road_address_name || place.address_name}<br/>
-                  전화번호: ${place.phone || '정보 없음'}<br/>
-                  영업시간: 09:00 ~ 16:00<br/>
-                  현재 상태: <span style="color: ${getOperatingStatus() === '영업 중' ? 'green' : 'red'}">${getOperatingStatus()}</span><br/>
-                  <a href="${place.place_url}" target="_blank" style="display: inline-block; margin-top: 5px; padding: 8px 12px; text-decoration: none; color: white; background-color: #008485; border-radius: 5px; font-weight: bold;">상세보기</a><br/>
-                `,
-                type: 'branch',
+        <div style="display: flex; flex-direction: column; gap: 10px; color: black;">
+          <div style="display: flex; align-items: center;">
+            <img src="${iconPin}" alt="주소 아이콘" style="width: 20px; height: 20px; margin-right: 8px;" />
+            ${place.road_address_name || place.address_name}
+          </div>
+          <div style="display: flex; align-items: center;">
+            <img src="${iconPhone}" alt="전화번호 아이콘" style="width: 20px; height: 20px; margin-right: 8px;" />
+            ${place.phone || '정보 없음'}
+          </div>
+          <div style="display: flex; align-items: center;">
+            <img src="${iconClock}" alt="영업시간 아이콘" style="width: 20px; height: 20px; margin-right: 8px;" />
+            09:00 ~ 16:00
+          </div>
+          <div style="display: flex; align-items: center;">
+            <img src="${iconHome}" alt="현재 상태 아이콘" style="width: 20px; height: 20px; margin-right: 8px;" />
+            <span style="color: ${getOperatingStatus() === '영업 중' ? 'green' : 'red'}">${getOperatingStatus()}</span>
+          </div>
+          <a href="${place.place_url}" target="_blank" style="display: inline-block; width: fit-content; margin-top: 5px; padding: 8px 12px; text-decoration: none; color: white; background-color: #008485; border-radius: 5px; font-weight: bold;">상세보기</a>
+        </div>
+      `,
+      type: 'branch',
               }));
               setPositions(locations);
 
