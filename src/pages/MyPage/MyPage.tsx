@@ -20,6 +20,7 @@ const MyPage: React.FC = () => {
 
   const customerMenus = [
     { key: 'profile', label: '프로필'},
+    { key: 'reservation', label: '예약 내역'},
     { key: 'posts', label: '게시글' },
     { key: 'likes', label: '좋아요' },
     { key: 'qnaScrap', label: 'QnA 스크랩' },
