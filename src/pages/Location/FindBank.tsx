@@ -282,7 +282,7 @@ const FindBank = () => {
       {/* ATM Button */}
       <button
         onClick={toggleATMMarkers}
-        className={`w-14 h-14 rounded-full transition-all transform hover:scale-110 shadow-lg ${
+        className={`w-12 h-12 text-sm rounded-full transition-all transform hover:scale-110 shadow-lg ${
           isATMActive
             ? "bg-white text-mainColor"
             : "bg-mainColor text-white"
@@ -294,7 +294,7 @@ const FindBank = () => {
       {/* Branch Button */}
       <button
         onClick={toggleBranchMarkers}
-        className={`w-14 h-14 rounded-full transition-all transform hover:scale-110 shadow-lg ${
+        className={`w-12 h-12 text-sm rounded-full transition-all transform hover:scale-110 shadow-lg ${
           isBranchActive
             ? "bg-white text-mainColor"
             : "bg-mainColor text-white"
@@ -306,7 +306,7 @@ const FindBank = () => {
       {/* Location Button */}
       <button
         onClick={goToUserLocation}
-        className={`w-14 h-14 rounded-full transition-all transform hover:scale-110 shadow-lg flex items-center justify-center ${
+        className={`w-12 h-12 text-sm rounded-full transition-all transform hover:scale-110 shadow-lg flex items-center justify-center ${
           isLocationActive
             ? "bg-mainColor text-white"
             : "bg-white text-mainColor"
@@ -324,7 +324,7 @@ const FindBank = () => {
   {/* Info Panel */}
   <div className="ml-10 w-80 h-[500px] bg-white rounded-3xl shadow-2xl transform transition-transform hover:scale-105 flex flex-col overflow-hidden">
     {/* Header */}
-    <div className="bg-mainColor p-6 text-center">
+    <div className="bg-mainColor p-4 text-center">
       <h3 className="font-bold text-white tracking-wide">
         {selectedLocation ? selectedLocation.title : "상세 정보"}
       </h3>
