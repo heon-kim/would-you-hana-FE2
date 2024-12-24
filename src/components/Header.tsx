@@ -257,19 +257,26 @@ const Header: React.FC = () => {
           )}
 
           <hr></hr>
-          
-          <Link to="/qna" onClick={() => setDrawerVisible(false)}>
-            Q&A
-          </Link>
-          <Link to="/community" onClick={() => setDrawerVisible(false)}>
-            커뮤니티
-          </Link>
-          <Link to={`/district/${userLocation}`} onClick={() => setDrawerVisible(false)}>
-          우주하나
-          </Link>
-          <Link to="/findbank" onClick={() => setDrawerVisible(false)}>
-            영업점 찾기
-          </Link>
+          {userRole == 'C' ? (
+            <>
+               <Link to="/qna" onClick={() => setDrawerVisible(false)}>
+                Q&A
+              </Link>
+              <Link to="/community" onClick={() => setDrawerVisible(false)}>
+                커뮤니티
+              </Link>
+              <Link to={`/district/${userLocation}`} onClick={() => setDrawerVisible(false)}>
+              우주하나
+              </Link>
+              <Link to="/findbank" onClick={() => setDrawerVisible(false)}>
+                영업점 찾기
+              </Link>
+            </>
+          ):(
+            <Link to='/qna/waiting' onClick={() => setDrawerVisible(false)}>
+              대기중인 질문
+            </Link>
+          )}
         </nav>
       </Drawer>
     </header>
