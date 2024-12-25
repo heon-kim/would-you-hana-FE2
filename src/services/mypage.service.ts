@@ -1,6 +1,7 @@
 import { request } from '../hoc/request';
 import { config } from '../config/config';
 import { LikesScrapDTO, ScrapPostDTO, ScrapQuestionDTO } from '../types/dto/likesscrap.dto';
+import { BankerMyPageReturnDTO } from '../types/dto/banker.dto';
 
 const BASE_URL = config.apiUrl;
 
@@ -28,11 +29,21 @@ export const myPageService = {
         url: `${BASE_URL}/my/post/likeList/${customerId}`
     });
   },
-
+  //질문 등록
   getRegisteredQuestions : (customerId: number) => {
     return request<LikesScrapDTO>({
       method: 'GET',
       url: `${BASE_URL}/my/questions/${customerId}`
+    })
+  },
+  //행원 마이페이지 정보보기
+  getBankerMyPage: (bankerId:number) => {
+    return request<BankerMyPageReturnDTO>({
+      method:'GET',
+      url: `${BASE_URL}/my/bankers/mypage`,
+      params: {
+        bankerId: bankerId.toString()
+    }
     })
   }
 };

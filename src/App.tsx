@@ -27,6 +27,7 @@ import CommunityDetail from "./pages/Community/CommunityDetail";
 import SetDistrict from "./pages/MyPage/SetDistrict";
 import Header from "./components/Header";
 import District from './pages/LandingPage/District';
+import WaitingQuestions from "./pages/QnA/WaitingQuestions"
 
 // Styles
 import "./App.css";
@@ -68,6 +69,8 @@ function App() {
               <Route path="/qna" element={<Board />} />
               <Route path="/qna/regist" element={<QuestionRegister />} />
               <Route path="/qna/detail/:postId" element={<QuestionDetail />} />
+              <Route path="/qna/waiting" element={<WaitingQuestions/>} />
+
               <Route path="/findbank" element={<FindBank />} />
               <Route path="/community">
                 <Route index element={<Community />} />
@@ -75,7 +78,7 @@ function App() {
                 <Route path="detail/:postId" element={<CommunityDetail />} />
               </Route>
               <Route path="/district/:districtId" element={<District />} />
-              <Route path="/bankerProfile" element={<BankerProfile />} />
+              <Route path="/bankerProfile/:bankerId" element={<BankerProfile />} />
               {/* Error */}
               <Route path="/404" element={<NotFound />} />
             </Routes>
