@@ -12,4 +12,15 @@ export const reservationService = {
       url: `${BASE_URL}/my/rsvList/${customerId}`
     });
   },
+
+  //행원별 예약 현황 확인
+  getReservatoinsForBanker: (bankerId: number) => {
+    return request<ReservationResponseDTO>({
+        method: 'GET',
+        url: `${BASE_URL}/my/bankers/reservations`,
+        params: {
+            bankerId: bankerId.toString()
+        }
+      });
+  }
 };
