@@ -177,8 +177,13 @@ const Header: React.FC = () => {
         {/* 큰 화면 네비게이션 */}
         <nav className="hidden lg:flex items-center gap-8">
           <ul className="flex gap-8">
-          {userRole == 'C' ? (
-            <>
+          {userRole == 'B' ? (
+              <li>
+                <Link to='/qna/waiting'>대기중인 질문</Link>
+              </li>
+            )
+            :(
+              <>
               <li>
                 <Link to='/qna'>Q&A</Link>
               </li>
@@ -191,13 +196,7 @@ const Header: React.FC = () => {
               <li>
                 <Link to='/findbank'>영업점 찾기</Link>
               </li>
-            </>
-            )
-            :(
-              <li>
-                <Link to='/qna/waiting'>대기중인 질문</Link>
-              </li>
-            )
+            </>)
           }
           </ul>
         </nav>
@@ -257,7 +256,11 @@ const Header: React.FC = () => {
           )}
 
           <hr></hr>
-          {userRole == 'C' ? (
+          {userRole == 'B' ? (
+            <Link to='/qna/waiting' onClick={() => setDrawerVisible(false)}>
+              대기중인 질문
+            </Link>
+          ):(
             <>
                <Link to="/qna" onClick={() => setDrawerVisible(false)}>
                 Q&A
@@ -272,10 +275,6 @@ const Header: React.FC = () => {
                 영업점 찾기
               </Link>
             </>
-          ):(
-            <Link to='/qna/waiting' onClick={() => setDrawerVisible(false)}>
-              대기중인 질문
-            </Link>
           )}
         </nav>
       </Drawer>
