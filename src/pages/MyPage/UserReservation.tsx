@@ -70,45 +70,7 @@ const UserReservation: React.FC = () => {
   const handleDetailInfo = (url: string) => {
     window.open(url, '_blank');
   };
-
-  //   useEffect(() => {
-  //     // if (!userLocation) return;
-
-  //     const script = document.createElement('script');
-  //     script.async = true;
-  //     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${config.kakaoJsKey}&libraries=services&autoload=false`;
-  //     document.head.appendChild(script);
-
-  //     script.onload = () => {
-  //       try {
-  //         window.kakao.maps.load(() => {
-  //           const places = new window.kakao.maps.services.Places();
-  //           // Branch 검색
-  //           places.keywordSearch(`${userDistrict} 하나은행`, (result, status) => {
-  //             if (status === window.kakao.maps.services.Status.OK) {
-  //               const locations = result.map((place) => ({
-  //                 title: place.place_name,
-  //                 lat: place.y,
-  //                 lng: place.x,
-  //                 latlng: new window.kakao.maps.LatLng(place.y, place.x),
-  //                 url: place.url
-  //                 }));
-
-  //             } else {
-  //               console.error('No Hana Bank branches found.');
-  //             }
-  //           });
-  //         });
-  //       } catch (error) {
-  //         console.error('Error loading the Kakao Maps script:', error);
-  //       }
-  //     };
-
-  //     script.onerror = () => {
-  //       console.error('Failed to load Kakao Maps SDK');
-  //     };
-  //   }, [userLocation, userDistrict]);
-
+  
   return (
     <div className='flex'>
       {/* 예약 내역 */}

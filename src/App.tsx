@@ -32,6 +32,7 @@ import District from './pages/LandingPage/District';
 import "./App.css";
 import "./styles/fonts.css";
 import UserReservation from "./pages/MyPage/UserReservation";
+import BankerReservation from "./pages/MyPage/BankerReservation";
 
 function App() {
   return (
@@ -62,6 +63,7 @@ function App() {
                 <Route path="edit" element={<EditProfile />} />
                 <Route path="district" element={<SetDistrict />} />
               </Route>
+              <Route path="/banker/reservation" element={<BankerReservation/>} />
               <Route path="/register" element={<LandingForRegister />} />
               <Route path="/register/user" element={<UserRegister />} />
               <Route path="/register/banker" element={<BankerRegister />} />
