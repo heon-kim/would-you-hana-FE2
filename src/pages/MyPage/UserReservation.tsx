@@ -84,6 +84,7 @@ const UserReservation: React.FC = () => {
         <div>예약 내역</div>
         <div className='px-10'>
           <div
+          className='scroll-container'
             style={{
               marginTop: '20px',
               maxHeight: '75vh',
