@@ -1,5 +1,5 @@
 * {
-  font-family: 'Nanum',sans-serif;
+  font-family: 'Nanum', sans-serif;
   font-weight: bold;
 }
 
@@ -20,9 +20,27 @@
   font-weight: 500; /* 모든 input에 500 적용 */
 }
 
+.scroll-container {
+  overflow-y: scroll; /* 세로 스크롤 활성화 */
+  max-height: 100vh;
+}
+
+.scroll-container::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 20px;
+  background-color: transparent;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  height: 3px; /* 스크롤바 길이 조정 */
+  border-radius: 10px; 
+  background-color: #dadada;
+}
+
 /* 부드러운 파도 애니메이션 */
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -32,7 +50,8 @@
 
 /* 아바타 부드러운 상하 떠오름 */
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {

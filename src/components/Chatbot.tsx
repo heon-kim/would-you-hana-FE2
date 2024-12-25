@@ -89,7 +89,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ onClose }) => {
           </button>
         </div>
 
-        <div className="h-[430px] p-2.5 bg-white overflow-y-auto font-light">
+        <div className="scroll-container h-[430px] p-2.5 bg-white overflow-y-auto font-light">
           {messages.map((message, index) => (
             <div
               key={index}

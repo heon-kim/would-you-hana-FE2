@@ -3,6 +3,7 @@ import { Layout, Menu } from 'antd';
 import { useNavigate, Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../hoc/store';
+import '../../App.css'
 
 const { Content, Sider } = Layout;
 
@@ -20,6 +21,7 @@ const MyPage: React.FC = () => {
 
   const customerMenus = [
     { key: 'profile', label: '프로필'},
+    { key: 'reservation', label: '예약 내역'},
     { key: 'posts', label: '게시글' },
     { key: 'likes', label: '좋아요' },
     { key: 'qnaScrap', label: 'QnA 스크랩' },
@@ -30,6 +32,7 @@ const MyPage: React.FC = () => {
 
   const bankerMenus = [
     { key: 'profile', label: '프로필'},
+    { key: 'bankerReservation', label: '예약 현황'},
     { key: 'edit', label: '개인정보 수정' },
   ]
 

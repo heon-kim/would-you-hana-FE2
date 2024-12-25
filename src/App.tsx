@@ -32,6 +32,8 @@ import WaitingQuestions from "./pages/QnA/WaitingQuestions"
 // Styles
 import "./App.css";
 import "./styles/fonts.css";
+import UserReservation from "./pages/MyPage/UserReservation";
+import BankerReservation from "./pages/MyPage/BankerReservation";
 
 function App() {
   return (
@@ -54,12 +56,14 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/my" element={<MyPage />}>
                 <Route path="profile" element={<Profile />} />
+                <Route path="reservation" element={<UserReservation />} />
                 <Route path="posts" element={<Posts />} />
                 <Route path="likes" element={<Likes />} />
                 <Route path="qnaScrap" element={<QnAScrap />} />
                 <Route path="communityScrap" element={<CommunityScrap />} />
                 <Route path="edit" element={<EditProfile />} />
                 <Route path="district" element={<SetDistrict />} />
+                <Route path="bankerReservation" element={<BankerReservation/>} />
               </Route>
               <Route path="/register" element={<LandingForRegister />} />
               <Route path="/register/user" element={<UserRegister />} />
