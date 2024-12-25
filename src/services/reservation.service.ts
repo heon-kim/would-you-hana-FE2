@@ -1,6 +1,6 @@
 import { request } from '../hoc/request';
 import { config } from '../config/config';
-import { ReservationResponseDTO } from '../types/dto/reservation.dto';
+import { ReservationRequestDTO, ReservationResponseDTO } from '../types/dto/reservation.dto';
 
 const BASE_URL = config.apiUrl;
 
@@ -22,5 +22,14 @@ export const reservationService = {
             bankerId: bankerId.toString()
         }
       });
-  }
+  },
+
+  //예약 등록
+  registReservation: (data: ReservationRequestDTO) => {
+    return request<ReservationRequestDTO>({
+        method: 'POST',
+        url: `${BASE_URL}/reservation/register`,
+        data
+      });
+  },
 };

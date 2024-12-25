@@ -14,6 +14,8 @@ import dayjs from 'dayjs';
 import dayLocaleData from 'dayjs/plugin/localeData';
 
 import 'dayjs/locale/zh-cn';
+import { ReservationRequestDTO } from '../types/dto/reservation.dto';
+import { reservationService } from '../services/reservation.service';
 
 dayjs.extend(dayLocaleData);
 
@@ -21,18 +23,25 @@ interface ReservationModalProps {
   isOpen: boolean;
   onOk: () => void;
   onCancel: () => void;
+  selectedBranchName: string | null;
 }
 
 const ReservationModal: React.FC<ReservationModalProps> = ({
   isOpen,
   onOk,
   onCancel,
+  selectedBranchName,
 }) => {
   const currentDateTime = dayjs();
 
   const [showAnimation, setShowAnimation] = useState(false);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+
+  // 지점명에서 '하나은행' 또는 '하나은행365'를 제거하는 함수
+  const getBranchName = (fullBranchName: string) => {
+    return fullBranchName.replace(/하나은행(365)?\s*/, '');
+  };
 
   // 모달이 열릴 때 selectedDate와 selectedTime을 초기화
   useEffect(() => {
@@ -41,17 +50,36 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
       setSelectedTime(null);
     }
   }, [isOpen]);
-  
-  const handleOk = () => {
-    if(!selectedTime) {
+
+  const handleOk = async () => {
+    if (!selectedTime) {
       message.warning('예약 시간을 선택해 주세요.');
-    }
-    else {
-      setShowAnimation(true);
-      setTimeout(() => {
-        onOk();
-        setShowAnimation(false);
-      }, 1500);
+    } else if (!selectedDate) {
+      message.warning('예약 날짜를 선택해 주세요.');
+    } else {
+      const reservationData: ReservationRequestDTO = {
+        customerId: localStorage.getItem('userId'),
+        branchName: getBranchName(selectedBranchName),
+        reservationDate: `${selectedDate}T${selectedTime}:00`,
+        bankerName: localStorage.getItem('userNickname'),
+      };
+
+      try {
+        const result = await reservationService.registReservation(reservationData);
+        if (result.data) {
+          setShowAnimation(true);
+          setTimeout(() => {
+            onOk();
+            setShowAnimation(false);
+          }, 1500);
+          message.success('예약이 성공적으로 등록되었습니다.');
+        } else {
+          throw new Error('예약 등록 실패');
+        }
+      } catch (error) {
+        console.log(error);
+        message.error('예약 등록에 실패했습니다. 다시 시도해주세요.');
+      }
     }
   };
 
@@ -138,57 +166,42 @@ const ReservationModal: React.FC<ReservationModalProps> = ({
                 marginBottom: '10px',
               }}
             >
-              {/* {times.am.map((time) => (
-                <Button
-                  key={time}
-                  type={selectedTime === time ? 'primary' : 'default'}
-                  onClick={() => handleTimeClick(time)}
-                >
-                  {time}
-                </Button>
-              ))} */}
               {times.am.map((time) => {
-                  // time을 dayjs 객체로 변환하여 비교
-                  const timeMoment = dayjs(time, 'HH:mm');  // time이 'HH:mm' 형식이라고 가정
+                const timeMoment = dayjs(time, 'HH:mm');
+                const isDisabled = timeMoment.isBefore(currentDateTime, 'minute')
+                  && selectedDate === currentDateTime.format('YYYY-MM-DD');
 
-                  // time이 현재 시간보다 작은 경우 버튼을 비활성화
-                  const isDisabled = timeMoment.isBefore(currentDateTime, 'minute')
-                     && selectedDate == currentDateTime.format('YYYY-MM-DD');
-
-                  return (
-                    <Button
-                      key={time}
-                      type={selectedTime === time ? 'primary' : 'default'}
-                      onClick={() => handleTimeClick(time)}
-                      disabled={isDisabled}  // 현재 시간보다 작은 경우 버튼 비활성화
-                    >
-                      {time}
-                    </Button>
-                  );
-                })}
+                return (
+                  <Button
+                    key={time}
+                    type={selectedTime === time ? 'primary' : 'default'}
+                    onClick={() => handleTimeClick(time)}
+                    disabled={isDisabled}
+                  >
+                    {time}
+                  </Button>
+                );
+              })}
             </div>
 
             <Typography.Title level={5}>오후</Typography.Title>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            {times.pm.map((time) => {
-                  // time을 dayjs 객체로 변환하여 비교
-                  const timeMoment = dayjs(time, 'HH:mm');  // time이 'HH:mm' 형식이라고 가정
+              {times.pm.map((time) => {
+                const timeMoment = dayjs(time, 'HH:mm');
+                const isDisabled = timeMoment.isBefore(currentDateTime, 'minute')
+                  && selectedDate === currentDateTime.format('YYYY-MM-DD');
 
-                  // time이 현재 시간보다 작은 경우 버튼을 비활성화
-                  const isDisabled = timeMoment.isBefore(currentDateTime, 'minute')
-                     && selectedDate == currentDateTime.format('YYYY-MM-DD');
-
-                  return (
-                    <Button
-                      key={time}
-                      type={selectedTime === time ? 'primary' : 'default'}
-                      onClick={() => handleTimeClick(time)}
-                      disabled={isDisabled}  // 현재 시간보다 작은 경우 버튼 비활성화
-                    >
-                      {time}
-                    </Button>
-                  );
-                })}
+                return (
+                  <Button
+                    key={time}
+                    type={selectedTime === time ? 'primary' : 'default'}
+                    onClick={() => handleTimeClick(time)}
+                    disabled={isDisabled}
+                  >
+                    {time}
+                  </Button>
+                );
+              })}
             </div>
           </div>
         </>
