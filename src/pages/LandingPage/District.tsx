@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Row, Col, message } from 'antd';
 import { useParams, Navigate } from 'react-router-dom';
 import hanaFamilyTogether from '../../assets/img/HanaFamilyTogether.png';
-import SearchInput from '../../components/common/SearchInput';
 import DistrictBadge from '../../components/landing/DistrictBadge/DistrictBadge';
 import RegulationBadge from '../../components/landing/RegulationBadge/RegulationBadge';
 import TrendingKeywords from '../../components/landing/TrendingKeywords/TrendingKeywords';
@@ -20,10 +19,6 @@ const District: React.FC = () => {
   }
 
   const districtData = DISTRICT_DATA[districtId];
-
-  const onSearch = (value: string) => {
-    console.log(value);
-  };
 
   return (
     <div className="w-full pb-5">
@@ -47,14 +42,10 @@ const District: React.FC = () => {
 
           <Col span={12} className="content-center w-full items-end">
             <TrendingKeywords
-              keywords={districtData.keywords}
               carouselIndex={carouselIndex}
               onCarouselChange={setCarouselIndex}
               districtName={districtData.name}
             />
-            <div className="mr-[150px]">
-              <SearchInput onSearch={onSearch} />
-            </div>
           </Col>
         </Row>
 

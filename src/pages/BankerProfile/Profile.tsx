@@ -1,11 +1,28 @@
-import React from 'react';
-import { Card, Col, Row, Button, List, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Card, Col, Row, Button, Typography } from 'antd';
 import { PhoneFilled, DesktopOutlined, ClockCircleOutlined } from '@ant-design/icons';
-import { hashtagLinks, mainProfile, bankerImages } from '../../constants/bankerProfile';
+import { BankerMyPageReturnDTO } from '../../types/dto/banker.dto';
+import { useParams } from 'react-router-dom';
+import bankerImg from '../../assets/img/banker4.png';
+
+
+
 import BankerCards from '../../components/BankerCards';
+import { myPageService } from '../../services/mypage.service';
 const { Title, Text } = Typography;
 
 const Profile: React.FC = () => {
+  const { bankerId } = useParams<{ bankerId: string }>();
+
+  const [bankerInfo, setBankerInfo] = useState<BankerMyPageReturnDTO | null>(null);
+
+  useEffect(() => {
+    const fetchBankerInfo = async () => {
+      const response = await myPageService.getBankerMyPage(Number(bankerId));
+      setBankerInfo(response.data);
+    }
+    fetchBankerInfo();
+  }, [bankerId]);
 
     return (
         <div className="w-full px-[15%] py-5">
@@ -16,32 +33,29 @@ const Profile: React.FC = () => {
                     <Card className="flex-grow rounded-2xl border border-[#d3d3d3]" bodyStyle={{ padding: 0 }}>
                         <Row>
                             <div className="w-full bg-mainColor text-right text-white py-2.5 rounded-t-2xl px-5">
-                                대리 - 하나가족 광진구 신자양점
+                              하나은행 {bankerInfo?.branchName}
                             </div>
-                            <img src={bankerImages.banker1} alt="Profile" className="w-full mb-5" />
+                            <img src={bankerImg} alt="Profile" className="w-full mb-5" />
                         </Row>
                         <Row>
                             <Col span={24} className="px-5">
                                 <Row justify="space-between" align="middle" className="mb-2.5">
-                                    <Title level={4}>{mainProfile.name}</Title>
-                                    <Text className="text-[#5E616E]">{mainProfile.title}</Text>
+                                    <Title level={4}>{bankerInfo?.name}</Title>
                                 </Row>
                                 <div className="mb-2.5">
-                                    {mainProfile.hashTag.map(hashTag => (
+                                    {bankerInfo?.specializations.map(hashTag => (
                                         <Button
                                             key={hashTag}
                                             type="primary"
                                             ghost
                                             className="mr-2 mb-2 bg-[#F7FDFD] text-xs p-2.5"
                                         >
-                                            <a href={hashtagLinks[hashTag]} target="_blank" rel="noopener noreferrer" className="text-mainColor">
-                                                {hashTag}
-                                            </a>
+                                            {hashTag}
                                         </Button>
                                     ))}
                                 </div>
                                 <hr/>
-                                <div className="my-5 text-base font-light">{mainProfile.description}</div>
+                                <div className="my-5 text-base font-light">{bankerInfo?.content}</div>
                             </Col>
                         </Row>
                     </Card>
@@ -49,22 +63,11 @@ const Profile: React.FC = () => {
 
                 {/* Q&A and Contact Section */}
                 <Col span={8} className="flex flex-col">
-                    <List 
-                        header={<Text strong>베스트 Q&A</Text>}
-                        bordered
-                        dataSource={[
-                            '주택 담보 대출은 얼마나 어렵게 해야 하나요?',
-                            '대출 한도는 현재 시세가 왜 중요한가요?',
-                            '신용 점수가 전세 대출에서 왜 중요한가요?',
-                        ]}
-                        renderItem={item => <List.Item>🎯 {item}</List.Item>}
-                        className="mb-0 rounded-2xl"
-                    />
-
-                    <Card className="mb-2.5 rounded-2xl border border-[#d3d3d3] mt-2.5" bodyStyle={{ padding: 15 }}>
+                    <Card className="mb-2.5 rounded-2xl border border-[#d3d3d3]" bodyStyle={{ padding: 15 }}>
                         <div>
                             <div className="mb-2.5 font-bold">상담시간</div>
-                            <Text>🕐 평일 10:00 - 18:00 (주말 및 공휴일 제외)</Text>
+                            <p><ClockCircleOutlined className='mr-1' /> 평일 10:00 - 18:00</p>
+                            <p className='ml-5 text-xs text-red-500'>주말 및 공휴일 제외</p>
                         </div>
                     </Card>
 
@@ -76,12 +79,13 @@ const Profile: React.FC = () => {
                             </div>
                             <br />
                             <Text >우주하나 Q&A 서비스를 통해</Text><br />
-                            <Text >고객님들에게 금융 관련 답변을 제공합니다.</Text><br />
+                            <Text >금융 관련 답변을 제공합니다.</Text><br />
                             <br />
-                            <span className="text-xl mr-5">
+                            <span className="mr-1">
                                 {<PhoneFilled />}
                             </span>
-                            <span>고객센터: 1599-1111, 1588-1111</span><br />
+                            <span>고객센터</span><br />
+                            <span>1599-1111, 1588-1111</span><br />
                             <span>(개인 0-4번, 법인 0-5번)</span><br />
                         </div>
                     </Card>
@@ -109,7 +113,7 @@ const Profile: React.FC = () => {
             {/* Similar Specialists Section */}
             <div className="mt-7">
                 <h1 className="text-2xl font-bold mb-6">같은 지점</h1>
-                <BankerCards></BankerCards>
+                <BankerCards exceptBankerId={Number(bankerId)}></BankerCards>
             </div>
            
         </div>

@@ -1,54 +1,38 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Layout, Button, Input, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import banker3 from '../../assets/img/banker3.png';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../hoc/store';
 import type { UploadProps } from 'antd/es/upload';
-import { findBanker, saveBanker } from '../../utils/userStorage';
+import { BankerMyPageReturnDTO } from '../../types/dto/banker.dto';
+import { myPageService } from '../../services/mypage.service';
 
 const { Content } = Layout;
 
-interface BankerProp {
-  email: string;
-  password: string;
-  name: string;
-  branchName: string;
-  interests: string[];
-  photo?: string;
-  desc: string;
-}
 
 const BankerInfo: React.FC = () => {
-  const userEmail = useSelector((state: RootState) => state.auth.userEmail);
-  const bankerProfile = userEmail ? findBanker(userEmail) : undefined;
+  const { userId } = useSelector((state: RootState) => state.auth);
+  const [bankerProfile, setBankerProfile] = useState<BankerMyPageReturnDTO>({
+    name:'김하나',
+    branchName:'성동지점',
+    specializations:['이체'],
+    content:'안녕하세요.',
+    filePath:'',
+    totalGoodCount:0,
+    totalCommentCount:0,
+    totalViewCount:0
+  });
 
-  // interface Banker의 interests를 string으로 지정해둬서 아래 처리를 함
-  // 추후 Banker의 interests를 string[]으로 업데이트하면 아래 처리 제거할 수 있음
-  // ============
-  // 기본값 처리
-  const defaultProfile: BankerProp = {
-    email: '',
-    password: '',
-    name: '알 수 없음',
-    branchName: '알 수 없는 지점',
-    interests: [],
-    photo: banker3, // 기본 이미지
-    desc: '금융 관련 도움을 드립니다.',
-  };
+  useEffect(() => {
+    const fetchBankerInfo = async () => {
+      const response = await myPageService.getBankerMyPage(Number(userId));
+      setBankerProfile(response.data);
+    }
+    fetchBankerInfo();
+  }, [userId]);
 
-  // bankerProfile을 안전하게 처리
-  const processedProfile = {
-    ...defaultProfile, // 기본값
-    ...bankerProfile, // 실제 데이터로 덮어쓰기
-    photo: banker3, // 기본 이미지
-    desc: '안녕하세요. 금융이 어려운 고객님께 도움을 드리고 있습니다.',
-    interests: JSON.parse(bankerProfile?.interests || '') || [], // interests가 문자열인 경우 JSON.parse
-  };
-  // ============
 
-  const [savedProfile, setSavedProfile] =
-    useState<BankerProp>(processedProfile);
+  const [savedProfile, setSavedProfile] = useState<BankerMyPageReturnDTO>(bankerProfile);
 
   // 편집 상태
   const [isComposing, setIsComposing] = useState(false); // IME 조합 상태
@@ -58,10 +42,10 @@ const BankerInfo: React.FC = () => {
 
   // 태그 추가
   const addTag = () => {
-    if (newTag && !editableProfile.interests.includes(newTag.trim())) {
+    if (newTag && !editableProfile.specializations.includes(newTag.trim())) {
       setEditableProfile({
         ...editableProfile,
-        interests: [...editableProfile.interests, newTag.trim()],
+        specializations: [...editableProfile.specializations, newTag.trim()],
       });
       setNewTag('');
     }
@@ -71,7 +55,7 @@ const BankerInfo: React.FC = () => {
   const removeTag = (removedTag: string) => {
     setEditableProfile({
       ...editableProfile,
-      interests: editableProfile.interests.filter((tag) => tag !== removedTag),
+      specializations: editableProfile.specializations.filter((tag) => tag !== removedTag),
     });
   };
 
@@ -83,7 +67,7 @@ const BankerInfo: React.FC = () => {
     reader.onload = () => {
       setEditableProfile({
         ...editableProfile,
-        photo: reader.result as string,
+        filePath: reader.result as string,
       });
       onSuccess?.('ok');
     };
@@ -98,10 +82,7 @@ const BankerInfo: React.FC = () => {
   const saveProfile = () => {
     setSavedProfile(editableProfile);
     // TODO: 사진 저장 안되는 이슈 있음.
-    saveBanker({
-      ...savedProfile,
-      interests: JSON.stringify(savedProfile.interests),
-    });
+    
     setIsEditing(false);
   };
 
@@ -134,7 +115,7 @@ const BankerInfo: React.FC = () => {
               maxWidth: '400px',
               margin: '0 auto',
               backgroundImage: `url(${
-                isEditing ? editableProfile.photo : savedProfile.photo
+                isEditing ? editableProfile.filePath : savedProfile.filePath
               })`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
@@ -143,7 +124,7 @@ const BankerInfo: React.FC = () => {
               justifyContent: 'center',
             }}
           >
-            {isEditing && !editableProfile.photo && (
+            {isEditing && !editableProfile.filePath && (
               <Upload
                 accept="image/*"
                 showUploadList={false}
@@ -159,7 +140,7 @@ const BankerInfo: React.FC = () => {
               size="small"
               style={{ width: '100px' }}
               onClick={() =>
-                setEditableProfile({ ...editableProfile, photo: undefined })
+                setEditableProfile({ ...editableProfile, filePath: '' })
               }
             >
               사진 삭제
@@ -222,8 +203,8 @@ const BankerInfo: React.FC = () => {
               }}
             >
               {(isEditing
-                ? editableProfile.interests
-                : savedProfile.interests
+                ? editableProfile.specializations
+                : savedProfile.specializations
               ).map((tag, index) => (
                 <Button
                   key={index}
@@ -266,11 +247,11 @@ const BankerInfo: React.FC = () => {
             </h4>
             {isEditing ? (
               <Input.TextArea
-                value={editableProfile.desc}
+                value={editableProfile.content}
                 onChange={(e) =>
                   setEditableProfile({
                     ...editableProfile,
-                    desc: e.target.value,
+                    content: e.target.value,
                   })
                 }
                 rows={4}
@@ -283,7 +264,7 @@ const BankerInfo: React.FC = () => {
                   borderRadius: '4px',
                 }}
               >
-                {savedProfile.desc}
+                {savedProfile.content}
               </p>
             )}
           </div>

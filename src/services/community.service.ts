@@ -42,6 +42,15 @@ export const communityService = {
             headers: { 'Content-Type': 'multipart/form-data' },
         })
     },
+
+    // 질문 삭제
+    deletePost: (postId: number) => {
+        return request<void>({
+            method: 'DELETE',
+            url: `${BASE_URL}/post/delete/${postId}`
+        });
+    },
+
     // 댓글 달기
     addComment: (postId: number, data: CommentAddRequestDTO) => {
             return request<CommentResponseDTO>({

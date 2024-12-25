@@ -24,7 +24,7 @@ const QuestionDetail: React.FC = () => {
   const [isChatbotVisible, setIsChatbotVisible] = useState(false);
   const [isScraped, setIsScraped] = useState<boolean>(false);
   const { userRole, userId } = useSelector((state: RootState) => state.auth);
-  const [isMyQna, setIsMyQna] = useState<boolean>(false);
+  const [ isMyQna, setIsMyQna] = useState<boolean>(false);
 
   // 게시글 조회
   useEffect(() => {
@@ -112,7 +112,7 @@ const QuestionDetail: React.FC = () => {
   return (
     <div className="w-full px-[15%] py-10">
       <div className="flex gap-5">
-        <div className="w-3/4 flex flex-col gap-6">
+        <div className="flex flex-col gap-6 flex-1">
           <div className="flex flex-col gap-6 pb-3 border-b border-gray-200">
             <div className="flex flex-col gap-3">
               <h1 className="text-3xl font-bold">
@@ -164,6 +164,7 @@ const QuestionDetail: React.FC = () => {
           ) : (
             showAnswerInput && (
               <AnswerInput
+                question={{ title: question.title, content: question.content }}
                 onSubmitAnswer={handleAnswerSubmit}
                 onChatbotToggle={toggleChatbot}
               />
@@ -176,16 +177,19 @@ const QuestionDetail: React.FC = () => {
           />
         </div>
 
-        <aside className="w-1/4">
-          <PostRegisterButton />
+        <aside className="w-[300px]">
+          {userRole == 'C' && (
+            <PostRegisterButton />
+          )}
+
+          {isChatbotVisible && (
+            <div className="fixed top-[120px] right-[10%] z-50">
+              <Chatbot onClose={toggleChatbot} />
+            </div>
+          )}
         </aside>
       </div>
 
-      {isChatbotVisible && (
-        <div className="fixed top-[120px] right-[10%] z-50">
-          <Chatbot onClose={toggleChatbot} />
-        </div>
-      )}
     </div>
   );
 };

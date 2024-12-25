@@ -5,8 +5,8 @@ import { HomeOutlined, CalendarOutlined, LikeOutlined, LikeFilled } from '@ant-d
 import userIcon from '../../../../assets/img/icon_user.png';
 import { relativeTime } from '../../../../utils/stringFormat';
 import { AnswerResponseDTO } from '../../../../types/dto/answer.dto';
-import { bankerMypageService } from '../../../../services/bankerMypage.service';
-import { BankerInfoResponeDTO } from '../../../../types/dto/mypage.dto';
+import { myPageService } from '../../../../services/mypage.service';
+import { BankerMyPageReturnDTO } from '../../../../types/dto/banker.dto';
 import { qnaService } from '../../../../services/qna.service';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../hoc/store';
@@ -18,13 +18,13 @@ interface AnswerProps {
 const Answer: React.FC<AnswerProps> = ({ answer }) => {
   const navigate = useNavigate();
 
-  const [bankerInfo, setBankerInfo] = useState<BankerInfoResponeDTO | null>(null);
+  const [bankerInfo, setBankerInfo] = useState<BankerMyPageReturnDTO | null>(null);
   const [isGood, setIsGood] = useState<boolean>(false);
   const { userId } = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     const fetchBankerInfo = async () => {
-      const response = await bankerMypageService.getBankerMyPageInfo(answer.bankerId);
+      const response = await myPageService.getBankerMyPage(answer.bankerId);
       setBankerInfo(response.data);
     }
     fetchBankerInfo();
@@ -55,21 +55,21 @@ const Answer: React.FC<AnswerProps> = ({ answer }) => {
     <>
       <div className='answer flex flex-col border rounded shadow-md'>
         <h1 className='p-5 font-bold bg-pointColor'>
-          하나은행 {bankerInfo?.branchName || ''} {bankerInfo?.bankerName || ''} 은행원의 답변
+          하나은행 {bankerInfo?.branchName || ''} {bankerInfo?.name || ''} 은행원의 답변
         </h1>
         <div className='p-5 flex flex-col gap-5'>
           <div className='comment__header flex justify-between font-light border-b pb-5'>
             <div className='flex gap-3'>
               <img src={userIcon} alt='user icon' className='w-12 h-12' />
-              <div>
+              <div className='flex flex-col gap-1'>
                 <div className='flex gap-3'>
-                  <span>{bankerInfo?.bankerName} 은행원</span>
+                  <span>{bankerInfo?.name} 은행원</span>
                   <div className='bg-gray-300 rounded-full px-3 text-sm self-center'>
                     🎖️ 행원
                   </div>
                 </div>
-                <span className='text-gray-400 text-xs'>
-                  #금융인증서 #주택청약
+                <span className='text-gray-400 text-xs flex space-x-1 items-center'>
+                  {bankerInfo?.specializations.map((tag)=><span>#{tag}</span>)}
                 </span>
               </div>
             </div>
@@ -85,7 +85,7 @@ const Answer: React.FC<AnswerProps> = ({ answer }) => {
               </Tooltip>
             </div>
           </div>
-          <p className='comment__body font-light'>{answer.content}</p>
+          <p className='comment__body font-light whitespace-pre-line'>{answer.content}</p>
           <div className='comment__footer font-light flex flex-col gap-5'>
             <p className="text-gray-400" style={{fontSize:'13px'}}>
               {relativeTime(+new Date(answer.createdAt))}

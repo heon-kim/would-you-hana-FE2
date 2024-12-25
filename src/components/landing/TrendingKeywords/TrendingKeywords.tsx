@@ -3,14 +3,12 @@ import axios from 'axios'
 import { Carousel, message } from 'antd';
 
 interface TrendingKeywordsProps {
-  // keywords: string[];
   carouselIndex: number;
   onCarouselChange: (current: number) => void;
   districtName: string;
 }
 
 const TrendingKeywords: React.FC<TrendingKeywordsProps> = ({
-  // keywords,
   carouselIndex,
   onCarouselChange,
   districtName
