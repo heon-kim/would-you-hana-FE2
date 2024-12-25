@@ -322,7 +322,7 @@ const FindBank = () => {
   </div>
 
   {/* Info Panel */}
-  <div className="ml-10 w-80 h-[500px] bg-white rounded-3xl shadow-2xl transform transition-transform hover:scale-105 flex flex-col overflow-hidden">
+  <div className="ml-10 w-80 h-[500px] bg-white rounded-3xl shadow-2xl transform transition-transform flex flex-col overflow-hidden">
     {/* Header */}
     <div className="bg-mainColor p-4 text-center">
       <h3 className="font-bold text-white tracking-wide">
