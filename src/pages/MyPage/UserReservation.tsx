@@ -7,7 +7,6 @@ import iconPhone from '../../assets/img/icon_phone.svg';
 import hwayangImg from '../../assets/img/bank/hwayang.jpg';
 import seongsuImg from '../../assets/img/bank/seongsu.png';
 import seouluuuuuupImg from '../../assets/img/bank/seoulsuuuuuup.jpg';
-import { config } from '../../config/config';
 
 const UserReservation: React.FC = () => {
   const [selectedBranch, setSelectedBranch] = useState<string | null>(null);

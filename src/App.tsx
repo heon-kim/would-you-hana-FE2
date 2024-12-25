@@ -63,8 +63,8 @@ function App() {
                 <Route path="communityScrap" element={<CommunityScrap />} />
                 <Route path="edit" element={<EditProfile />} />
                 <Route path="district" element={<SetDistrict />} />
+                <Route path="bankerReservation" element={<BankerReservation/>} />
               </Route>
-              <Route path="/banker/reservation" element={<BankerReservation/>} />
               <Route path="/register" element={<LandingForRegister />} />
               <Route path="/register/user" element={<UserRegister />} />
               <Route path="/register/banker" element={<BankerRegister />} />

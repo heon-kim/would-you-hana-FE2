@@ -5,11 +5,6 @@ import type { Dayjs } from 'dayjs';
 import iconClock from '../../assets/img/icon_clock.svg';
 import iconHome from '../../assets/img/icon_home.svg';
 import iconHana from '../../assets/img/icon_hana.png';
-import iconPin from '../../assets/img/icon_pin.svg';
-import iconPhone from '../../assets/img/icon_phone.svg';
-import hwayangImg from '../../assets/img/bank/hwayang.jpg';
-import seongsuImg from '../../assets/img/bank/seongsu.png';
-import seouluuuuuupImg from '../../assets/img/bank/seoulsuuuuuup.jpg';
 
 const reservations = [
   {
@@ -35,6 +30,22 @@ const reservations = [
     branch: '성수점',
     userName: '정연채',
     banker: '홍창기 대리',
+  },
+  {
+    id: 3,
+    date: '2024-12-27',
+    time: '4:00 PM',
+    branch: '성수점',
+    userName: '김채운',
+    banker: '홍창기 대리',
+  },
+  {
+    id: 3,
+    date: '2024-12-27',
+    time: '4:00 PM',
+    branch: '성수점',
+    userName: '김상현',
+    banker: '고은행 과장',
   },
 ];
 
@@ -97,6 +108,7 @@ const BankerReservation: React.FC = () => {
         <div>예약 내역</div>
         <div className="px-10">
           <div
+          className = "scroll-container"
             style={{
               marginTop: '20px',
               maxHeight: '90vh',
