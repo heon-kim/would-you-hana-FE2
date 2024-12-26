@@ -27,9 +27,12 @@ const FindBank = () => {
   const [isBranchActive, setIsBranchActive] = useState(false);
   const [isATMActive, setIsATMActive] = useState(false);
   const [isLocationActive, setIsLocationActive] = useState(true);
+  const [selectedBranchName, setSelectedBranchName] = useState<string>(''); 
 
   const showModal = () => {
     setIsModalOpen(true);
+    setSelectedBranchName(selectedLocation.title);
+    console.log('---------------selected', selectedLocation.title);
   };
 
   const handleOk = () => {
@@ -384,7 +387,7 @@ const FindBank = () => {
     </div>
   </div>
 
-  <ReservationModal isOpen={isModalOpen} onOk={handleOk} onCancel={handleCancel} />
+  <ReservationModal isOpen={isModalOpen} onOk={handleOk} onCancel={handleCancel} selectedBranchName={selectedBranchName} />
 </div>
 
   
