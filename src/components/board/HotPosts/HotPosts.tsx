@@ -1,9 +1,11 @@
 import React from 'react';
 import { TodayQnaListDTO } from '../../../types/dto/question.dto';
+import { useNavigate } from 'react-router-dom';
 
 interface HotPostProps {
   rank: number;
   title: string;
+  postId: string;
 }
 
 
@@ -22,9 +24,11 @@ const getTodayDate = () => {
   return `${month}.${day}. (${dayOfWeek})`;
 };
 
-const HotPost: React.FC<HotPostProps> = ({ rank, title }) => {
+const HotPost: React.FC<HotPostProps> = ({ rank, title, postId }) => {
+  const navigate = useNavigate();
+
   return (
-    <div className="flex items-center justify-center w-full">
+    <div className="flex items-center justify-center w-full" onClick={()=>navigate(`/qna/detail/${postId}`)}>
       <div className="text-base font-bold text-[#008485] mr-2.5">{rank}</div>
       <div className="text-sm text-gray-800 w-full cursor-pointer hover:underline hover:text-[#004c99] transition-colors">
         {truncateTitle(title, 50)}
@@ -49,7 +53,7 @@ const HotPosts: React.FC<{ todayQuestions: TodayQnaListDTO[] }> = ({ todayQuesti
           key={post.questionId}
           className="bg-white p-2.5 rounded-lg min-h-[50px] flex flex-col items-center justify-center border border-[#F3F5F7]"
         >
-          <HotPost rank={index + 1} title={post.title} />
+          <HotPost rank={index + 1} title={post.title} postId={post.questionId} />
         </div>
       ))}
     </div>
