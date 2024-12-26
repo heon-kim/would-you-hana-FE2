@@ -2,6 +2,7 @@ import { request } from '../hoc/request';
 import { config } from '../config/config';
 import { QnaListDTO } from '../types/dto/question.dto';
 import { CommunityListDTO } from '../types/dto/community.dto';
+import { CustomerResponseDTO } from '../types/dto/customer.dto';
 
 const BASE_URL = config.apiUrl;
 
@@ -18,6 +19,13 @@ export const districtService = {
         return request<CommunityListDTO[]>({
             method: 'GET',
             url: `${BASE_URL}/district/${location}/hotPost`,
+        });
+    },
+    // 지역구별 댓글 수 많은 유저 3명 반환
+    getTop3Customer: (location: string) => {
+        return request<CustomerResponseDTO[]>({
+            method: 'GET',
+            url: `${BASE_URL}/district/${location}/activeUser`,
         });
     },
 }
