@@ -2,8 +2,11 @@ import chatbotImg from '../../../../assets/img/img_chatbot.png';
 import { Button, Input, message, Tooltip } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { config } from '../../../../config/config';
 
 const { TextArea } = Input;
+
+const BASE_URL = config.aiURL;
 
 interface AnswerInputProps {
   question: {title:string, content:string};
@@ -41,7 +44,7 @@ const Answer: React.FC<AnswerInputProps> = ({ question, onSubmitAnswer, onChatbo
     if (!input?.trim()) return;
 
     try {
-      const response = await axios.post("http://localhost:8000/get_answer", {
+      const response = await axios.post(`${BASE_URL}/get_answer`, {
         question: input,
       });
       setBotResult(response.data.answer) // 응답 텍스트
