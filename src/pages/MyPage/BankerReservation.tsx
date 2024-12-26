@@ -1,62 +1,86 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { BadgeProps, CalendarProps } from 'antd';
 import { Badge, Calendar } from 'antd';
 import type { Dayjs } from 'dayjs';
 import iconClock from '../../assets/img/icon_clock.svg';
 import iconHome from '../../assets/img/icon_home.svg';
 import iconHana from '../../assets/img/icon_hana.png';
+import { ReservationResponseDTO } from '../../types/dto/reservation.dto';
+import { reservationService } from '../../services/reservation.service';
+import dayjs from 'dayjs';
 
-const reservations = [
-  {
-    id: 1,
-    date: '2024-12-25',
-    time: '10:00 AM',
-    branch: '성수점',
-    userName: '김고객',
-    banker: '김하나 대리',
-  },
-  {
-    id: 2,
-    date: '2024-12-26',
-    time: '2:00 PM',
-    branch: '성수점',
-    userName: '김해원',
-    banker: '고은행 과장',
-  },
-  {
-    id: 3,
-    date: '2024-12-27',
-    time: '4:00 PM',
-    branch: '성수점',
-    userName: '정연채',
-    banker: '홍창기 대리',
-  },
-  {
-    id: 3,
-    date: '2024-12-27',
-    time: '4:00 PM',
-    branch: '성수점',
-    userName: '김채운',
-    banker: '홍창기 대리',
-  },
-  {
-    id: 3,
-    date: '2024-12-27',
-    time: '4:00 PM',
-    branch: '성수점',
-    userName: '김상현',
-    banker: '고은행 과장',
-  },
-];
+// const reservations = [
+//   {
+//     id: 1,
+//     date: '2024-12-25',
+//     time: '10:00 AM',
+//     branch: '성수점',
+//     userName: '김고객',
+//     banker: '김하나 대리',
+//   },
+//   {
+//     id: 2,
+//     date: '2024-12-26',
+//     time: '2:00 PM',
+//     branch: '성수점',
+//     userName: '김해원',
+//     banker: '고은행 과장',
+//   },
+//   {
+//     id: 3,
+//     date: '2024-12-27',
+//     time: '4:00 PM',
+//     branch: '성수점',
+//     userName: '정연채',
+//     banker: '홍창기 대리',
+//   },
+//   {
+//     id: 3,
+//     date: '2024-12-27',
+//     time: '4:00 PM',
+//     branch: '성수점',
+//     userName: '김채운',
+//     banker: '홍창기 대리',
+//   },
+//   {
+//     id: 3,
+//     date: '2024-12-27',
+//     time: '4:00 PM',
+//     branch: '성수점',
+//     userName: '김상현',
+//     banker: '고은행 과장',
+//   },
+// ];
 
 const BankerReservation: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
+  const [reservations, setReservations] = useState<ReservationResponseDTO[]>([]);
   const [filteredReservations, setFilteredReservations] = useState(reservations);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // 예약 내역을 API에서 받아오는 함수
+  const fetchReservations = async (bankerId: number) => {
+    setLoading(true);
+    try {
+      const response = await reservationService.getReservatoinsForBanker(bankerId);
+      setReservations(response.data); // 예약 내역을 상태에 저장
+      setLoading(false);
+    } catch (error) {
+      setError('예약 정보를 불러오는 데 실패했습니다.');
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const bankerId = localStorage.getItem('userId');
+    fetchReservations(bankerId);
+  }, []);
 
   const getListData = (value: Dayjs) => {
     const selectedDateString = value.format('YYYY-MM-DD');
     return reservations.filter((reservation) =>
-      reservation.date === selectedDateString
+      dayjs(reservation.rdayTime).format('YYYY-MM-DD') === selectedDateString
     );
   };
 
@@ -71,8 +95,8 @@ const BankerReservation: React.FC = () => {
     return (
       <ul className="events">
         {listData.map((item) => (
-          <li key={item.id}>
-            <Badge status="success" text={`예약: ${item.time}`} />
+          <li key={item.branchName}>
+            <Badge status="success" text={`${item.rdayTime.substring(11, 16)}`} />
           </li>
         ))}
       </ul>
@@ -105,8 +129,9 @@ const BankerReservation: React.FC = () => {
           marginLeft: '30px',
         }}
       >
-        <div>예약 내역</div>
+        
         <div className="px-10">
+        <div style={{paddingLeft:'15px'}}>예약 현황</div>
           <div
           className = "scroll-container"
             style={{
@@ -118,7 +143,7 @@ const BankerReservation: React.FC = () => {
           >
             {filteredReservations.map((reservation) => (
               <div
-                key={reservation.id}
+                key={reservation.branchName}
                 style={{
                   border: '1px solid #7E8082',
                   borderRadius: '10px',
@@ -138,7 +163,7 @@ const BankerReservation: React.FC = () => {
                       fontSize: '15px',
                     }}
                   >
-                    {reservation.date}
+                    {reservation.rdayTime.substring(2, 4)}.{reservation.rdayTime.substring(5, 7)}.{reservation.rdayTime.substring(8, 10)}
                   </p>
                 </div>
                 <div className="flex ml-4">
@@ -174,14 +199,15 @@ const BankerReservation: React.FC = () => {
                   </div>
                   <div className="flex flex-col ml-4 mt-1 text-[#555558] gap-2">
                     <div className="text-black">
-                      <strong>{reservation.userName}</strong>
+                      {/* <strong>{reservation.userName}</strong> */}
+                      <strong>김고객</strong>
                     </div>
                     <div
                       className="flex gap-2 align-center text-center"
                       style={{ fontSize: '16px' }}
                     >
                       <img src={iconClock} width={'17px'} />
-                      {reservation.time} 예약
+                      {reservation.rdayTime.substring(11, 16)} 예약
                       <p
                         className="text-gray-400 font-normal flex justify-center items-center"
                         style={{ fontSize: '14px' }}
@@ -192,7 +218,7 @@ const BankerReservation: React.FC = () => {
                     </div>
                     <div className="flex gap-2" style={{ fontSize: '16px' }}>
                       <img src={iconHome} width={'17px'} />
-                      {reservation.banker}
+                      {reservation.bankerName}
                     </div>
                   </div>
                 </div>
