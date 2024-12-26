@@ -6,39 +6,41 @@ import { RootState } from '../../hoc/store';
 import type { UploadProps } from 'antd/es/upload';
 import { BankerMyPageReturnDTO } from '../../types/dto/banker.dto';
 import { myPageService } from '../../services/mypage.service';
+import bankerImg from '../../assets/img/banker1.png';
 
 const { Content } = Layout;
 
 
 const BankerInfo: React.FC = () => {
   const { userId } = useSelector((state: RootState) => state.auth);
-  const [bankerProfile, setBankerProfile] = useState<BankerMyPageReturnDTO>({
+  const [savedProfile, setSavedProfile] = useState<BankerMyPageReturnDTO>({
     name:'김하나',
     branchName:'성동지점',
     specializations:['이체'],
     content:'안녕하세요.',
-    filePath:'',
+    filePath:bankerImg,
     totalGoodCount:0,
     totalCommentCount:0,
     totalViewCount:0
   });
-
-  useEffect(() => {
-    const fetchBankerInfo = async () => {
-      const response = await myPageService.getBankerMyPage(Number(userId));
-      setBankerProfile(response.data);
-    }
-    fetchBankerInfo();
-  }, [userId]);
-
-
-  const [savedProfile, setSavedProfile] = useState<BankerMyPageReturnDTO>(bankerProfile);
 
   // 편집 상태
   const [isComposing, setIsComposing] = useState(false); // IME 조합 상태
   const [editableProfile, setEditableProfile] = useState(savedProfile);
   const [newTag, setNewTag] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    const fetchBankerInfo = async () => {
+      const response = await myPageService.getBankerMyPage(Number(userId));
+      if(!response.data.filePath){
+        response.data.filePath=bankerImg;
+      }
+      setSavedProfile(response.data);
+   
+    }
+    fetchBankerInfo();
+  }, [userId]);
 
   // 태그 추가
   const addTag = () => {
@@ -106,6 +108,7 @@ const BankerInfo: React.FC = () => {
         >
           <div
             style={{
+              marginTop:'20px',
               marginBottom: '20px',
               textAlign: 'center',
               border: '1px dashed #d9d9d9',
