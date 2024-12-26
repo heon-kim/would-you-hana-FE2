@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'
 import { Carousel, message } from 'antd';
+import { config } from '../../../config/config';
 
 interface TrendingKeywordsProps {
   carouselIndex: number;
@@ -14,11 +15,12 @@ const TrendingKeywords: React.FC<TrendingKeywordsProps> = ({
   districtName
 }) => {
   const [keywords, setKeywords] = useState<string[][]>([]); // 초기 값을 빈 배열로 설정
+  const BASE_URL = config.aiURL;
 
   useEffect(() => {
     const fetchKeywords = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/hot_keywords');
+    const response = await axios.get(`${BASE_URL}/hot_keywords`);
         console.log('Fetched keywords:', response.data.keywords);  // 키워드 확인용 로그
         setKeywords(response.data.popular_keywords || []); // 응답이 없거나 형식이 맞지 않으면 빈 배열 설정
       } catch (error) {
