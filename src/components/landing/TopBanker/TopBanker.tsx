@@ -1,42 +1,45 @@
 import React from 'react';
 import { Card } from 'antd';
 import iconUser from '../../../assets/img/icon_user.png';
+import { CustomerResponseDTO } from '../../../types/dto/customer.dto';
 
-interface BankerInfo {
-  rank: 1|2|3;
-  name: string;
-  level: string;
-  activities: string;
-  likes: string;
-  bgColor: string;
-  showFullProfile?: boolean;
-}
 
-const TopBanker: React.FC<{ bankers: BankerInfo[] }> = ({ bankers }) => {
+const TopBanker: React.FC<{ topUsers: CustomerResponseDTO[] }> = ({ topUsers }) => {
+  const bgColors = ['bg-[#ffC0CB60]', "bg-[#f6FE8060]", "bg-[#ADC8E650]"]
   return (
     <Card
-      title={<span className="font-bold">🏆 오늘의 열혈 답변가</span>}
+      title={<span className="font-bold">🏆 오늘의 열혈 활동가</span>}
       className="text-center"
     >
-      {bankers.map((banker, index) => (
+      {topUsers.map((user, index) => (
         <div
           key={index}
-          className={`flex items-center ${banker.bgColor} rounded-lg p-5 mb-3 text-left`}
+          className={`flex items-center ${bgColors[index]} rounded-lg p-5 mb-3 text-left`}
         >
-          <span className="text-4xl mr-4 leading-none">{banker.rank===1 ? '🥇' : banker.rank===2 ? '🥈' : banker.rank===3 ? '🥉' : ''}</span>
-          {banker.showFullProfile && (
-            <img
-              src={iconUser}
-              alt="User Icon"
-              className="w-[100px] h-[100px] mr-4"
-            />
+          <span className="text-4xl mr-4 leading-none">{index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}</span>
+          {index === 0 ? (
+            <div className='flex'>
+              <img
+                src={iconUser}
+                alt="User Icon"
+                className="w-[100px] h-[100px] mr-4"
+              />
+              <div className='flex flex-col justify-center'>
+                <p className="font-bold text-lg mb-2">{user.nickname}</p>
+                {/* <p className="font-bold">{user.experiencePoints}</p> */}
+                <p className="">댓글수 {user.todayCommentCount | 0}</p>
+                <p className="">작성글수 {user.QnaPostCount | 0}</p>
+              </div>
+            </div>
+
+          ) : (
+            <div>
+              <span className="font-bold text-[15px] mr-5">{user.nickname}</span>
+              {/* <span className="font-bold">{user.experiencePoints}</span> */}
+              <span className="mr-3">댓글수 {user.todayCommentCount | 0}</span>
+              <span className="">작성글수 {user.QnaPostCount | 0}</span>
+            </div>
           )}
-          <div className={`${banker.showFullProfile ? 'flex flex-col gap-2' : 'grid grid-cols-4'} w-full`}>
-            <span className="font-bold">{banker.name}</span>
-            <span className="font-bold">{banker.level}</span>
-            <span className="">활동🥁: {banker.activities}</span>
-            <span className="">좋아요👍🏻: {banker.likes}</span>
-          </div>
         </div>
       ))}
     </Card>

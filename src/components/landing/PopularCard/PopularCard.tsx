@@ -10,7 +10,7 @@ const CardContent: React.FC<QnaListDTO|CommunityListDTO> = (post) => (
       <span className="font-bold text-[#FF6F61] text-xs">{post.categoryName}</span>
       <span className="text-gray-500 ml-5 text-xs">{relativeTime(+new Date(post.createdAt))}</span>
     </div>
-    <div className="text-black mt-3">{post.title}</div>
+    <div className="text-black mt-3 text-[15px]">{post.title}</div>
     <div className="mt-3 justify-between text-right">
       <span className="text-gray-500 mr-5 text-xs">좋아요 {post.likeCount|0}</span>
       <span className="text-gray-500 text-xs">조회수 {post.viewCount|0}</span>

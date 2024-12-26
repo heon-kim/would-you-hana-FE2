@@ -14,12 +14,14 @@ import { CommunityListDTO } from '../../types/dto/community.dto';
 import { AxiosResponse } from 'axios';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../hoc/store';
+import { CustomerResponseDTO } from '../../types/dto/customer.dto';
 
 const District: React.FC = () => {
   const { districtId } = useParams<{ districtId: string }>();
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [latestQuestions, setLatestQuestions] = useState<QnaListDTO[]>();
   const [hotPosts, setHotPost] = useState<CommunityListDTO[]>();
+  const [topUsers, setTopUsers] = useState<CustomerResponseDTO[]>();
   const { userLocation } = useSelector((state: RootState) => state.auth);
 
 
@@ -68,12 +70,33 @@ const District: React.FC = () => {
       console.error('Error fetching data:', err);
 
     }
+  } 
+  
+  const getTop3Customer = async () => {
+    if (!userLocation) {
+      message.error("위치 정보를 설정하세요.");
+      return;
+    }
+
+    try {
+      const response: AxiosResponse<CustomerResponseDTO[]> = await districtService.getTop3Customer(userLocation);
+
+      if (response && response.data) {
+        setTopUsers(response.data);
+      } else {
+        console.error('Error fetching data: response.data is undefined');
+      }
+    } catch (err) {
+      console.error('Error fetching data:', err);
+
+    }
   }
 
 
   useEffect(() => {
     getHot3Post();
     getLatest3Questions();
+    getTop3Customer();
   }, [userLocation]);
 
   return (
@@ -122,10 +145,11 @@ const District: React.FC = () => {
               />
             </Col>
           )}
-
-          <Col xs={24} sm={8}>
-            <TopBanker bankers={districtData.topBankers} />
-          </Col>
+          {topUsers&&(
+             <Col xs={24} sm={8}>
+             <TopBanker topUsers={topUsers} />
+           </Col>
+          )}
         </Row>
       </div>
     </div>

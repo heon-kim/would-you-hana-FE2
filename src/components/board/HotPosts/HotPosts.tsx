@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 interface HotPostProps {
   rank: number;
   title: string;
-  postId: string;
+  postId: number;
 }
 
 
